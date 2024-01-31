@@ -1,4 +1,8 @@
 __tests__
+.bundle
+android
+ios
+node_modules
 
 # OSX
 #
