@@ -1,84 +1,84 @@
-import { StyleSheet } from "react-native";
-import font from '../utils/font'
+import { StyleSheet } from 'react-native';
+import font from '../utils/font';
 
 export const title1 = StyleSheet.create({
   bold: {
-    fontFamily: 'bold',
+    fontFamily: 'SUIT-Bold',
     fontSize: font(25),
   },
 });
 
 export const title2 = StyleSheet.create({
   bold: {
-    fontFamily: 'bold',
-    fontSize: font(20)
+    fontFamily: 'SUIT-Bold',
+    fontSize: font(20),
   },
   medium: {
-    fontFamily: 'medium',
-    fontSize: font(20)
-  }
-})
+    fontFamily: 'SUIT-Medium',
+    fontSize: font(20),
+  },
+});
 
 export const title3 = StyleSheet.create({
   bold: {
-    fontFamily: 'bold',
+    fontFamily: 'SUIT-Bold',
     fontSize: font(19),
   },
   semibold: {
-    fontFamily: 'semibold',
+    fontFamily: 'SUIT-Semibold',
     fontSize: font(19),
   },
 });
 
 export const subtitle1 = StyleSheet.create({
   semibold: {
-    fontFamily: 'semibold',
+    fontFamily: 'SUIT-Semibold',
     fontSize: font(17),
   },
 });
 
 export const subtitle2 = StyleSheet.create({
   semibold: {
-    fontFamily: 'semibold',
+    fontFamily: 'SUIT-Semibold',
     fontSize: font(16),
   },
   medium: {
-    fontFamily: 'medium',
+    fontFamily: 'SUIT-Medium',
     fontSize: font(16),
   },
 });
 
 export const subtitle3 = StyleSheet.create({
   bold: {
-    fontFamily: 'bold',
+    fontFamily: 'SUIT-Bold',
     fontSize: font(15),
   },
 });
 
 export const body1 = StyleSheet.create({
   medium: {
-    fontFamily: 'medium',
-    fontSize: font(16)
-  }
-})
+    fontFamily: 'SUIT-Medium',
+    fontSize: font(16),
+  },
+});
 
 export const body2 = StyleSheet.create({
   medium: {
-    fontFamily: 'medium',
+    fontFamily: 'SUIT-Medium',
     fontSize: font(15),
   },
 });
 
 export const body3 = StyleSheet.create({
   medium: {
-    fontFamily: 'medium',
+    fontFamily: 'SUIT-Medium',
     fontSize: font(14),
   },
 });
 
 export const caption1 = StyleSheet.create({
   semibold: {
-    fontFamily: 'semibold',
+    fontFamily: 'SUIT-Semibold',
     fontSize: font(13),
   },
   medium: {
@@ -89,14 +89,14 @@ export const caption1 = StyleSheet.create({
 
 export const caption2 = StyleSheet.create({
   medium: {
-    fontFamily: 'medium',
+    fontFamily: 'SUIT-Medium',
     fontSize: font(12),
   },
 });
 
 export const caption3 = StyleSheet.create({
   medium: {
-    fontFamily: 'medium',
+    fontFamily: 'SUIT-Medium',
     fontSize: font(11),
   },
 });
