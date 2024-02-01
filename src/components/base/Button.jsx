@@ -42,6 +42,7 @@ const Button = ({
             textColor: colors.orange,
           });
         }
+        break;
       case 'disable':
         if (varient === 'outlined') {
           return setStyle({
@@ -62,6 +63,7 @@ const Button = ({
             textColor: 'white',
           });
         }
+        break;
       case 'default':
         if (varient === 'outlined') {
           return setStyle({ borderColor: 'white', bgColor: 'transparent', textColor: 'white' });
@@ -74,6 +76,7 @@ const Button = ({
             textColor: 'white',
           });
         }
+        break;
     }
   }, [varient, color]);
 
@@ -104,6 +107,6 @@ const ButtonWrapper = styled(TouchableOpacity)`
 
 const ButtonText = styled(Text)(props => ({
   fontFamily: subtitle2.semibold.fontFamily,
-  fontSize: subtitle2.semibold.fontSize,
+  fontSize: size.width * subtitle2.semibold.fontSize,
   color: props.buttonStyle.textColor,
 }));
