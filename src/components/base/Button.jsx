@@ -7,7 +7,7 @@ import { subtitle2 } from '../../styles/fonts';
 
 const Button = ({
   width = 350,
-  height = 54 | 36,
+  height,
   varient = 'outlined' | 'filled' | 'none',
   color = 'primary' | 'default' | 'disable',
   text,
@@ -98,9 +98,7 @@ const Button = ({
       style={style}
     >
       {renderIcon()}
-      <ButtonText height={height} buttonStyle={buttonStyle}>
-        {text}
-      </ButtonText>
+      <ButtonText buttonStyle={buttonStyle}>{text}</ButtonText>
     </ButtonWrapper>
   );
 };
@@ -109,12 +107,13 @@ export default Button;
 
 const ButtonWrapper = styled(TouchableOpacity)`
   width: ${({ width }) => size.width * width}px;
-  height: ${({ height }) => size.height * height}px;
+  height: ${({ height }) => size.height * (height + 8)}px;
   background-color: ${({ buttonStyle }) => buttonStyle.bgColor};
   border: 1px solid ${({ buttonStyle }) => buttonStyle.borderColor};
   border-radius: 12px;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
   gap: ${size.width * 4}px;
   ${({ style }) => style};
 `;

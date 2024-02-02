@@ -27,7 +27,6 @@ const AddToFolderBottomSheet = ({ onPressClose }) => {
         <Button
           width={(WIDTH - 64) / 2}
           height={54}
-          style={{ paddingTop: size.height * 12 }}
           varient="filled"
           color="primary"
           text="태그 추가"
@@ -37,7 +36,6 @@ const AddToFolderBottomSheet = ({ onPressClose }) => {
           height={54}
           varient="filled"
           color="default"
-          style={{ paddingTop: size.height * 12 }}
           text="앱에서 보기"
         />
       </ButtonWrapper>

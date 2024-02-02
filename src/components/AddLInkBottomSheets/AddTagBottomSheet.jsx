@@ -25,7 +25,6 @@ const AddTagBottomSheet = ({ onPressClose }) => {
         <Button
           width={WIDTH - 60}
           height={54}
-          style={{ paddingTop: size.height * 12 }}
           varient="filled"
           color="primary"
           text="앱에서 보기"
