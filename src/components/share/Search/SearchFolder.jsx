@@ -35,13 +35,12 @@ export default SearchFolder;
 
 const SearchContainer = styled(View)`
   flex-direction: row;
-  gap: 16px;
+  gap: ${size.width*16}px
   align-items: center;
-  margin: 0 20px;
-  margin-right: 20px;
+  margin: 0 ${size.width*20}px;
 `;
 
 const FolderListContainer = styled(View)`
-  padding: 16px 0;
+  padding: ${size.height*16}px 0;
   background-color: colors.bg[400]
 `;
