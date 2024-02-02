@@ -25,7 +25,7 @@ const Default = () => {
       title="폴더 선택"
       leftButtonType="none"
       rightButtonType="close"
-      onRightButtonPress={() => console.log('Close button pressed')}
+      onRightButtonPress={() => null}
     >
       <ButtonsContainer>
         <Button

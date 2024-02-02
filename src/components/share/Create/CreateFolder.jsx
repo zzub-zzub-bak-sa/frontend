@@ -46,7 +46,6 @@ const ButtonContainer = styled(View)`
   border-radius: 12px;
   margin: ${size.height * 32}px ${size.width * 20}px ${size.height * 20}px ${size.width * 20}px;
   background-color: ${colors.grey[100]};
-  color: #8d97a2;
 `;
 
 const ImageBox = styled(View)`

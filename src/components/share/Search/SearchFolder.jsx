@@ -37,11 +37,11 @@ const SearchContainer = styled(View)`
   flex-direction: row;
   gap: 16px;
   align-items: center;
-  margin-left: 20px;
+  margin: 0 20px;
   margin-right: 20px;
 `;
 
 const FolderListContainer = styled(View)`
   padding: 16px 0;
-  background-color: #171719;
+  background-color: colors.bg[400]
 `;

@@ -19,20 +19,20 @@ const NoResultsContainer = styled(View)`
   background-color: ${colors.bg[400]};
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: ${size.width*20}px;
 `;
 
 const NoResultText = styled(Text)`
   font-family: ${body1.medium.fontFamily};
   font-size: ${body1.medium.fontSize}px;
-  line-height: 25.6px;
+line-height: ${size.width * 16 * 1.2}px;
   color: white;
   font-size: ${size.width * 16}px;
   text-align: center;
 `;
 
 const StyledButton = styled(TouchableOpacity)`
-  height: 36px;
+  height: ${size.height*36}px;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
