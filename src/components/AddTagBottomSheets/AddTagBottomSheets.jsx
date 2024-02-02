@@ -10,23 +10,17 @@ import Tags from '../base/Tags';
 const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
   const tags = ['태그', '태그', '태그', '태그', '태그', '태그길이가최대', '7자', '공백포함'];
   const [value, setValue] = useState('');
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [keyboard, setShowKeyboard] = useState(false);
 
   const handleInputFocus = () => {
-    setKeyboardHeight(1);
+    setShowKeyboard(true);
     function onKeyboardDidShow(e) {
-      setKeyboardHeight(e.endCoordinates.height);
-    }
-
-    function onKeyboardDidHide() {
-      setKeyboardHeight(0);
+      setShowKeyboard(true);
     }
 
     const showSubscription = Keyboard.addListener('keyboardDidShow', onKeyboardDidShow);
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', onKeyboardDidHide);
     return () => {
       showSubscription.remove();
-      hideSubscription.remove();
     };
   };
 
@@ -37,7 +31,7 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
       onLeftButtonPress={onPressBack}
       rightButtonType="done"
       onRightButtonPress={onPressClose}
-      snapPoints={[keyboardHeight ? '94.3%' : '62.7%', '105.7%']}
+      snapPoints={[keyboard ? '94.3%' : '62.7%', '105.7%']}
     >
       <InputWrapper>
         <Input
