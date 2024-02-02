@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-const Folder = ({ size, color }) => {
+const IcSearch = ({ size, color }) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,4 +20,4 @@ const Folder = ({ size, color }) => {
   );
 };
 
-export default Folder;
+export default IcSearch;
