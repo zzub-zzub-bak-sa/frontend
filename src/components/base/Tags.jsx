@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import styled from 'styled-components';
 import size from '../../utils/size';
@@ -6,15 +6,25 @@ import { colors } from '../../styles/colors';
 import IcClear from '../../assets/icons/IcClear';
 import { body1 } from '../../styles/fonts';
 
-const Tags = ({ text, onPressTag, style }) => {
+const Tags = ({ text, onPressTag, style, color = 'primary', isEditPossible, height = 42 }) => {
+  const [bgColor, setBgColor] = useState('');
+
+  useEffect(() => {
+    if (color === 'primary') {
+      setBgColor(colors.orange);
+    } else if (color === 'default') {
+      setBgColor(colors.bg[100]);
+    }
+  }, [color]);
+
   const handleSliceText = () => {
-    return text.length > 7 ? text.slice(0, 7) + '...' : text;
+    return text.length > 7 ? `${text.slice(0, 7)}...` : text;
   };
 
   return (
-    <TagWrapper onPress={onPressTag} style={style}>
+    <TagWrapper onPress={onPressTag} style={style} bgColor={bgColor} height={height}>
       <TagText>{handleSliceText()}</TagText>
-      <IcClear size={20} color={'white'} />
+      {isEditPossible && <IcClear size={20} color="white" />}
     </TagWrapper>
   );
 };
@@ -22,20 +32,19 @@ const Tags = ({ text, onPressTag, style }) => {
 export default Tags;
 
 const TagWrapper = styled(TouchableOpacity)`
-  height: ${size.height * 40}px;
+  height: ${({ height }) => size.width * height}px;
+  background-color: ${({ bgColor }) => bgColor};
+  padding: ${size.height * 8}px ${size.width * 12}px;
   border-radius: 8px;
-  background-color: ${colors.orange};
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: ${size.width * 8}px;
-  padding: ${size.height * 8}px ${size.width * 12}px;
   ${({ style }) => style};
 `;
 
 const TagText = styled(Text)`
   font-family: ${body1.medium.fontFamily};
-  font-size: ${body1.medium.fontSize};
+  font-size: ${size.width * body1.medium.fontSize};
   color: white;
 `;
