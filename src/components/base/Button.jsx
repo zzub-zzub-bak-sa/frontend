@@ -20,7 +20,6 @@ const Button = ({
     bgColor: '',
     textColor: '',
   });
-
   useEffect(() => {
     switch (color) {
       case 'primary':
@@ -102,7 +101,6 @@ const Button = ({
     </ButtonWrapper>
   );
 };
-
 export default Button;
 
 const ButtonWrapper = styled(TouchableOpacity)`

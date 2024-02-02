@@ -22,7 +22,6 @@ const InputField = ({
     onChangeValue('');
     console.log(tags);
   };
-
   const handleTagDelete = idx => {
     setTags(tags.filter((_, i) => i !== idx));
   };
@@ -94,7 +93,6 @@ const Content = styled(View)`
   flex-direction: row;
   align-items: center;
 `;
-
 const InputWrapper = styled(View)`
   margin-left: ${({ hasTags }) => (hasTags ? 8 : 0)}px;
 `;
