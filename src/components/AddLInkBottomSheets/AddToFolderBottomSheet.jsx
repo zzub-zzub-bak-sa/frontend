@@ -52,7 +52,7 @@ const TitleWrapper = styled(View)`
 `;
 
 const Title = styled(Text)`
-  font-size: ${size.width * title3.semibold.fontSize};
+  font-size: ${size.width * title3.semibold.fontSize}px;
   font-family: ${title3.semibold.fontFamily};
   color: white;
   text-align: center;
