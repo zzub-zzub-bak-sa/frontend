@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Keyboard, Text, View } from 'react-native';
 import styled from 'styled-components/native';
-import size from '../../utils/size';
-import CommonBottomSheet from '../base/modal/CommonBottomSheet';
-import InputField from '../base/InputField';
-import { body1 } from '../../styles/fonts';
-import Tags from '../base/Tags';
+import size from '../../../utils/size';
+import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
+import InputField from '../../base/InputField';
+import { body1 } from '../../../styles/fonts';
+import Tags from '../../base/Tags';
 
 const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
   const tags = ['태그', '태그', '태그', '태그', '태그', '태그길이가최대', '7자', '공백포함'];
