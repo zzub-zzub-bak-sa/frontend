@@ -52,8 +52,8 @@ const Button = ({
           });
         } else if (varient === 'filled') {
           return setButtonStyle({
-            borderColor: color.grey[100],
-            bgColor: color.grey[100],
+            borderColor: colors.grey[100],
+            bgColor: colors.grey[100],
             textColor: 'white',
           });
         } else if (varient === 'none') {
