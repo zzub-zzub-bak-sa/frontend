@@ -38,7 +38,7 @@ const CardWrapper = styled(TouchableOpacity)`
   height: ${size.height * 96};
   flex-direction: row;
   align-items: center;
-  background-color: black;
+  background-color: ${colors.bg[400]};
   padding: 0 ${size.width * 20}px;
 `;
 
