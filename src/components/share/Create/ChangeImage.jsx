@@ -13,6 +13,8 @@ import IcPeopleFolder from '../../../assets/icons/folders/IcPeopleFolder';
 import IcPersonFolder from '../../../assets/icons/folders/IcPersonFolder';
 import IcRiceFolder from '../../../assets/icons/folders/IcRiceFolder';
 import IcWineFolder from '../../../assets/icons/folders/IcWineFolder';
+import { colors } from '../../../styles/colors';
+import size from '../../../utils/size';
 
 const iconComponents = [
   IcFolderFolder,
@@ -42,7 +44,7 @@ const SearchFolder = () => {
 
   const renderItem = ({ item }) => (
     <IconContainer selected={item.id === selectedIconId} onPress={() => setSelectedIconId(item.id)}>
-      <item.IconComponent size={50} color="white" backgroundColor={item.color} />
+      <item.IconComponent size={72} color="white" backgroundColor={item.color} />
     </IconContainer>
   );
 
@@ -70,12 +72,12 @@ const SearchFolder = () => {
 export default SearchFolder;
 
 const IconContainer = styled(TouchableOpacity)`
-  padding: 10px;
+  padding: ${size.width * 10}px;
   border-radius: 14px;
 `;
 
 const ButtonContainer = styled(View)`
   border-radius: 12px;
-  margin: 32px 20px;
-  background-color: #2e3034;
+  margin: ${size.height * 32}px ${size.width * 20}px;
+  background-color: ${colors.grey[100]};
 `;
