@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 import styled from 'styled-components';
 import size from '../../utils/size';
 import { body1 } from '../../styles/fonts';
@@ -13,6 +13,7 @@ const InputField = ({
   onChangeValue,
   inputStyle,
   onFocus = () => null,
+  max = 10,
 }) => {
   const [tags, setTags] = useState([]);
 
@@ -29,32 +30,38 @@ const InputField = ({
   return (
     <>
       <Container containerStyle={containerStyle}>
-        <Content>
-          <TagWrapper>
-            {tags.map((tag, idx) => (
-              <Tags
-                key={idx}
-                text={tag}
-                onPressTag={() => handleTagDelete(idx)}
-                height={40}
-                isEditPossible
-              />
-            ))}
-          </TagWrapper>
-          {tags.length < 3 && (
-            <InputWrapper hasTags={tags.length > 0}>
-              <Input
-                placeholder={!tags.length ? placeholder : ''}
-                placeholderTextColor={colors.grey[200]}
-                value={value}
-                onChangeText={text => onChangeValue(text)}
-                inputStyle={inputStyle}
-                onFocus={onFocus}
-                onEndEditing={handleTagAdd}
-              />
-            </InputWrapper>
-          )}
-        </Content>
+        <Scroll horizontal={true}>
+          <Content>
+            {tags.length > 0 && (
+              <TagWrapper>
+                {tags.map((tag, idx) => (
+                  <Tags
+                    key={idx}
+                    text={tag}
+                    onPressTag={() => handleTagDelete(idx)}
+                    height={40}
+                    isEditPossible
+                  />
+                ))}
+              </TagWrapper>
+            )}
+            {tags.length < 3 && (
+              <InputWrapper hasTags={tags.length > 0}>
+                <Input
+                  placeholder={!tags.length ? placeholder : ''}
+                  placeholderTextColor={colors.grey[200]}
+                  value={value}
+                  onChangeText={text => onChangeValue(text)}
+                  inputStyle={inputStyle}
+                  onFocus={onFocus}
+                  onEndEditing={handleTagAdd}
+                  maxLength={max}
+                  returnKeyType="done"
+                />
+              </InputWrapper>
+            )}
+          </Content>
+        </Scroll>
       </Container>
       {value && (
         <SearchDropDown>
@@ -72,16 +79,19 @@ const InputField = ({
 export default InputField;
 
 const Container = styled(View)`
-  height: ${size.height * 58}px;
+  height: ${size.height * 68}px;
   border-bottom-width: 1px;
   border-bottom-color: ${colors.orange};
-  overflow-x: hidden;
-  overflow-y: visible;
   ${({ containerStyle }) => containerStyle};
+  margin-top: ${size.height * 8}px;
+`;
+
+const Scroll = styled(ScrollView)`
+  overflow: hidden;
 `;
 
 const Content = styled(View)`
-  height: ${size.height * 42}px;
+  height: ${size.height * 50}px;
   flex-direction: row;
   align-items: center;
 `;
@@ -98,6 +108,7 @@ const Input = styled(TextInput)`
 `;
 
 const TagWrapper = styled(View)`
+  width: 100%;
   flex-direction: row;
   gap: ${size.width * 8}px;
 `;
