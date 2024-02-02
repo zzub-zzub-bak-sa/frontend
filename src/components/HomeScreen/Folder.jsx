@@ -43,8 +43,8 @@ const FolderWrapper = styled(TouchableOpacity)`
 
 const KebabMenu = styled(TouchableOpacity)`
   position: absolute;
-  right: 8px;
-  top: 12px;
+  right: ${size.width * 8}px;
+  top: ${size.height * 12}px;
   z-index: 1;
 `;
 
