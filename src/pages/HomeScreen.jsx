@@ -6,7 +6,7 @@ import Layout from '../components/layout/Layout';
 import Header from '../components/layout/Header';
 import size from '../utils/size';
 import IcSearch from '../assets/icons/IcSearch';
-import { body1, body2, caption1, subtitle3 } from '../styles/fonts';
+import { body1, caption1, subtitle3 } from '../styles/fonts';
 import { colors } from '../styles/colors';
 import IcArrowDown from '../assets/icons/IcArrowDown';
 import Folder from '../components/HomeScreen/Folder';
@@ -14,6 +14,8 @@ import { WIDTH } from '../constants/constants';
 import IcPlus from '../assets/icons/IcPlus';
 import IcClearCircle from '../assets/icons/IcClearCircle';
 import SearchResults from '../components/HomeScreen/SearchResults';
+import CommonShortBottomSheet from '../components/base/modal/CommonShortBottomSheet';
+import EditBottomSheet from '../components/HomeScreen/EditBottomSheet';
 
 const data = [
   {
@@ -57,6 +59,12 @@ const data = [
 function HomeScreen() {
   const [keyword, setKeyword] = useState('');
   const [focus, setFocus] = useState(false);
+  const [openSort, setOpenSort] = useState(false);
+  const [sort, setSort] = useState('가나다순');
+  const [openEdit, setOpenEdit] = useState({
+    condition: false,
+    id: 0,
+  });
 
   return (
     <Layout>
@@ -82,14 +90,19 @@ function HomeScreen() {
       {!keyword && !focus && (
         <>
           <Content>
-            <SelectBox>
-              <SelectText>가나다순</SelectText>
+            <SelectBox onPress={() => setOpenSort(true)}>
+              <SelectText>{sort}</SelectText>
               <IcArrowDown />
             </SelectBox>
             <FlatList
               data={data}
               renderItem={({ item, index }) => (
-                <Folder index={index} title={item.title} numberOfLinks={item.numberOfLinks} />
+                <Folder
+                  index={index}
+                  title={item.title}
+                  numberOfLinks={item.numberOfLinks}
+                  onPressKebab={() => setOpenEdit({ condition: true, id: index })}
+                />
               )}
               keyExtractor={(_, index) => String(index)}
               numColumns={2}
@@ -103,6 +116,19 @@ function HomeScreen() {
             </FloatingButton>
           </FloatingBox>
         </>
+      )}
+      {openSort && (
+        <CommonShortBottomSheet
+          onSetValue={setSort}
+          onClose={() => setOpenSort(false)}
+          data={['가나다순', '최신순', '오래된순']}
+        />
+      )}
+      {openEdit.condition && (
+        <EditBottomSheet
+          onClose={() => setOpenEdit({ ...openEdit, condition: false })}
+          index={openEdit.id}
+        />
       )}
       {keyword && <SearchResults />}
     </Layout>
