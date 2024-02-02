@@ -80,7 +80,7 @@ const Header = styled.View`
 const Title = styled.Text`
   color: white;
   font-family: ${title3.semibold.fontFamily};
-  font-size: ${title3.semibold.fontSize}px;
+  font-size: ${size.width * title3.semibold.fontSize}px;
   flex: 1;
   text-align: center;
 `;
