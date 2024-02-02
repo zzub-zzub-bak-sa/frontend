@@ -37,7 +37,7 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
       onLeftButtonPress={onPressBack}
       rightButtonType="done"
       onRightButtonPress={onPressClose}
-      snapPoints={[keyboardHeight ? '94.3%' : '62.7%', '45.7%']}
+      snapPoints={[keyboardHeight ? '94.3%' : '62.7%', '105.7%']}
     >
       <InputWrapper>
         <Input
@@ -46,16 +46,19 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
           onChangeValue={text => setValue(text)}
           isEditPossible={false}
           onFocus={handleInputFocus}
+          max={7}
         />
       </InputWrapper>
-      <TagsWrapper>
-        <Title>등록된 태그</Title>
-        <TagBox>
-          {tags.map((tag, idx) => (
-            <Tags key={idx} text={tag} height={42} color="default" />
-          ))}
-        </TagBox>
-      </TagsWrapper>
+      {!value && (
+        <TagsWrapper>
+          <Title>등록된 태그</Title>
+          <TagBox>
+            {tags.map((tag, idx) => (
+              <Tags key={idx} text={tag} height={42} color="default" />
+            ))}
+          </TagBox>
+        </TagsWrapper>
+      )}
     </CommonBottomSheet>
   );
 };
@@ -80,10 +83,10 @@ const TagsWrapper = styled(View)`
 `;
 
 const Title = styled(Text)`
-  margin-top: ${size.width * 14}px;
-  margin-bottom: ${size.height * 8}px;
+  margin-top: ${size.width * 9}px;
+  margin-bottom: ${size.height * 10}px;
   font-family: ${body1.medium.fontFamily};
-  font-size: ${size.height * body1.medium.fontSize}px;
+  font-size: ${size.width * body1.medium.fontSize}px;
   color: white;
 `;
 
