@@ -1,12 +1,12 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import styled from 'styled-components/native';
-import CommonBottomSheet from '../base/modal/CommonBottomSheet';
-import { title3 } from '../../styles/fonts';
-import size from '../../utils/size';
-import FolderBox from '../base/FolderBox';
-import Button from '../base/Button';
-import { WIDTH } from '../../constants/constants';
+import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
+import { title3 } from '../../../styles/fonts';
+import size from '../../../utils/size';
+import FolderBox from '../../base/FolderBox';
+import Button from '../../base/Button';
+import { WIDTH } from '../../../constants/constants';
 
 const AddToFolderBottomSheet = ({ onPressClose }) => {
   return (
@@ -20,7 +20,7 @@ const AddToFolderBottomSheet = ({ onPressClose }) => {
       </TitleWrapper>
       <ImageBox>
         <FolderBox>
-          <FolderImage source={require('../../assets/images/folder-yellow.png')} />
+          <FolderImage source={require('../../../assets/images/folder-yellow.png')} />
         </FolderBox>
       </ImageBox>
       <ButtonWrapper>

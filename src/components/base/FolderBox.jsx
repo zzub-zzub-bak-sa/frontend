@@ -4,15 +4,15 @@ import styled from 'styled-components/native';
 import size from '../../utils/size';
 import { colors } from '../../styles/colors';
 
-function FolderBox({ children }) {
-  return <Folder>{children}</Folder>;
+function FolderBox({ iconSize, children }) {
+  return <Folder iconSize={iconSize}>{children}</Folder>;
 }
 
 export default FolderBox;
 
 const Folder = styled(View)`
-  height: ${size.width * 72}px;
-  width: ${size.width * 72}px;
+  height: ${({ iconSize }) => size.height * iconSize}px;
+  width: ${({ iconSize }) => size.width * iconSize}px;
   background-color: ${colors.bg[100]};
   border-radius: 14px;
   align-items: center;
