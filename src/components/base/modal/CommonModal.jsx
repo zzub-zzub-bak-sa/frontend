@@ -1,7 +1,8 @@
 import React from 'react';
-import { Modal, TouchableOpacity, View } from 'react-native';
+import { Modal, Pressable, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import size from '../../../utils/size';
+import { HEIGHT, WIDTH } from '../../../constants/constants';
 
 const CommonModal = ({
   showModal,
@@ -10,38 +11,52 @@ const CommonModal = ({
   width = 80,
   height = 20,
   bg = 'white',
+  borderRadius = 10,
   style,
 }) => {
   return (
-    <Modal
+    <ModalContainer
       animationType="fade"
       transparent={true}
       visible={showModal}
       onRequestClose={onClose}
     >
+      <Blur onPress={onClose} />
       <ModalWrapper onPressOut={onClose} style={style}>
-        <ModalContent width={width} height={height} bg={bg}>
+        <ModalContent width={width} height={height} bg={bg} borderRadius={borderRadius}>
           <View style={{ alignItems: 'center' }}>{children}</View>
         </ModalContent>
       </ModalWrapper>
-    </Modal>
+    </ModalContainer>
   );
 };
 
 export default CommonModal;
 
+const ModalContainer = styled(Modal)`
+  width: ${WIDTH}px;
+  height: ${HEIGHT}px;
+`;
+
 const ModalWrapper = styled(TouchableOpacity)`
-  flex: 1;
-  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 0;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+`;
+
+const Blur = styled(Pressable)`
+  flex: 1;
+  background-color: '#000';
 `;
 
 const ModalContent = styled(View)`
-  width: ${props => size.width * props.width}%;
-  height: ${props => size.height * props.height}%;
+  width: ${props => size.width * props.width}px;
+  height: ${props => size.height * props.height}px;
   background-color: ${props => props.bg};
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
+  border-radius: ${({ borderRadius }) => borderRadius}px;
 `;
