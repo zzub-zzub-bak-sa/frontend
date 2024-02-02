@@ -7,11 +7,11 @@ import { colors } from '../../styles/colors';
 import Tags from './Tags';
 
 const InputField = ({
-  containerStyle,
+  containerStyle = null,
   placeholder,
   value,
   onChangeValue,
-  inputStyle,
+  inputStyle = null,
   onFocus = () => null,
   max = 10,
 }) => {
@@ -32,23 +32,22 @@ const InputField = ({
       <Container containerStyle={containerStyle}>
         <Scroll horizontal={true}>
           <Content>
-            {tags.length > 0 && (
-              <TagWrapper>
-                {tags.map((tag, idx) => (
-                  <Tags
-                    key={idx}
-                    text={tag}
-                    onPressTag={() => handleTagDelete(idx)}
-                    height={40}
-                    isEditPossible
-                  />
-                ))}
-              </TagWrapper>
-            )}
+            <TagWrapper>
+              {tags.map((tag, idx) => (
+                <Tags
+                  key={idx}
+                  text={tag}
+                  onPressTag={() => handleTagDelete(idx)}
+                  height={40}
+                  isEditPossible
+                />
+              ))}
+            </TagWrapper>
+
             {tags.length < 3 && (
               <InputWrapper hasTags={tags.length > 0}>
                 <Input
-                  placeholder={!tags.length ? placeholder : ''}
+                  placeholder={placeholder}
                   placeholderTextColor={colors.grey[200]}
                   value={value}
                   onChangeText={text => onChangeValue(text)}
@@ -101,6 +100,7 @@ const InputWrapper = styled(View)`
 `;
 
 const Input = styled(TextInput)`
+  width: 100%;
   font-family: ${body1.medium.fontFamily};
   font-size: ${body1.medium.fontSize}px;
   color: white;
@@ -108,7 +108,6 @@ const Input = styled(TextInput)`
 `;
 
 const TagWrapper = styled(View)`
-  width: 100%;
   flex-direction: row;
   gap: ${size.width * 8}px;
 `;
