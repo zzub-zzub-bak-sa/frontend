@@ -6,14 +6,14 @@ import { colors } from '../../styles/colors';
 import { caption1, subtitle1 } from '../../styles/fonts';
 import IcDots from '../../assets/icons/IcDots';
 
-const Folder = ({ title = '', numberOfLinks = 0, index }) => {
+const Folder = ({ title = '', numberOfLinks = 0, index, onPressKebab }) => {
   const handleNumberOfLinks = () => {
     return numberOfLinks >= 1000 ? '999+' : numberOfLinks;
   };
 
   return (
     <FolderWrapper index={index}>
-      <KebabMenu onPress={() => console.log('ttoto')}>
+      <KebabMenu onPress={onPressKebab}>
         <IcDots />
       </KebabMenu>
       <View>
