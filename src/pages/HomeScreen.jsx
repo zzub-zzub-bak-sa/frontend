@@ -6,12 +6,14 @@ import Layout from '../components/layout/Layout';
 import Header from '../components/layout/Header';
 import size from '../utils/size';
 import IcSearch from '../assets/icons/IcSearch';
-import { body1, caption1, subtitle3 } from '../styles/fonts';
+import { body1, body2, caption1, subtitle3 } from '../styles/fonts';
 import { colors } from '../styles/colors';
 import IcArrowDown from '../assets/icons/IcArrowDown';
 import Folder from '../components/HomeScreen/Folder';
 import { WIDTH } from '../constants/constants';
 import IcPlus from '../assets/icons/IcPlus';
+import IcClearCircle from '../assets/icons/IcClearCircle';
+import SearchResults from '../components/HomeScreen/SearchResults';
 
 const data = [
   {
@@ -54,42 +56,55 @@ const data = [
 
 function HomeScreen() {
   const [keyword, setKeyword] = useState('');
+  const [focus, setFocus] = useState(false);
 
   return (
     <Layout>
       <Header />
       <InputWrapper>
-        <InputBox>
+        <InputBox focus={focus}>
           <IcSearch />
           <Input
             placeholder="폴더,태그를 검색해 보세요!"
             placeholderTextColor={colors.grey[200]}
             value={keyword}
             onChangeText={text => setKeyword(text)}
+            onFocus={() => setFocus(true)}
+            onEndEditing={() => setFocus(false)}
           />
+          {keyword && (
+            <TouchableOpacity onPress={() => setKeyword('')}>
+              <IcClearCircle />
+            </TouchableOpacity>
+          )}
         </InputBox>
       </InputWrapper>
-      <Content>
-        <SelectBox>
-          <SelectText>가나다순</SelectText>
-          <IcArrowDown />
-        </SelectBox>
-        <FlatList
-          data={data}
-          renderItem={({ item, index }) => (
-            <Folder index={index} title={item.title} numberOfLinks={item.numberOfLinks} />
-          )}
-          keyExtractor={(_, index) => String(index)}
-          numColumns={2}
-          ListFooterComponent={<FooterComponent />}
-        />
-      </Content>
-      <FloatingBox>
-        <FloatingButton>
-          <IcPlus />
-          <FloatingButtonText>링크 추가하기</FloatingButtonText>
-        </FloatingButton>
-      </FloatingBox>
+      {!keyword && !focus && (
+        <>
+          <Content>
+            <SelectBox>
+              <SelectText>가나다순</SelectText>
+              <IcArrowDown />
+            </SelectBox>
+            <FlatList
+              data={data}
+              renderItem={({ item, index }) => (
+                <Folder index={index} title={item.title} numberOfLinks={item.numberOfLinks} />
+              )}
+              keyExtractor={(_, index) => String(index)}
+              numColumns={2}
+              ListFooterComponent={<FooterComponent />}
+            />
+          </Content>
+          <FloatingBox>
+            <FloatingButton>
+              <IcPlus />
+              <FloatingButtonText>링크 추가하기</FloatingButtonText>
+            </FloatingButton>
+          </FloatingBox>
+        </>
+      )}
+      {keyword && <SearchResults />}
     </Layout>
   );
 }
@@ -106,11 +121,12 @@ const InputBox = styled(View)`
   flex-direction: row;
   gap: ${size.width * 16}px;
   padding-bottom: ${size.height * 13}px;
-  border-bottom-color: white;
+  border-bottom-color: ${({ focus }) => (focus ? colors.orange : 'white')};
   border-bottom-width: 1px;
 `;
 
 const Input = styled(TextInput)`
+  width: ${size.width * (WIDTH - 125)}px;
   font-family: ${body1.medium.fontFamily};
   font-size: ${body1.medium.fontSize}px;
   color: white;

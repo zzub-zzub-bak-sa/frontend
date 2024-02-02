@@ -6,9 +6,9 @@ import { body1, body3 } from '../../styles/fonts';
 import Check from '../../assets/icons/Check';
 import { colors } from '../../styles/colors';
 
-const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected }) => {
+const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected, isOnlyTitle }) => {
   const handleSliceText = () => {
-    return title.length > 16 ? title.slice(0, 16) + '...' : title;
+    return title.length > 16 ? `${title.slice(0, 16)}...` : title;
   };
 
   const handleSliceLink = () => {
