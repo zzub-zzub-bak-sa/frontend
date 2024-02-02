@@ -13,8 +13,9 @@ const Button = ({
   text,
   renderIcon = () => null,
   onPress,
+  style,
 }) => {
-  const [style, setStyle] = useState({
+  const [buttonStyle, setButtonStyle] = useState({
     borderColor: '',
     bgColor: '',
     textColor: '',
@@ -24,19 +25,19 @@ const Button = ({
     switch (color) {
       case 'primary':
         if (varient === 'outlined') {
-          return setStyle({
+          return setButtonStyle({
             borderColor: colors.orange,
             bgColor: 'transparent',
             textColor: colors.orange,
           });
         } else if (varient === 'filled') {
-          return setStyle({
+          return setButtonStyle({
             borderColor: colors.orange,
             bgColor: colors.orange,
             textColor: 'white',
           });
         } else if (varient === 'none') {
-          return setStyle({
+          return setButtonStyle({
             borderColor: 'transparent',
             bgColor: 'transparent',
             textColor: colors.orange,
@@ -45,19 +46,19 @@ const Button = ({
         break;
       case 'disable':
         if (varient === 'outlined') {
-          return setStyle({
+          return setButtonStyle({
             borderColor: colors.grey[100],
             bgColor: 'transparent',
             textColor: 'white',
           });
         } else if (varient === 'filled') {
-          return setStyle({
+          return setButtonStyle({
             borderColor: color.grey[100],
             bgColor: color.grey[100],
             textColor: 'white',
           });
         } else if (varient === 'none') {
-          return setStyle({
+          return setButtonStyle({
             borderColor: 'transparent',
             bgColor: 'transparent',
             textColor: 'white',
@@ -66,11 +67,19 @@ const Button = ({
         break;
       case 'default':
         if (varient === 'outlined') {
-          return setStyle({ borderColor: 'white', bgColor: 'transparent', textColor: 'white' });
+          return setButtonStyle({
+            borderColor: 'white',
+            bgColor: 'transparent',
+            textColor: 'white',
+          });
         } else if (varient === 'filled') {
-          return setStyle({ borderColor: 'white', bgColor: 'white', textColor: colors.black });
+          return setButtonStyle({
+            borderColor: 'white',
+            bgColor: 'white',
+            textColor: colors.black,
+          });
         } else if (varient === 'none') {
-          return setStyle({
+          return setButtonStyle({
             borderColor: 'transparent',
             bgColor: 'transparent',
             textColor: 'white',
@@ -81,9 +90,15 @@ const Button = ({
   }, [varient, color]);
 
   return (
-    <ButtonWrapper width={width} height={height | 54} onPress={onPress} buttonStyle={style}>
+    <ButtonWrapper
+      width={width}
+      height={height}
+      onPress={onPress}
+      buttonStyle={buttonStyle}
+      style={style}
+    >
       {renderIcon()}
-      <ButtonText height={height} buttonStyle={style}>
+      <ButtonText height={height} buttonStyle={buttonStyle}>
         {text}
       </ButtonText>
     </ButtonWrapper>
@@ -101,8 +116,7 @@ const ButtonWrapper = styled(TouchableOpacity)`
   flex-direction: row;
   justify-content: center;
   gap: ${size.width * 4}px;
-  padding-top: ${size.height * 16}px;
-  padding-bottom: ${size.height * 16}px;
+  ${({ style }) => style};
 `;
 
 const ButtonText = styled(Text)(props => ({
