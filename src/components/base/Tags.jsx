@@ -45,6 +45,6 @@ const TagWrapper = styled(TouchableOpacity)`
 
 const TagText = styled(Text)`
   font-family: ${body1.medium.fontFamily};
-  font-size: ${size.width * body1.medium.fontSize};
+  font-size: ${size.width * body1.medium.fontSize}px;
   color: white;
 `;
