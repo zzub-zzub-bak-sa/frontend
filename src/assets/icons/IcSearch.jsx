@@ -1,7 +1,7 @@
 import React from 'react';
-import Svg, { Path } from 'react-native-svg';
+import { Path, Svg } from 'react-native-svg';
 
-const IcSearch = ({ size, color }) => {
+const IcSearch = ({ color = '#4E5867', size = 24 }) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"

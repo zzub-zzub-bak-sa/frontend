@@ -1,11 +1,11 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import styled from 'styled-components/native';
-import CommonBottomSheet from '../base/modal/CommonBottomSheet';
-import { title3 } from '../../styles/fonts';
-import size from '../../utils/size';
-import Button from '../base/Button';
-import { WIDTH } from '../../constants/constants';
+import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
+import { title3 } from '../../../styles/fonts';
+import size from '../../../utils/size';
+import Button from '../../base/Button';
+import { WIDTH } from '../../../constants/constants';
 
 const AddTagBottomSheet = ({ onPressClose }) => {
   return (
@@ -19,7 +19,7 @@ const AddTagBottomSheet = ({ onPressClose }) => {
         <Title>먹킷링크가 더 채워졌어요.</Title>
       </TitleWrapper>
       <ImageBox>
-        <FolderImage source={require('../../assets/images/folders.png')} />
+        <FolderImage source={require('../../../assets/images/folders.png')} />
       </ImageBox>
       <ButtonWrapper>
         <Button
