@@ -24,7 +24,8 @@ const AddTagBottomSheet = ({ onPressClose }) => {
       <ButtonWrapper>
         <Button
           width={WIDTH - 60}
-          height={size.height * 54}
+          height={54}
+          style={{ paddingTop: size.height * 12 }}
           varient="filled"
           color="primary"
           text="앱에서 보기"
@@ -62,8 +63,6 @@ const FolderImage = styled(Image)`
 
 const ButtonWrapper = styled(View)`
   width: ${WIDTH - size.width * 20 * 2}px;
-  flex-direction: row;
-  gap: ${size.width * 8}px;
   padding: 0 ${size.height * 20}px;
   margin-top: ${size.height * -10}px;
 `;
