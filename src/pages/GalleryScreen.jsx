@@ -109,6 +109,7 @@ const GalleryScreen = () => {
           onClose={() => {
             setOpenFolder(false);
             setCurrentEdit('');
+            setSelected([]);
             setShowToast(true);
           }}
           onPressNewFolder={() => {
@@ -130,6 +131,7 @@ const GalleryScreen = () => {
           onClose={() => {
             setCreateNewFolder(false);
             setCurrentEdit('');
+            setSelected([]);
           }}
           onBack={() => {
             setCreateNewFolder(false);
@@ -148,6 +150,7 @@ const GalleryScreen = () => {
           onClose={() => {
             setOpenChangeImage(false);
             setCurrentEdit('');
+            setSelected([]);
           }}
         />
       )}
