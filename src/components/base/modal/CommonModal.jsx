@@ -12,6 +12,7 @@ const CommonModal = ({
   height = 20,
   bg = 'white',
   borderRadius = 10,
+  isOnCenter = false,
   style,
 }) => {
   return (
@@ -23,8 +24,14 @@ const CommonModal = ({
     >
       <Blur onPress={onClose} />
       <ModalWrapper onPressOut={onClose} style={style}>
-        <ModalContent width={width} height={height} bg={bg} borderRadius={borderRadius}>
-          <View style={{ alignItems: 'center' }}>{children}</View>
+        <ModalContent
+          width={width}
+          height={height}
+          bg={bg}
+          borderRadius={borderRadius}
+          isOnCenter={isOnCenter}
+        >
+          <CenterView>{children}</CenterView>
         </ModalContent>
       </ModalWrapper>
     </ModalContainer>
@@ -49,14 +56,19 @@ const ModalWrapper = styled(TouchableOpacity)`
 
 const Blur = styled(Pressable)`
   flex: 1;
-  background-color: '#000';
+  background-color: black;
+  opacity: 0.8;
 `;
 
 const ModalContent = styled(View)`
   width: ${props => size.width * props.width}px;
   height: ${props => size.height * props.height}px;
   background-color: ${props => props.bg};
-  justify-content: center;
-  align-items: center;
+  justify-content: ${({ isOnCenter }) => (isOnCenter ? 'center' : 'none')};
+  align-items: ${({ isOnCenter }) => (isOnCenter ? 'center' : 'none')};
   border-radius: ${({ borderRadius }) => borderRadius}px;
+`;
+
+const CenterView = styled(View)`
+  align-items: ${({ isOnCenter }) => (isOnCenter ? 'center' : 'none')};
 `;
