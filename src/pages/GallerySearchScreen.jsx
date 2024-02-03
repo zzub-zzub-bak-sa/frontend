@@ -19,6 +19,7 @@ const GallerySearchScreen = () => {
   const [focus, setFocus] = useState(false);
   const tags = ['태그', '태그', '태그', '태그', '태그', '태그길이가최대', '7자', '공백포함'];
   const [written, setWritten] = useState([]);
+  const data = null;
 
   return (
     <>
@@ -76,21 +77,23 @@ const GallerySearchScreen = () => {
           )}
         </Content>
 
-        {keyword && !focus && (
-          <GridWrapper>
+        {keyword && !focus && data && (
+          <ScrollView>
             <Grid />
-          </GridWrapper>
+          </ScrollView>
         )}
-        <ScrollView>
-          <NoResultWrapper>
-            <NoResult />
-          </NoResultWrapper>
-          <Divider />
-          <View style={{ marginVertical: size.height * 24, paddingLeft: size.width * 20 }}>
-            <Title>태그가 등록되지 않은 링크</Title>
-          </View>
-          <Grid />
-        </ScrollView>
+        {!focus && keyword && !data && (
+          <ScrollView>
+            <NoResultWrapper>
+              <NoResult />
+            </NoResultWrapper>
+            <Divider />
+            <View style={{ marginVertical: size.height * 24, paddingLeft: size.width * 20 }}>
+              <Title>태그가 등록되지 않은 링크</Title>
+            </View>
+            <Grid />
+          </ScrollView>
+        )}
       </Layout>
 
       {keyword && focus && (
@@ -149,7 +152,6 @@ const TagBox = styled(View)`
 `;
 
 const SearchDropDown = styled(View)`
-  width: 100%;
   height: ${size.height * 155}px;
   border-radius: 0 0 12px 12px;
   background-color: ${colors.grey[100]};
