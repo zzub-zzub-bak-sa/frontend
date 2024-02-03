@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import styled from 'styled-components/native';
-import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
-import size from '../../../utils/size';
-import Button from '../../base/Button';
-import InputField from '../../base/InputField';
+import CommonBottomSheet from '../base/modal/CommonBottomSheet';
+import size from '../../utils/size';
+import Button from '../base/Button';
+import InputField from '../base/InputField';
 
 const AddLinkBottomSheet = ({ onPressClose }) => {
   const [inputValue, setInputValue] = useState('');

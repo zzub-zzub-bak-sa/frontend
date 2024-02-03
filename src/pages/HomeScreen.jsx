@@ -16,6 +16,7 @@ import IcClearCircle from '../assets/icons/IcClearCircle';
 import SearchResults from '../components/HomeScreen/SearchResults';
 import CommonShortBottomSheet from '../components/base/modal/CommonShortBottomSheet';
 import EditBottomSheet from '../components/HomeScreen/EditBottomSheet';
+import AddLinkBottomSheet from '../components/HomeScreen/AddLinkBottomSheet';
 
 const data = [
   {
@@ -65,7 +66,7 @@ function HomeScreen() {
     condition: false,
     id: 0,
   });
-
+  const [openAddLink, setOpenAddLink] = useState(false);
   return (
     <Layout>
       <Header />
@@ -110,11 +111,12 @@ function HomeScreen() {
             />
           </Content>
           <FloatingBox>
-            <FloatingButton>
+            <FloatingButton onPress={() => setOpenAddLink(true)}>
               <IcPlus />
               <FloatingButtonText>링크 추가하기</FloatingButtonText>
             </FloatingButton>
           </FloatingBox>
+          {openAddLink && <AddLinkBottomSheet onPressClose={() => setOpenAddLink(false)} />}
         </>
       )}
       {openSort && (
