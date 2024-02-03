@@ -64,7 +64,7 @@ const InputWrapper = styled(View)`
 `;
 
 const Input = styled(InputWithTag)`
-  width: '100%';
+  width: 100%;
   margin: 0 ${size.height * 16}px;
   align-items: center;
   justify-content: center;

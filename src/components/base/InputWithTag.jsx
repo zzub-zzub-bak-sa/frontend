@@ -104,7 +104,7 @@ const TagWrapper = styled(View)`
 `;
 
 const SearchDropDown = styled(View)`
-  width: '100%';
+  width: 100%;
   height: ${size.height * 155}px;
   border-radius: 0 0 12px 12px;
   background-color: ${colors.grey[100]};

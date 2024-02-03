@@ -39,7 +39,7 @@ const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected }) => {
 export default Card;
 
 const CardWrapper = styled(TouchableOpacity)`
-  width: '100%';
+  width: 100%;
   height: ${size.height * 96}px;
   flex-direction: row;
   align-items: center;

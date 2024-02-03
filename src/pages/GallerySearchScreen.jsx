@@ -19,7 +19,6 @@ const GallerySearchScreen = () => {
   const [focus, setFocus] = useState(false);
   const tags = ['태그', '태그', '태그', '태그', '태그', '태그길이가최대', '7자', '공백포함'];
   const [written, setWritten] = useState([]);
-  const data = [];
 
   return (
     <>
@@ -150,7 +149,7 @@ const TagBox = styled(View)`
 `;
 
 const SearchDropDown = styled(View)`
-  width: '100%';
+  width: 100%;
   height: ${size.height * 155}px;
   border-radius: 0 0 12px 12px;
   background-color: ${colors.grey[100]};
