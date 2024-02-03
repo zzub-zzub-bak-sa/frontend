@@ -6,5 +6,7 @@ module.exports = {
     'operator-linebreak': ['error', 'before'],
     'react/function-component-definition': 'off',
     'global-require': 'off',
+    'import/no-unresolved': 'off',
+    'no-return-assign': 'off',
   },
 };
