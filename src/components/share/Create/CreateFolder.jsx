@@ -25,7 +25,7 @@ const CreateFolder = ({ placeholder = '태그를 입력하세요', onClose, onBa
 
   return (
     <CommonBottomSheet
-      snapPoints={[showKeyboard ? '94.5%' : '54%', '90%']}
+      snapPoints={[!showKeyboard ? size.height * 490 : size.height * 804]}
       title="새로운 폴더"
       leftButtonType="back"
       onLeftButtonPress={onBack}

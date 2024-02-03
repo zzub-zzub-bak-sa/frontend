@@ -29,7 +29,11 @@ const CommonBottomSheet = forwardRef(
         case 'none':
           return <ButtonImage />;
         case 'done':
-          return <ButtonText onPress={onPress}>완료</ButtonText>;
+          return (
+            <TouchableOpacity onPress={onPress}>
+              <ButtonText>완료</ButtonText>
+            </TouchableOpacity>
+          );
         case 'back':
           return (
             <ButtonImage onPress={onPress}>
@@ -38,7 +42,7 @@ const CommonBottomSheet = forwardRef(
           );
         case 'close':
           return (
-            <ButtonImage onPress={() => ref.current?.close()}>
+            <ButtonImage onPress={() => ref?.current?.close()}>
               <IcClear size={24} color="white" />
             </ButtonImage>
           );
