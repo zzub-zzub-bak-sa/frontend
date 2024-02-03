@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CommonShortBottomSheet from '../base/modal/CommonShortBottomSheet';
 import size from '../../utils/size';
 
-const TagEditBottomSheet = ({ onClose, index }) => {
+const TagEditSelectBottomSheet = ({ onClose, index }) => {
   const [editCondition, setEditCondition] = useState('');
 
   useEffect(() => {
@@ -20,9 +20,9 @@ const TagEditBottomSheet = ({ onClose, index }) => {
       onSetValue={setEditCondition}
       onClose={onClose}
       data={['태그 편집', '이동', '삭제']}
-      snapPoints={[size.height * 234, size.height * 234]}
+      snapPoints={[size.height * 234, size.height * 300]}
     />
   );
 };
 
-export default TagEditBottomSheet;
+export default TagEditSelectBottomSheet;
