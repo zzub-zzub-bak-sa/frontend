@@ -18,6 +18,7 @@ import SearchFolder from '../components/share/Search/SearchFolder';
 import { showSuccessToast } from '../utils/showSuccessToast';
 import CreateFolder from '../components/share/Create/CreateFolder';
 import ChangeImage from '../components/share/Create/ChangeImage';
+import Grid from '../components/GalleryScreen/Grid';
 
 const GalleryScreen = () => {
   const navigation = useNavigation();
@@ -71,29 +72,7 @@ const GalleryScreen = () => {
           <IcArrowDown />
         </SortBox>
       </Row>
-      <Grid>
-        <FlatList
-          data={Array(20)
-            .fill(0)
-            .map((_, i) => i + 1)}
-          renderItem={({ item }) =>
-            selected.length > 0 && selected.includes(item) ? (
-              <SelectedBox onPress={() => setSelected(selected.filter(el => el !== item))}>
-                <CheckBox>
-                  <Check size={24} color="white" />
-                </CheckBox>
-              </SelectedBox>
-            ) : (
-              <ArticleBox
-                item={item}
-                onPress={() => (currentEdit ? setSelected([...selected, item]) : null)}
-              />
-            )
-          }
-          ListFooterComponent={<FooterComponent />}
-          numColumns={3}
-        />
-      </Grid>
+      <Grid selected={selected} onSelect={setSelected} currentEdit={currentEdit} />
       {openCancel && (
         <CancelOrNotModal
           show={openCancel}
@@ -184,6 +163,7 @@ const Header = styled(View)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-top: ${size.height * 12}px;
   margin-bottom: ${size.height * 22}px;
 `;
 
@@ -223,30 +203,6 @@ const SortBoxText = styled(Text)`
   color: white;
 `;
 
-const Grid = styled(View)`
-  padding: 0 ${size.width * 20}px;
-`;
-
-const ArticleBox = styled(TouchableOpacity)`
-  width: ${size.width * 112}px;
-  height: ${size.height * 112}px;
-  border-radius: 16px;
-  background-color: ${colors.bg[200]};
-  margin-bottom: ${size.height * 7}px;
-  margin-right: ${({ item }) => (item % 3 !== 0 ? size.width * 7 : 0)}px;
-`;
-
-const SelectedBox = styled(ArticleBox)`
-  background-color: ${colors.bg.selected};
-  opacity: 0.9;
-`;
-
-const CheckBox = styled(View)`
-  position: absolute;
-  bottom: ${size.height * 8}px;
-  right: ${size.width * 8}px;
-`;
-
 const Select = styled(View)`
   width: ${WIDTH}px;
   height: ${size.height * 96}px;
@@ -263,8 +219,4 @@ const SelectText = styled(Text)`
   font-family: ${body1.medium.fontFamily};
   font-size: ${body1.medium.fontSize}px;
   color: ${colors.grey[400]};
-`;
-
-const FooterComponent = styled(View)`
-  height: 120px;
 `;
