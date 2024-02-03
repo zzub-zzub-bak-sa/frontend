@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Button } from 'react-native';
 import styled from 'styled-components';
 import size from '../utils/size';
-import { colors } from '../styles/colors';
 import IcBack from '../assets/icons/IcBack';
 import Layout from '../components/layout/Layout';
 import { body2, subtitle1 } from '../styles/fonts';
@@ -42,13 +41,7 @@ const ContentSceen = () => {
           <GoSnsText>SNS에서 보기 ></GoSnsText>
         </GoSns>
       </GoSnsContainer>
-      {/* TagEditBottomSheet 조건부 렌더링 */}
-      {openTagEdit && (
-        <TagEditSelectBottomSheet
-          onClose={() => setOpenTagEdit(false)}
-          // 필요하다면 여기에 추가 props를 전달할 수 있습니다.
-        />
-      )}
+      {openTagEdit && <TagEditSelectBottomSheet onClose={() => setOpenTagEdit(false)} />}
     </Layout>
   );
 };
