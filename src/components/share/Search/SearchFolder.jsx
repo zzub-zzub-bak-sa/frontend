@@ -76,6 +76,10 @@ const SearchContainer = styled(View)`
   margin: 0 ${size.width * 20}px;
 `;
 
+const FolderListContainer = styled(View)`
+  padding: ${size.height * 16}px 0;
+  background-color: ${colors.bg[400]};
+
 const BottomButton = styled(Button)`
   position: absolute;
   bottom: 35px;

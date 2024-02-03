@@ -1,6 +1,8 @@
 import React from 'react';
 import { Modal, Pressable, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
+import Button from '../Button';
+import { colors } from '../../../styles/colors';
 import size from '../../../utils/size';
 import { HEIGHT, WIDTH } from '../../../constants/constants';
 

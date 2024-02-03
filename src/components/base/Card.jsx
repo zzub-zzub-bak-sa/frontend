@@ -5,7 +5,7 @@ import size from '../../utils/size';
 import { body1, body3 } from '../../styles/fonts';
 import Check from '../../assets/icons/Check';
 import { colors } from '../../styles/colors';
-import FolderBox from './FolderBox';
+import IcFolderFolder from '../../assets/icons/folders/IcFolderFolder';
 
 const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected }) => {
   const handleSliceText = () => {
@@ -18,11 +18,9 @@ const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected }) => {
 
   return (
     <CardWrapper onPress={onPress}>
-      <View style={{ marginRight: size.width * 16 }}>
-        <FolderBox iconSize={64}>
-          <ImageBox source={require('../../assets/images/folder-yellow.png')} />
-        </FolderBox>
-      </View>
+      <ImageBox>
+        <IcFolderFolder size={64} color={colors.folders.yellow} />
+      </ImageBox>
       <TextWrapper>
         <Title>{handleSliceText()}</Title>
         <Subtitle>{handleSliceLink()}개의 링크</Subtitle>
@@ -47,9 +45,10 @@ const CardWrapper = styled(TouchableOpacity)`
   padding: 0 ${size.width * 20}px;
 `;
 
-const ImageBox = styled(Image)`
-  width: ${size.width * 29.222}px;
-  height: ${size.height * 26.814}px;
+const ImageBox = styled(View)`
+  width: ${size.width * 64}px;
+  height: ${size.height * 64}px;
+  margin-right: ${size.width * 16}px;
 `;
 
 const TextWrapper = styled(View)`

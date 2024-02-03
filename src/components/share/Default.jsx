@@ -18,59 +18,83 @@ const Default = () => {
 
   const ref = useRef(null);
 
+  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [openAddFolder, setOpenAddFolder] = useState(false);
+  const [openSearchFolder, setOpenSearchFolder] = useState(false);
+
+  const folders = [
+    { title: ' 폴더명 최대 노출 길이 여...', numberOfLinks: 10 },
+    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 20 },
+    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
+    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
+  ];
+
+  const handleNext = () => {
+    setOpenDefault(false);
+    setOpenAddFolder(true);
+  };
+
   return (
-    <CommonBottomSheet
-      ref={bottomSheetRef}
-      snapPoints={['58%']}
-      title="폴더 선택"
-      leftButtonType="none"
-      rightButtonType="close"
-      onRightButtonPress={() => null}
-    >
-      <ButtonsContainer>
-        <Button
-          width={93}
-          height={36}
-          varient="filled"
-          color="default"
-          text="폴더추가"
-          renderIcon={() => <Folder size={24} />}
-          onPress={() => console.log('Add folder pressed')}
+    <>
+      <CommonBottomSheet
+        ref={bottomSheetRef}
+        snapPoints={[size.height * 640]}
+        title="폴더 선택"
+        leftButtonType="none"
+        rightButtonType="close"
+        onRightButtonPress={() => null}
+      >
+        <ButtonsContainer>
+          <Button
+            width={93}
+            height={36}
+            varient="filled"
+            color="default"
+            text="폴더추가"
+            renderIcon={() => <Folder size={24} />}
+            onPress={() => {
+              setOpenAddFolder(true);
+              setSelectedFolder(false);
+            }}
+          />
+          <TouchableOpacity onPress={() => setOpenSearchFolder(true)}>
+            <Search size={24} />
+          </TouchableOpacity>
+        </ButtonsContainer>
+        <FolderListContainer>
+          <ScrollViewContainer>
+            {folders.map((folder, index) => (
+              <FolderCard
+                key={`folder-${index}`}
+                title={folder.title}
+                numberOfLinks={folder.numberOfLinks}
+                onPress={() => setSelectedFolder(index)}
+                isSelected={selectedFolder === index}
+              />
+            ))}
+          </ScrollViewContainer>
+        </FolderListContainer>
+        <ButtonContainer>
+          <Button width={350} height={54} text="선택하기" varient="filled" color="primary" />
+        </ButtonContainer>
+      </CommonBottomSheet>
+
+      {openAddFolder && (
+        <CreateFolder
+          onClose={() => {
+            setOpenAddFolder(false);
+          }}
         />
-        <TouchableOpacity onPress={() => console.log('Search Icon')}>
-          <Search size={24} />
-        </TouchableOpacity>
-      </ButtonsContainer>
-      {/* 폴더 목록 컨테이너 */}
-      <FolderListContainer>
-        <ScrollViewContainer>
-          <FolderCard
-            key="default-folder"
-            title="기본폴더"
-            numberOfLinks={0}
-            onPress={() => console.log('Selected folder: 기본폴더')}
-            isSelected
-          />
-          <FolderCard
-            key="default-folder"
-            title="기본폴더"
-            numberOfLinks={0}
-            onPress={() => console.log('Selected folder: 기본폴더')}
-            isSelected
-          />
-          <FolderCard
-            key="default-folder"
-            title="기본폴더"
-            numberOfLinks={0}
-            onPress={() => console.log('Selected folder: 기본폴더')}
-            isSelected
-          />
-        </ScrollViewContainer>
-      </FolderListContainer>
-      <ButtonContainer>
-        <Button width={350} height={54} text="선택하기" varient="filled" color="primary" />
-      </ButtonContainer>
-    </CommonBottomSheet>
+      )}
+
+      {openSearchFolder && (
+        <SearchFolder
+          onClose={() => {
+            setOpenSearchFolder(false);
+          }}
+        />
+      )}
+    </>
   );
 };
 
@@ -100,4 +124,5 @@ const ScrollViewContainer = styled(ScrollView)`
 const ButtonContainer = styled(View)`
   padding-left: ${size.width * 16}px;
   padding-bottom: ${size.height * 16}px;
+  margin-bottom: ${size.height * 33};
 `;
