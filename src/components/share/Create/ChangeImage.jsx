@@ -29,7 +29,7 @@ const iconComponents = [
   IcWineFolder,
 ];
 
-const iconColors = ['#F9D869', '#02BB87', 'white', '#FE5027'];
+const iconColors = [colors.folders.yellow, colors.folders.green, 'white', colors.folders.orange];
 
 const icons = iconComponents.flatMap((IconComponent, idx) =>
   iconColors.map(color => ({
