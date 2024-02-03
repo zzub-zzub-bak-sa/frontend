@@ -10,6 +10,7 @@ import Folder from '../../../assets/icons/Folder';
 import IcSearch from '../../../assets/icons/IcSearch';
 import { WIDTH } from '../../../constants/constants';
 import NoSearchResult from './NoSearchResult';
+import { colors } from '../../../styles/colors';
 
 const SearchFolder = ({ onPressCard, selected, onClose, onPressNewFolder, data }) => {
   const [doSearch, setDoSearch] = useState(false);
@@ -76,9 +77,10 @@ const SearchContainer = styled(View)`
   margin: 0 ${size.width * 20}px;
 `;
 
-const FolderListContainer = styled(View)`
-  padding: ${size.height * 16}px 0;
-  background-color: ${colors.bg[400]};
+// const FolderListContainer = styled(View)`
+//   padding: ${size.height * 16}px 0;
+//   background-color: ${colors.bg[400]};
+// `;
 
 const BottomButton = styled(Button)`
   position: absolute;

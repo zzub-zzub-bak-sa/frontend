@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, Button } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import styled from 'styled-components';
 import size from '../utils/size';
 import IcBack from '../assets/icons/IcBack';
@@ -109,6 +109,6 @@ const GoSns = styled(TouchableOpacity)``;
 const GoSnsText = styled(Text)`
   color: white;
   font-family: ${subtitle1.semibold.fontFamily};
-  font-size: ${subtitle1.semibold.fontSize};
+  font-size: ${subtitle1.semibold.fontSize}px;
   align-items: center;
 `;
