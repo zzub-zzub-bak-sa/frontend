@@ -16,19 +16,17 @@ const InputField = ({
   style,
 }) => {
   return (
-    <InputWrapper>
-      <Input
-        placeholder={placeholder}
-        placeholderTextColor={placeholderTextColor}
-        value={value}
-        onChangeText={text => onChangeValue(text)}
-        inputStyle={style}
-        onFocus={onFocus}
-        onEndEditing={onEndEditing}
-        maxLength={maxLength}
-        returnKeyType="done"
-      />
-    </InputWrapper>
+    <Input
+      placeholder={placeholder}
+      placeholderTextColor={placeholderTextColor}
+      value={value}
+      onChangeText={text => onChangeValue(text)}
+      inputStyle={style}
+      onFocus={onFocus}
+      onEndEditing={onEndEditing}
+      maxLength={maxLength}
+      returnKeyType="done"
+    />
   );
 };
 
