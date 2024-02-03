@@ -6,7 +6,7 @@ import size from '../../utils/size';
 import Button from '../base/Button';
 import InputField from '../base/InputField';
 
-const AddLinkBottomSheet = ({ onPressClose }) => {
+const AddLinkBottomSheet = ({ onPressClose, onNext }) => {
   const [inputValue, setInputValue] = useState('');
 
   const customContainerStyle = {
@@ -24,7 +24,14 @@ const AddLinkBottomSheet = ({ onPressClose }) => {
         containerStyle={customContainerStyle}
       />
       <ButtonContainer>
-        <Button width={350} height={54} varient="filled" color="primary" text="다음" />
+        <Button
+          width={350}
+          height={54}
+          varient="filled"
+          color="primary"
+          text="다음"
+          onPress={onNext}
+        />
       </ButtonContainer>
     </CommonBottomSheet>
   );

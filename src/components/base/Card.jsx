@@ -5,6 +5,7 @@ import size from '../../utils/size';
 import { body1, body3 } from '../../styles/fonts';
 import Check from '../../assets/icons/Check';
 import { colors } from '../../styles/colors';
+import IcFolderFolder from '../../assets/icons/folders/IcFolderFolder';
 
 const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected, isOnlyTitle }) => {
   const handleSliceText = () => {
@@ -17,7 +18,9 @@ const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected, isOnlyTitle 
 
   return (
     <CardWrapper onPress={onPress}>
-      <ImageBox source={require('../../assets/images/logo.png')} />
+      <ImageBox>
+        <IcFolderFolder size={64} color={colors.folders.yellow} />
+      </ImageBox>
       <TextWrapper>
         <Title>{handleSliceText()}</Title>
         <Subtitle>{handleSliceLink()}개의 링크</Subtitle>
@@ -42,7 +45,7 @@ const CardWrapper = styled(TouchableOpacity)`
   padding: 0 ${size.width * 20}px;
 `;
 
-const ImageBox = styled(Image)`
+const ImageBox = styled(View)`
   width: ${size.width * 64}px;
   height: ${size.height * 64}px;
   margin-right: ${size.width * 16}px;

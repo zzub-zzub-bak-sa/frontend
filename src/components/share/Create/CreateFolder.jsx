@@ -7,7 +7,7 @@ import Button from '../../base/Button';
 import { colors } from '../../../styles/colors';
 import size from '../../../utils/size';
 
-const SearchFolder = () => {
+const CreateFolder = ({ onClose }) => {
   const [inputValue, setInputValue] = useState('');
 
   return (
@@ -16,6 +16,7 @@ const SearchFolder = () => {
       title="새로운 폴더"
       leftButtonType="back"
       rightButtonType="done"
+      onRightButtonPress={onClose}
     >
       <CreateContainer>
         <ImageBox>
@@ -36,7 +37,7 @@ const SearchFolder = () => {
   );
 };
 
-export default SearchFolder;
+export default CreateFolder;
 
 const CreateContainer = styled(View)`
   flex: 1;

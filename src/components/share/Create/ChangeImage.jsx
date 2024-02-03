@@ -39,7 +39,7 @@ const icons = iconComponents.flatMap((IconComponent, idx) =>
   })),
 );
 
-const SearchFolder = () => {
+const ChangeImage = () => {
   const [selectedIconId, setSelectedIconId] = useState(null);
 
   const renderItem = ({ item }) => (
@@ -69,7 +69,7 @@ const SearchFolder = () => {
   );
 };
 
-export default SearchFolder;
+export default ChangeImage;
 
 const IconContainer = styled(TouchableOpacity)`
   padding: ${size.width * 10}px;

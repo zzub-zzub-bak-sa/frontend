@@ -8,10 +8,11 @@ import Button from '../../base/Button';
 import { colors } from '../../../styles/colors';
 import Folder from '../../../assets/icons/Folder';
 import styled from 'styled-components';
+import size from '../../../utils/size';
 
-const SearchFolder = () => {
+const SearchFolder = ({ onClose }) => {
   return (
-    <CommonBottomSheet title="폴더 선택" rightButtonType="close">
+    <CommonBottomSheet title="폴더 선택" rightButtonType="close" onRightButtonPress={onClose}>
       <SearchContainer>
         <Button
           width={93}
@@ -20,7 +21,6 @@ const SearchFolder = () => {
           color="default"
           text="폴더추가"
           renderIcon={() => <Folder size={24} />}
-          onPress={() => console.log('Add folder pressed')}
         />
         <SearchInput width={241} />
       </SearchContainer>

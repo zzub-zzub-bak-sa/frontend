@@ -17,6 +17,7 @@ import SearchResults from '../components/HomeScreen/SearchResults';
 import CommonShortBottomSheet from '../components/base/modal/CommonShortBottomSheet';
 import EditBottomSheet from '../components/HomeScreen/EditBottomSheet';
 import AddLinkBottomSheet from '../components/HomeScreen/AddLinkBottomSheet';
+import Default from '../components/share/Default';
 
 const data = [
   {
@@ -67,6 +68,13 @@ function HomeScreen() {
     id: 0,
   });
   const [openAddLink, setOpenAddLink] = useState(false);
+  const [openDefault, setOpenDefault] = useState(false);
+
+  const handleNext = () => {
+    setOpenAddLink(false); // AddLinkBottomSheet 닫기
+    setOpenDefault(true); // Default 바텀시트 열기
+  };
+
   return (
     <Layout>
       <Header />
@@ -116,7 +124,6 @@ function HomeScreen() {
               <FloatingButtonText>링크 추가하기</FloatingButtonText>
             </FloatingButton>
           </FloatingBox>
-          {openAddLink && <AddLinkBottomSheet onPressClose={() => setOpenAddLink(false)} />}
         </>
       )}
       {openSort && (
@@ -133,6 +140,11 @@ function HomeScreen() {
         />
       )}
       {keyword && <SearchResults />}
+      {openAddLink && (
+        <AddLinkBottomSheet onPressClose={() => setOpenAddLink(false)} onNext={handleNext} />
+      )}
+
+      {openDefault && <Default onPressClose={() => setOpenDefault(false)} />}
     </Layout>
   );
 }
