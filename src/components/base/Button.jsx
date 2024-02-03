@@ -85,6 +85,21 @@ const Button = ({
           });
         }
         break;
+      case 'mdright':
+        if (varient === 'no') {
+          return setButtonStyle({
+            borderColor: colors.grey[200],
+            bgColor: colors.grey[200],
+            textColor: colors.grey[500],
+          });
+        } else if (varient === 'yes') {
+          return setButtonStyle({
+            borderColor: 'transparent',
+            bgColor: colors.orange,
+            textColor: 'white',
+          });
+        }
+        break;
     }
   }, [varient, color]);
 
