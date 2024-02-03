@@ -6,15 +6,19 @@ import CommonBottomSheet from '../base/modal/CommonBottomSheet';
 import InputField from '../../components/base/InputField';
 import { body1, subtitle3 } from '../../styles/fonts';
 import Tags from '../base/Tags';
+import CommonModal from '../base/modal/CommonModal';
 
 const TagEditBottomSheet = ({ onPressBack, onPressClose }) => {
-  const tags = ['태그예시1', '태그예시2', '태그예시2'];
+  const tags = ['태그예시1', '태그예시2'];
   const [value, setValue] = useState('');
   const [keyboard, setShowKeyboard] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [bottomSheetTitle, setBottomSheetTitle] = useState('태그 편집');
 
   const handleInputFocus = () => {
     setShowKeyboard(true);
+    setBottomSheetTitle('태그 추가');
     function onKeyboardDidShow(e) {
       setShowKeyboard(true);
     }
@@ -34,46 +38,75 @@ const TagEditBottomSheet = ({ onPressBack, onPressClose }) => {
   };
 
   const toggleEditMode = () => {
-    setEditMode(!editMode);
+    if (editMode) {
+      setShowConfirmModal(true);
+    } else {
+      setEditMode(true);
+    }
   };
 
   return (
-    <CommonBottomSheet
-      title="태그 편집"
-      leftButtonType="back"
-      onLeftButtonPress={onPressBack}
-      rightButtonType="done"
-      onRightButtonPress={onPressClose}
-      snapPoints={calculateSnapPoints()}
-    >
-      {tags.length < 3 && (
-        <InputWrapper>
-          <Input
-            placeholder="태그를 추가해 주세요."
-            value={value}
-            onChangeValue={text => setValue(text)}
-            isEditPossible={false}
-            onFocus={handleInputFocus}
-            max={7}
-          />
-        </InputWrapper>
-      )}
-      {!value && (
-        <TagsWrapper>
-          <TagsHeader>
-            <Title>등록된 태그</Title>
-            <TouchableOpacity onPress={toggleEditMode}>
-              <Delete>{!editMode ? '삭제' : '취소'}</Delete>
-            </TouchableOpacity>
-          </TagsHeader>
-          <TagBox>
-            {tags.map((tag, idx) => (
-              <Tags key={idx} text={tag} height={42} color="default" isEditPossible={editMode} />
-            ))}
-          </TagBox>
-        </TagsWrapper>
-      )}
-    </CommonBottomSheet>
+    <>
+      <CommonBottomSheet
+        title={bottomSheetTitle}
+        leftButtonType="back"
+        onLeftButtonPress={onPressBack}
+        rightButtonType="done"
+        onRightButtonPress={onPressClose}
+        snapPoints={calculateSnapPoints()}
+      >
+        {tags.length < 3 && (
+          <InputWrapper>
+            <Input
+              placeholder="태그를 추가해 주세요."
+              value={value}
+              onChangeValue={text => setValue(text)}
+              isEditPossible={false}
+              onFocus={handleInputFocus}
+              max={7}
+            />
+          </InputWrapper>
+        )}
+        {!value && (
+          <TagsWrapper>
+            <TagsHeader>
+              <Title>등록된 태그</Title>
+              <TouchableOpacity onPress={toggleEditMode}>
+                <Delete>{!editMode ? '삭제' : '취소'}</Delete>
+              </TouchableOpacity>
+            </TagsHeader>
+            <TagBox>
+              {tags.map((tag, idx) => (
+                <Tags key={idx} text={tag} height={42} color="default" isEditPossible={editMode} />
+              ))}
+            </TagBox>
+          </TagsWrapper>
+        )}
+      </CommonBottomSheet>
+      <CommonModal
+        isVisible={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        title="정말 취소하시겠습니까?"
+        message="변경사항이 사라져요."
+        buttons={[
+          {
+            text: '취소하기',
+            onPress: () => {
+              setEditMode(false);
+              setShowConfirmModal(false);
+            },
+            varient: 'yes',
+            color: 'mdright',
+          },
+          {
+            text: '삭제하기',
+            onPress: () => setShowConfirmModal(false),
+            varient: 'no',
+            color: 'mdright',
+          },
+        ]}
+      />
+    </>
   );
 };
 
