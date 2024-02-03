@@ -11,7 +11,7 @@ function FolderBox({ iconSize, children }) {
 export default FolderBox;
 
 const Folder = styled(View)`
-  height: ${({ iconSize }) => size.height * iconSize}px;
+  height: ${({ iconSize }) => size.width * iconSize}px;
   width: ${({ iconSize }) => size.width * iconSize}px;
   background-color: ${colors.bg[100]};
   border-radius: 14px;
