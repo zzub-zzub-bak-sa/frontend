@@ -18,6 +18,7 @@ export const colors = {
     200: '#4E5767',
     300: '#7B8490',
     400: '#171719',
+    selected: '#252529',
   },
   folders: {
     yellow: '#F9D869',

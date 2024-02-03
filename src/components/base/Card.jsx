@@ -7,7 +7,7 @@ import Check from '../../assets/icons/Check';
 import { colors } from '../../styles/colors';
 import IcFolderFolder from '../../assets/icons/folders/IcFolderFolder';
 
-const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected, isOnlyTitle }) => {
+const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected }) => {
   const handleSliceText = () => {
     return title.length > 16 ? `${title.slice(0, 16)}...` : title;
   };
@@ -37,8 +37,8 @@ const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected, isOnlyTitle 
 export default Card;
 
 const CardWrapper = styled(TouchableOpacity)`
-  width: '100%';
-  height: ${size.height * 96};
+  width: 100%;
+  height: ${size.height * 96}px;
   flex-direction: row;
   align-items: center;
   background-color: ${colors.bg[400]};
@@ -57,13 +57,13 @@ const TextWrapper = styled(View)`
 
 const Title = styled(Text)`
   font-family: ${body1.medium.fontFamily};
-  font-size: ${body1.medium.fontSize};
+  font-size: ${body1.medium.fontSize}px;
   color: white;
 `;
 
 const Subtitle = styled(Text)`
   font-family: ${body3.medium.fontFamily};
-  font-size: ${body3.medium.fontSize};
+  font-size: ${body3.medium.fontSize}px;
   color: white;
 `;
 

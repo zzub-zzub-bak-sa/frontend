@@ -1,32 +1,49 @@
 import React, { useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Keyboard, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
-import InputField from '../../base/InputField';
 import Button from '../../base/Button';
 import { colors } from '../../../styles/colors';
 import size from '../../../utils/size';
+import InputField from '../../base/InputField';
 
-const CreateFolder = ({ onClose }) => {
+const CreateFolder = ({ placeholder = '태그를 입력하세요', onClose, onBack, onChangeImage }) => {
   const [inputValue, setInputValue] = useState('');
+  const [showKeyboard, setShowKeyboard] = useState(false);
+
+  const handleInputFocus = () => {
+    setShowKeyboard(true);
+    function onKeyboardDidShow(e) {
+      setShowKeyboard(true);
+    }
+
+    const showSubscription = Keyboard.addListener('keyboardDidShow', onKeyboardDidShow);
+    return () => {
+      showSubscription.remove();
+    };
+  };
 
   return (
     <CommonBottomSheet
-      snapPoints={['70%', '90%']}
+      snapPoints={[!showKeyboard ? size.height * 490 : size.height * 804]}
       title="새로운 폴더"
       leftButtonType="back"
+      onLeftButtonPress={onBack}
       rightButtonType="done"
       onRightButtonPress={onClose}
     >
       <CreateContainer>
-        <ImageBox>
+        <ImageBox onPress={onChangeImage}>
           <FolderImage source={require('../../../assets/images/editFolder.png')} />
         </ImageBox>
         <InputContainer>
           <InputField
-            placeholder="태그를 입력하세요"
+            placeholder={placeholder}
+            placeholderTextColor={colors.grey[200]}
             value={inputValue}
             onChangeValue={setInputValue}
+            maxLength={16}
+            onFocus={() => handleInputFocus()}
           />
         </InputContainer>
       </CreateContainer>
@@ -49,7 +66,7 @@ const ButtonContainer = styled(View)`
   background-color: ${colors.grey[100]};
 `;
 
-const ImageBox = styled(View)`
+const ImageBox = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   padding: ${size.height * 45}px 0;

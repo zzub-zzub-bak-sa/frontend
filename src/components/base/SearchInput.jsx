@@ -13,7 +13,7 @@ export default SearchInput;
 
 const Input = styled(TextInput)`
   width: ${({ width }) => size.width * width}px;
-  height: ${size.height * 36}px;
+  height: ${size.height * (36 + 8)}px;
   border-radius: 10px;
   background-color: ${colors.grey[100]};
   text-align: right;

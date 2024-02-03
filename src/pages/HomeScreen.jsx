@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FlatList, Platform, Text, TextInput, View } from 'react-native';
 import styled from 'styled-components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 import Layout from '../components/layout/Layout';
 import Header from '../components/layout/Header';
 import size from '../utils/size';
@@ -58,7 +59,8 @@ const data = [
   },
 ];
 
-function HomeScreen() {
+const HomeScreen = () => {
+  const navigation = useNavigation();
   const [keyword, setKeyword] = useState('');
   const [focus, setFocus] = useState(false);
   const [openSort, setOpenSort] = useState(false);
@@ -111,6 +113,7 @@ function HomeScreen() {
                   title={item.title}
                   numberOfLinks={item.numberOfLinks}
                   onPressKebab={() => setOpenEdit({ condition: true, id: index })}
+                  onPress={() => navigation.navigate('Gallery')}
                 />
               )}
               keyExtractor={(_, index) => String(index)}
@@ -147,7 +150,7 @@ function HomeScreen() {
       {openDefault && <Default onPressClose={() => setOpenDefault(false)} />}
     </Layout>
   );
-}
+};
 
 export default HomeScreen;
 
