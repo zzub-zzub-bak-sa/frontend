@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
-import { Image, View } from 'react-native';
+import React, { useRef } from 'react';
+import { View } from 'react-native';
+import styled from 'styled-components';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import CommonBottomSheet from '../base/modal/CommonBottomSheet';
 import Button from '../base/Button';
 import Card from '../base/Card';
 import Folder from '../../assets/icons/Folder';
-import Search from '../../assets/icons/Search';
+import Search from '../../assets/icons/IcSearch';
 import size from '../../utils/size';
-import styled from 'styled-components';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 const Default = () => {
   const bottomSheetRef = useRef(null);

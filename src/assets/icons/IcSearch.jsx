@@ -8,7 +8,7 @@ const IcSearch = ({ color = '#4E5867', size = 24 }) => {
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
+      fill="white"
     >
       <Path
         fillRule="evenodd"

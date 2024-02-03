@@ -3,11 +3,11 @@ import { ScrollView, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import size from '../../utils/size';
-import { body1, body2 } from '../../styles/fonts';
+import { body2 } from '../../styles/fonts';
 import { colors } from '../../styles/colors';
 import FolderCard from './FolderCard';
 import TagCard from './TagCard';
-import { HEIGHT } from '../../constants/constants';
+import NoResult from './NoResult';
 
 const SearchResults = ({ data }) => {
   return (
@@ -42,13 +42,7 @@ const SearchResults = ({ data }) => {
           </View>
         </>
       ) : (
-        <View>
-          <NoResultBox>
-            <NoResult>검색결과가 없어요 :(</NoResult>
-            <NoResult>검색어를 바꿔서 다시 시도해보시는건</NoResult>
-            <NoResult>어때요?</NoResult>
-          </NoResultBox>
-        </View>
+        <NoResult />
       )}
     </ScrollView>
   );
@@ -90,21 +84,7 @@ const SeeMoreText = styled(Text)`
   color: ${colors.grey[300]};
 `;
 
-const Divider = styled(View)`
+export const Divider = styled(View)`
   height: ${size.height * 12}px;
   background-color: ${colors.black};
-`;
-
-const NoResultBox = styled(View)`
-  height: ${size.height * (HEIGHT / 2)}px;
-  align-items: center;
-  justify-content: center;
-`;
-
-const NoResult = styled(Text)`
-  font-family: ${body1.medium.fontFamily};
-  font-size: ${body1.medium.fontSize}px;
-  color: white;
-  line-height: ${size.height * 25.6}px;
-  opacity: 0.8;
 `;

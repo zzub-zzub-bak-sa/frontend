@@ -39,45 +39,60 @@ const icons = iconComponents.flatMap((IconComponent, idx) =>
   })),
 );
 
-const SearchFolder = () => {
-  const [selectedIconId, setSelectedIconId] = useState(null);
-
+const ChangeImage = ({ folderImage, onPressSelect, onClose }) => {
   const renderItem = ({ item }) => (
-    <IconContainer selected={item.id === selectedIconId} onPress={() => setSelectedIconId(item.id)}>
+    <IconContainer selected={item.id === folderImage} onPress={() => onPressSelect(item.id)}>
       <item.IconComponent size={72} color="white" backgroundColor={item.color} />
     </IconContainer>
   );
 
   return (
-    <CommonBottomSheet
-      snapPoints={['70%', '90%']}
-      title="이미지 변경"
-      leftButtonType="back"
-      rightButtonType="none"
-    >
-      <FlatList
-        data={icons}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        numColumns={4}
-        contentContainerStyle={{ alignItems: 'center' }}
-      />
+    <>
+      <CommonBottomSheet
+        snapPoints={[size.height * 640, size.height * 844]}
+        title="이미지 변경"
+        leftButtonType="back"
+        rightButtonType="none"
+      >
+        <FlatList
+          data={icons}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          numColumns={4}
+          contentContainerStyle={{ alignItems: 'center' }}
+          ListFooterComponent={() => <LastComponent />}
+        />
+      </CommonBottomSheet>
       <ButtonContainer>
-        <Button width={350} height={54} text="선택하기" varient="filled" color="primary" />
+        <Button
+          width={350}
+          height={54}
+          text="선택하기"
+          varient="filled"
+          color="primary"
+          onPress={onClose}
+        />
       </ButtonContainer>
-    </CommonBottomSheet>
+    </>
   );
 };
 
-export default SearchFolder;
+export default ChangeImage;
 
 const IconContainer = styled(TouchableOpacity)`
-  padding: ${size.width * 10}px;
   border-radius: 14px;
+  border: ${({ selected }) => (selected ? '1px solid white' : `1px solid ${colors.grey[100]}`)};
+  margin: ${size.width * 10}px;
 `;
 
 const ButtonContainer = styled(View)`
   border-radius: 12px;
   margin: ${size.height * 32}px ${size.width * 20}px;
   background-color: ${colors.grey[100]};
+  position: absolute;
+  bottom: 0;
+`;
+
+const LastComponent = styled(View)`
+  height: ${size.height * 120}px;
 `;

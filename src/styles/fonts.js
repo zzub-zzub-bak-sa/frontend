@@ -53,6 +53,10 @@ export const subtitle3 = StyleSheet.create({
     fontFamily: 'SUIT-Bold',
     fontSize: size.width * 15,
   },
+  medium: {
+    fontFamily: 'SUIT-Medium',
+    fontSize: size.width * 15,
+  },
 });
 
 export const body1 = StyleSheet.create({
