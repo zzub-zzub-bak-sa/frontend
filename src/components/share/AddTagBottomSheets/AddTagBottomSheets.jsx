@@ -3,9 +3,9 @@ import { Keyboard, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import size from '../../../utils/size';
 import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
-import InputField from '../../base/InputField';
 import { body1 } from '../../../styles/fonts';
 import Tags from '../../base/Tags';
+import InputWithTag from '../../base/InputWithTag';
 
 const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
   const tags = ['태그', '태그', '태그', '태그', '태그', '태그길이가최대', '7자', '공백포함'];
@@ -63,7 +63,7 @@ const InputWrapper = styled(View)`
   margin: ${size.height * 25}px ${size.width * 32}px ${size.height * 16}px;
 `;
 
-const Input = styled(InputField)`
+const Input = styled(InputWithTag)`
   width: '100%';
   margin: 0 ${size.height * 16}px;
   align-items: center;
