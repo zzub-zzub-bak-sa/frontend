@@ -195,12 +195,12 @@ const Row = styled(View)`
   margin-bottom: ${size.height * 20}px;
 `;
 
-const SortBox = styled(TouchableOpacity)`
+export const SortBox = styled(TouchableOpacity)`
   flex-direction: row;
   align-items: center;
 `;
 
-const SortBoxText = styled(Text)`
+export const SortBoxText = styled(Text)`
   font-family: ${caption1.semibold.fontFamily};
   font-size: ${caption1.semibold.fontSize}px;
   color: white;
