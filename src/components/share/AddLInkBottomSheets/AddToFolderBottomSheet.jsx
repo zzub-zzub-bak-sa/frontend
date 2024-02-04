@@ -13,7 +13,7 @@ const AddToFolderBottomSheet = ({ onPressClose, onPressGoTag }) => {
     <CommonBottomSheet
       rightButtonType="close"
       onRightButtonPress={onPressClose}
-      snapPoints={['70%', '55%']}
+      snapPoints={[size.height * 399, size.height * 399]}
     >
       <TitleWrapper>
         <Title>폴더에 저장완료!</Title>
@@ -74,8 +74,8 @@ const FolderImage = styled(Image)`
 `;
 
 const ButtonWrapper = styled(View)`
-  width: ${WIDTH - size.width * 20 * 2}px;
   flex-direction: row;
   gap: ${size.width * 8}px;
   padding: 0 ${size.height * 20}px;
+  margin-left: ${size.width * 18}px;
 `;

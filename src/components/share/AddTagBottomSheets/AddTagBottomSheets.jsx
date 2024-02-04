@@ -7,8 +7,17 @@ import { body1 } from '../../../styles/fonts';
 import Tags from '../../base/Tags';
 import InputWithTag from '../../base/InputWithTag';
 
-const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
-  const tags = ['태그', '태그', '태그', '태그', '태그', '태그길이가최대', '7자', '공백포함'];
+const AddTagBottomSheets = ({ onPressBack, onPressClose, tags, setTags }) => {
+  const tagList = [
+    '김밥',
+    '맛집',
+    '카페',
+    '맛있는커피',
+    '데이트',
+    '데이트하기좋은',
+    '술집',
+    '일식',
+  ];
   const [value, setValue] = useState('');
   const [keyboard, setShowKeyboard] = useState(false);
 
@@ -37,9 +46,11 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
         <Input
           placeholder="태그를 추가해 주세요."
           value={value}
-          onChangeValue={text => setValue(text)}
+          onChangeValue={setValue}
           isEditPossible={false}
           onFocus={handleInputFocus}
+          tags={tags}
+          setTags={setTags}
           max={7}
         />
       </InputWrapper>
@@ -47,7 +58,7 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
         <TagsWrapper>
           <Title>등록된 태그</Title>
           <TagBox>
-            {tags.map((tag, idx) => (
+            {tagList.map((tag, idx) => (
               <Tags key={idx} text={tag} height={42} color="default" />
             ))}
           </TagBox>

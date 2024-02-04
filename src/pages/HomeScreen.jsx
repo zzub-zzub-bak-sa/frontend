@@ -31,42 +31,39 @@ import { createPosts } from '../api/apis/posts';
 import { dataByLinkState } from '../store/store';
 import AddTagBottomSheets from '../components/share/AddTagBottomSheets/AddTagBottomSheets';
 
-const data = [
+let data = [
   {
-    title: '길이',
-    numberOfLinks: 10,
+    title: '홍대맛집',
+    numberOfLinks: 20,
   },
   {
-    title: '중간길이',
+    title: '송파',
     numberOfLinks: 100,
   },
   {
-    title: '최대길이최대길이최대길이',
+    title: '전주맛집',
     numberOfLinks: 1000,
   },
   {
-    title: '길이',
+    title: '짜장과짬뽕',
     numberOfLinks: 10,
   },
   {
-    title: '중간길이',
-    numberOfLinks: 100,
+    title: '엄마 생신 파티',
+    numberOfLinks: 20,
   },
   {
-    title: '최대길이최대길이최대길이',
+    title: '역시밥은쌀밥이지',
+    numberOfLinks: 100,
+  },
+
+  {
+    title: '경남 맛집',
     numberOfLinks: 1000,
   },
   {
-    title: '길이',
-    numberOfLinks: 10,
-  },
-  {
-    title: '중간길이',
+    title: '경주 맛집 투어',
     numberOfLinks: 100,
-  },
-  {
-    title: '최대길이최대길이최대길이',
-    numberOfLinks: 1000,
   },
 ];
 
@@ -86,25 +83,33 @@ const HomeScreen = () => {
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [openCreateNewFolder, setOpenCreateNewFolder] = useState(false);
   const [openChangeImage, setOpenChangeImage] = useState(false);
-  const [folderImage, setFolderImage] = useState(null);
+  const [folderImage, setFolderImage] = useState(0);
   const [openFinishSavingFolder, setOpenFinishSavingFolder] = useState(false);
   const [openFinish, setOpenFinish] = useState(false);
   const [openTag, setOpenTag] = useState(false);
+  const [tags, setTags] = useState([]);
+  const [imageChange, setImageChange] = useState(false);
+  const [fixedKeyword, setFixedKeyword] = useState('');
 
   const { mutate } = useMutation(createPosts, {
     onSuccess: data => {
       console.log(data);
+      setOpenFinishSavingFolder(true);
     },
   });
 
-  useEffect(() => {
-    const storage = async () => {
-      const uuid = await AsyncStorage.getItem('@device-id');
-      if (!uuid) {
-        await AsyncStorage.setItem('@device-id', DeviceInfo.getUniqueId());
-      }
-    };
+  const storage = async () => {
+    // try {
+    //   const uuid = await AsyncStorage.getItem('@device-id');
+    //   if (!uuid) {
+    //     await AsyncStorage.setItem('@device-id', DeviceInfo.getUniqueId());
+    //   }
+    // } catch (error) {
+    //   console.error('An error occurred while accessing storage:', error);
+    // }
+  };
 
+  useEffect(() => {
     storage();
   }, []);
 
@@ -125,7 +130,10 @@ const HomeScreen = () => {
             value={keyword}
             onChangeText={text => setKeyword(text)}
             onFocus={() => setFocus(true)}
-            onEndEditing={() => setFocus(false)}
+            onEndEditing={() => {
+              setFocus(false);
+              setFixedKeyword(keyword);
+            }}
           />
           {keyword && (
             <TouchableOpacity onPress={() => setKeyword('')}>
@@ -142,7 +150,7 @@ const HomeScreen = () => {
               <IcArrowDown />
             </SelectBox>
             <FlatList
-              data={data}
+              data={data.filter(el => el.title.includes(keyword))}
               renderItem={({ item, index }) => (
                 <Folder
                   index={index}
@@ -178,7 +186,7 @@ const HomeScreen = () => {
           index={openEdit.id}
         />
       )}
-      {keyword && <SearchResults />}
+      {fixedKeyword && <SearchResults />}
       {openAddLink && (
         <AddLinkBottomSheet onPressClose={() => setOpenAddLink(false)} onNext={handleNext} />
       )}
@@ -201,6 +209,8 @@ const HomeScreen = () => {
       {openCreateNewFolder && (
         <CreateFolder
           placeholder="폴더의 이름을 지어주세요."
+          folderImage={folderImage}
+          imageChange={folderImage !== 0}
           onClose={() => {
             setOpenCreateNewFolder(false);
           }}
@@ -209,7 +219,6 @@ const HomeScreen = () => {
             setOpenDefault(true);
           }}
           onChangeImage={() => {
-            setOpenCreateNewFolder(false);
             setOpenChangeImage(true);
           }}
           onPressNext={() => {
@@ -225,6 +234,7 @@ const HomeScreen = () => {
           onPressSelect={setFolderImage}
           onClose={() => {
             setOpenChangeImage(false);
+            setImageChange(true);
           }}
         />
       )}
@@ -232,19 +242,44 @@ const HomeScreen = () => {
       {openFinishSavingFolder && (
         <AddToFolderBottomSheet
           onPressClose={() => {
-            setOpenFinish(false);
-            setOpenFinish(true);
+            setOpenFinishSavingFolder(false);
           }}
           onPressGoTag={() => {
-            setOpenFinish(false);
+            setOpenFinishSavingFolder(false);
             setOpenTag(true);
           }}
         />
       )}
 
-      {openTag && <AddTagBottomSheets />}
+      {openTag && (
+        <AddTagBottomSheets
+          onPressBack={() => {
+            setOpenTag(false);
+            setOpenFinishSavingFolder(true);
+          }}
+          onPressClose={() => {
+            setOpenTag(false);
+            setOpenFinish(true);
+          }}
+          tags={tags}
+          setTags={setTags}
+        />
+      )}
 
-      {openFinish && <AddTagBottomSheet onPressClose={() => setOpenFinish(false)} />}
+      {openFinish && (
+        <AddTagBottomSheet
+          onPressClose={() => {
+            setOpenFinish(false);
+            data = [
+              {
+                title: '연남맛집',
+                numberOfLinks: 1,
+              },
+              ...data,
+            ];
+          }}
+        />
+      )}
     </Layout>
   );
 };

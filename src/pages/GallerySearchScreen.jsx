@@ -17,7 +17,7 @@ import NoResult from '../components/HomeScreen/NoResult';
 const GallerySearchScreen = () => {
   const [keyword, setKeyword] = useState('');
   const [focus, setFocus] = useState(false);
-  const tags = ['태그', '태그', '태그', '태그', '태그', '태그길이가최대', '7자', '공백포함'];
+  const tags = ['김밥', '맛집', '카페', '맛있는커피', '데이트', '데이트하기좋은', '술집', '일식'];
   const [written, setWritten] = useState([]);
   const data = null;
 
