@@ -33,7 +33,7 @@ export default Folder;
 
 const FolderWrapper = styled(TouchableOpacity)`
   width: ${size.width * 168}px;
-  height: ${size.height * 136}px;
+  height: ${size.width * 136}px;
   border-radius: 12px;
   background-color: ${colors.bg[100]};
   padding: ${size.height * 16}px ${size.width * 16}px;
@@ -50,16 +50,16 @@ const KebabMenu = styled(TouchableOpacity)`
 
 const IconWrapper = styled(View)`
   width: ${size.width * 48}px;
-  height: ${size.height * 48}px;
+  height: ${size.width * 48}px;
   background-color: ${colors.bg[200]};
   border-radius: 12px;
   align-items: center;
   justify-content: center;
-  margin-bottom: ${size.height * 11}px;
+  margin-bottom: ${size.height * 20}px;
 `;
 
 const Icon = styled(Image)`
-  height: ${size.height * 24.135}px;
+  height: ${size.width * 24.135}px;
   width: ${size.width * 26.3}px;
 `;
 

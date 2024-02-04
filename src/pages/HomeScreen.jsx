@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Platform, Text, TextInput, View } from 'react-native';
 import styled from 'styled-components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { useMutation } from 'react-query';
+import { useRecoilValue } from 'recoil';
+import DeviceInfo from 'react-native-device-info';
+import { AsyncStorage } from '@react-native-async-storage/async-storage';
 import Layout from '../components/layout/Layout';
 import Header from '../components/layout/Header';
 import size from '../utils/size';
@@ -18,7 +22,14 @@ import SearchResults from '../components/HomeScreen/SearchResults';
 import CommonShortBottomSheet from '../components/base/modal/CommonShortBottomSheet';
 import EditBottomSheet from '../components/HomeScreen/EditBottomSheet';
 import AddLinkBottomSheet from '../components/HomeScreen/AddLinkBottomSheet';
-import Default from '../components/share/Default';
+import SearchFolder from '../components/share/Search/SearchFolder';
+import CreateFolder from '../components/share/Create/CreateFolder';
+import ChangeImage from '../components/share/Create/ChangeImage';
+import AddToFolderBottomSheet from '../components/share/AddLInkBottomSheets/AddToFolderBottomSheet';
+import AddTagBottomSheet from '../components/share/AddLInkBottomSheets/AddTagBottomSheet';
+import { createPosts } from '../api/apis/posts';
+import { dataByLinkState } from '../store/store';
+import AddTagBottomSheets from '../components/share/AddTagBottomSheets/AddTagBottomSheets';
 
 const data = [
   {
@@ -61,6 +72,7 @@ const data = [
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const dataByLink = useRecoilValue(dataByLinkState);
   const [keyword, setKeyword] = useState('');
   const [focus, setFocus] = useState(false);
   const [openSort, setOpenSort] = useState(false);
@@ -71,6 +83,30 @@ const HomeScreen = () => {
   });
   const [openAddLink, setOpenAddLink] = useState(false);
   const [openDefault, setOpenDefault] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [openCreateNewFolder, setOpenCreateNewFolder] = useState(false);
+  const [openChangeImage, setOpenChangeImage] = useState(false);
+  const [folderImage, setFolderImage] = useState(null);
+  const [openFinishSavingFolder, setOpenFinishSavingFolder] = useState(false);
+  const [openFinish, setOpenFinish] = useState(false);
+  const [openTag, setOpenTag] = useState(false);
+
+  const { mutate } = useMutation(createPosts, {
+    onSuccess: data => {
+      console.log(data);
+    },
+  });
+
+  useEffect(() => {
+    const storage = async () => {
+      const uuid = await AsyncStorage.getItem('@device-id');
+      if (!uuid) {
+        await AsyncStorage.setItem('@device-id', DeviceInfo.getUniqueId());
+      }
+    };
+
+    storage();
+  }, []);
 
   const handleNext = () => {
     setOpenAddLink(false); // AddLinkBottomSheet 닫기
@@ -147,7 +183,68 @@ const HomeScreen = () => {
         <AddLinkBottomSheet onPressClose={() => setOpenAddLink(false)} onNext={handleNext} />
       )}
 
-      {openDefault && <Default onPressClose={() => setOpenDefault(false)} />}
+      {openDefault && (
+        <SearchFolder
+          selected={selectedFolder}
+          onPressCard={setSelectedFolder}
+          data={[]}
+          onClose={() => {
+            setOpenDefault(false);
+          }}
+          onPressNewFolder={() => {
+            setOpenDefault(false);
+            setOpenCreateNewFolder(true);
+          }}
+        />
+      )}
+
+      {openCreateNewFolder && (
+        <CreateFolder
+          placeholder="폴더의 이름을 지어주세요."
+          onClose={() => {
+            setOpenCreateNewFolder(false);
+          }}
+          onBack={() => {
+            setOpenCreateNewFolder(false);
+            setOpenDefault(true);
+          }}
+          onChangeImage={() => {
+            setOpenCreateNewFolder(false);
+            setOpenChangeImage(true);
+          }}
+          onPressNext={() => {
+            setOpenCreateNewFolder(false);
+            setOpenFinishSavingFolder(true);
+          }}
+        />
+      )}
+
+      {openChangeImage && (
+        <ChangeImage
+          folderImage={folderImage}
+          onPressSelect={setFolderImage}
+          onClose={() => {
+            setOpenChangeImage(false);
+          }}
+        />
+      )}
+
+      {openFinishSavingFolder && (
+        <AddToFolderBottomSheet
+          onPressClose={() => {
+            setOpenFinish(false);
+            setOpenFinish(true);
+          }}
+          onPressGoTag={() => {
+            setOpenFinish(false);
+            setOpenTag(true);
+          }}
+        />
+      )}
+
+      {openTag && <AddTagBottomSheets />}
+
+      {openFinish && <AddTagBottomSheet onPressClose={() => setOpenFinish(false)} />}
     </Layout>
   );
 };

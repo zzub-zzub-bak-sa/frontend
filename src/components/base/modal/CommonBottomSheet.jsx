@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
+import { View } from 'react-native';
 import IcClear from '../../../assets/icons/IcClear';
 import IcBack from '../../../assets/icons/IcBack';
 import size from '../../../utils/size';

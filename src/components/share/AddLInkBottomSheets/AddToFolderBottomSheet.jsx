@@ -8,7 +8,7 @@ import FolderBox from '../../base/FolderBox';
 import Button from '../../base/Button';
 import { WIDTH } from '../../../constants/constants';
 
-const AddToFolderBottomSheet = ({ onPressClose }) => {
+const AddToFolderBottomSheet = ({ onPressClose, onPressGoTag }) => {
   return (
     <CommonBottomSheet
       rightButtonType="close"
@@ -30,6 +30,7 @@ const AddToFolderBottomSheet = ({ onPressClose }) => {
           varient="filled"
           color="primary"
           text="태그 추가"
+          onPress={onPressGoTag}
         />
         <Button
           width={(WIDTH - 64) / 2}
@@ -37,6 +38,7 @@ const AddToFolderBottomSheet = ({ onPressClose }) => {
           varient="filled"
           color="default"
           text="앱에서 보기"
+          onPress={onPressClose}
         />
       </ButtonWrapper>
     </CommonBottomSheet>
