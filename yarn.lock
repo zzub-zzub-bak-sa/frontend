@@ -1120,7 +1120,7 @@
   resolved "https://registry.npmjs.org/@babel/regjsgen/-/regjsgen-0.8.0.tgz"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.20.0", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.8", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.20.0", "@babel/runtime@^7.20.6", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.8", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
   version "7.23.9"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.23.9.tgz"
   integrity sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==
@@ -1566,6 +1566,18 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
+
+"@react-native-async-storage/async-storage@^1.21.0":
+  version "1.21.0"
+  resolved "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.21.0.tgz"
+  integrity sha512-JL0w36KuFHFCvnbOXRekqVAUplmOyT/OuCQkogo6X98MtpSaJOKEAeZnYO8JB0U/RIEixZaGI5px73YbRm/oag==
+  dependencies:
+    merge-options "^3.0.4"
+
+"@react-native-community/blur@^4.4.0":
+  version "4.4.0"
+  resolved "https://registry.npmjs.org/@react-native-community/blur/-/blur-4.4.0.tgz"
+  integrity sha512-P+xdT2LIq1ewOsF3zx7C0nu4dj7nxl2NVTsMXEzRDjM3bWMdrrEbTRA7uwPV5ngn7/BXIommBPlT/JW4SAedrw==
 
 "@react-native-community/cli-clean@12.3.2":
   version "12.3.2"
@@ -3276,7 +3288,7 @@ domutils@^3.0.1:
     domelementtype "^2.3.0"
     domhandler "^5.0.3"
 
-dotenv@^16.4.1:
+dotenv@^16.3.1, dotenv@^16.4.1:
   version "16.4.1"
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.4.1.tgz"
   integrity sha512-CjA3y+Dr3FyFDOAMnxZEGtnW9KBR2M0JvvUtXNW+dYJL5ROWxP9DUHCwgFqpMk0OXCc0ljhaNTr2w/kutYIcHQ==
@@ -4421,6 +4433,11 @@ is-path-inside@^3.0.3:
   resolved "https://registry.npmjs.org/is-path-inside/-/is-path-inside-3.0.3.tgz"
   integrity sha512-Fd4gABb+ycGAmKou8eMftCupSir5lRxqf4aD/vd0cD2qc4HL07OjCeuHMr8Ro4CoMaeCKDB0/ECBOVWjTwUvPQ==
 
+is-plain-obj@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/is-plain-obj/-/is-plain-obj-2.1.0.tgz"
+  integrity sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==
+
 is-plain-object@^2.0.4:
   version "2.0.4"
   resolved "https://registry.npmjs.org/is-plain-object/-/is-plain-object-2.0.4.tgz"
@@ -5143,6 +5160,13 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
+linkify-it@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/linkify-it/-/linkify-it-4.0.1.tgz"
+  integrity sha512-C7bfi1UZmoj8+PQx22XyeXCuBlokoyWQL5pWSP+EI6nzRylyThouddufc2c1NDIcP9k5agmN9fLpA7VNJfIiqw==
+  dependencies:
+    uc.micro "^1.0.1"
+
 locate-path@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/locate-path/-/locate-path-3.0.0.tgz"
@@ -5263,10 +5287,22 @@ mdn-data@2.0.14:
   resolved "https://registry.npmjs.org/mdn-data/-/mdn-data-2.0.14.tgz"
   integrity sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==
 
+mdurl@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/mdurl/-/mdurl-1.0.1.tgz"
+  integrity sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==
+
 memoize-one@^5.0.0:
   version "5.2.1"
   resolved "https://registry.npmjs.org/memoize-one/-/memoize-one-5.2.1.tgz"
   integrity sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==
+
+merge-options@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.npmjs.org/merge-options/-/merge-options-3.0.4.tgz"
+  integrity sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==
+  dependencies:
+    is-plain-obj "^2.1.0"
 
 merge-stream@^2.0.0:
   version "2.0.0"
@@ -6109,6 +6145,23 @@ react-is@^17.0.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-config@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.npmjs.org/react-native-config/-/react-native-config-1.5.1.tgz"
+  integrity sha512-g1xNgt1tV95FCX+iWz6YJonxXkQX0GdD3fB8xQtR1GUBEqweB9zMROW77gi2TygmYmUkBI7LU4pES+zcTyK4HA==
+
+react-native-device-info@^10.12.0:
+  version "10.12.0"
+  resolved "https://registry.npmjs.org/react-native-device-info/-/react-native-device-info-10.12.0.tgz"
+  integrity sha512-gnBkjyZNEqRd+5BNrdzuvmlraHTCH/to2x0Gp9rtDt0O9xWWW1MTYohUVWX9A0Ad2HVYcGanDCIvjWp4ngMZFg==
+
+react-native-dotenv@^3.4.9:
+  version "3.4.9"
+  resolved "https://registry.npmjs.org/react-native-dotenv/-/react-native-dotenv-3.4.9.tgz"
+  integrity sha512-dbyd+mcy7SUzxEgmt33TRf1FGcNe6swJhXmB0unKkI49F7+pidog9kPtjxMLTAfmKA8gcN2XHQSKltGfGbGCLQ==
+  dependencies:
+    dotenv "^16.3.1"
+
 react-native-gesture-handler@^2.14.1, "react-native-gesture-handler@>= 1.0.0", react-native-gesture-handler@>=1.10.1:
   version "2.14.1"
   resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.14.1.tgz"
@@ -6119,6 +6172,14 @@ react-native-gesture-handler@^2.14.1, "react-native-gesture-handler@>= 1.0.0", r
     invariant "^2.2.4"
     lodash "^4.17.21"
     prop-types "^15.7.2"
+
+react-native-hyperlink@^0.0.22:
+  version "0.0.22"
+  resolved "https://registry.npmjs.org/react-native-hyperlink/-/react-native-hyperlink-0.0.22.tgz"
+  integrity sha512-IVhG+aP2bAnllUEr08/+rGA3cbpzyl83PtOfe94higfWUR8E7rUGThj21tdhx8SWAyl+4XO1K864tA6ybVbMFA==
+  dependencies:
+    linkify-it "^4.0.1"
+    mdurl "^1.0.1"
 
 react-native-reanimated@^3.6.2, "react-native-reanimated@>= 1.0.0", react-native-reanimated@>=2.2.0:
   version "3.6.2"
@@ -6156,7 +6217,7 @@ react-native-toast-message@^2.2.0:
   resolved "https://registry.npmjs.org/react-native-toast-message/-/react-native-toast-message-2.2.0.tgz"
   integrity sha512-AFti8VzUk6JvyGAlLm9/BknTNDXrrhqnUk7ak/pM7uCTxDPveAu2ekszU0on6vnUPFnG04H/QfYE2IlETqeaWw==
 
-react-native@*, react-native@0.73.3:
+react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@0.73.3:
   version "0.73.3"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.73.3.tgz"
   integrity sha512-RSQDtT2DNUcmB4IgmW9NhRb5wqvXFl6DI2NEJmt0ps2OrVHpoA8Tkq+lkFOA/fvPscJKtFKEHFBDSR5UHR3PUw==
@@ -7092,6 +7153,11 @@ typed-array-length@^1.0.4:
   version "5.0.4"
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.0.4.tgz"
   integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
+
+uc.micro@^1.0.1:
+  version "1.0.6"
+  resolved "https://registry.npmjs.org/uc.micro/-/uc.micro-1.0.6.tgz"
+  integrity sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

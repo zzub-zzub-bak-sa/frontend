@@ -8,12 +8,12 @@ import FolderBox from '../../base/FolderBox';
 import Button from '../../base/Button';
 import { WIDTH } from '../../../constants/constants';
 
-const AddToFolderBottomSheet = ({ onPressClose }) => {
+const AddToFolderBottomSheet = ({ onPressClose, onPressGoTag }) => {
   return (
     <CommonBottomSheet
       rightButtonType="close"
       onRightButtonPress={onPressClose}
-      snapPoints={['70%', '55%']}
+      snapPoints={[size.height * 399, size.height * 399]}
     >
       <TitleWrapper>
         <Title>폴더에 저장완료!</Title>
@@ -30,6 +30,7 @@ const AddToFolderBottomSheet = ({ onPressClose }) => {
           varient="filled"
           color="primary"
           text="태그 추가"
+          onPress={onPressGoTag}
         />
         <Button
           width={(WIDTH - 64) / 2}
@@ -37,6 +38,7 @@ const AddToFolderBottomSheet = ({ onPressClose }) => {
           varient="filled"
           color="default"
           text="앱에서 보기"
+          onPress={onPressClose}
         />
       </ButtonWrapper>
     </CommonBottomSheet>
@@ -72,8 +74,8 @@ const FolderImage = styled(Image)`
 `;
 
 const ButtonWrapper = styled(View)`
-  width: ${WIDTH - size.width * 20 * 2}px;
   flex-direction: row;
   gap: ${size.width * 8}px;
   padding: 0 ${size.height * 20}px;
+  margin-left: ${size.width * 18}px;
 `;

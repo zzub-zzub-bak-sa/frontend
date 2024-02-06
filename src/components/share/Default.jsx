@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -8,15 +8,17 @@ import Card from '../base/Card';
 import Folder from '../../assets/icons/Folder';
 import Search from '../../assets/icons/IcSearch';
 import size from '../../utils/size';
+import CreateFolder from './Create/CreateFolder';
+import SearchFolder from './Search/SearchFolder';
 
-const Default = () => {
+const Default = ({ onPressClose }) => {
   const bottomSheetRef = useRef(null);
 
-  const openBottomSheet = () => {
-    bottomSheetRef.current?.expand();
-  };
+  // const openBottomSheet = () => {
+  //   bottomSheetRef.current?.expand();
+  // };
 
-  const ref = useRef(null);
+  // const ref = useRef(null);
 
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [openAddFolder, setOpenAddFolder] = useState(false);
@@ -30,7 +32,7 @@ const Default = () => {
   ];
 
   const handleNext = () => {
-    setOpenDefault(false);
+    onPressClose();
     setOpenAddFolder(true);
   };
 
@@ -65,7 +67,7 @@ const Default = () => {
           <ScrollViewContainer>
             {folders.map((folder, index) => (
               <FolderCard
-                key={`folder-${index}`}
+                key={String(folder.numberOfLinks + folder.title + index)}
                 title={folder.title}
                 numberOfLinks={folder.numberOfLinks}
                 onPress={() => setSelectedFolder(index)}
@@ -75,7 +77,14 @@ const Default = () => {
           </ScrollViewContainer>
         </FolderListContainer>
         <ButtonContainer>
-          <Button width={350} height={54} text="선택하기" varient="filled" color="primary" />
+          <Button
+            width={350}
+            height={54}
+            text="선택하기"
+            varient="filled"
+            color="primary"
+            onPress={handleNext}
+          />
         </ButtonContainer>
       </CommonBottomSheet>
 
@@ -124,5 +133,5 @@ const ScrollViewContainer = styled(ScrollView)`
 const ButtonContainer = styled(View)`
   padding-left: ${size.width * 16}px;
   padding-bottom: ${size.height * 16}px;
-  margin-bottom: ${size.height * 33};
+  margin-bottom: ${size.height * 33}px;
 `;

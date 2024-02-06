@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, Image, Keyboard, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
 import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
 import Button from '../../base/Button';
 import { colors } from '../../../styles/colors';
 import size from '../../../utils/size';
 import InputField from '../../base/InputField';
+import { dataByLinkState } from '../../../store/store';
 
-const CreateFolder = ({ placeholder = '태그를 입력하세요', onClose, onBack, onChangeImage }) => {
+const CreateFolder = ({
+  placeholder = '태그를 입력하세요',
+  onClose,
+  onBack,
+  onChangeImage,
+  onPressNext,
+}) => {
   const [inputValue, setInputValue] = useState('');
   const [showKeyboard, setShowKeyboard] = useState(false);
+  const [dataByLink, setDataByLink] = useRecoilState(dataByLinkState);
 
   const handleInputFocus = () => {
     setShowKeyboard(true);
@@ -25,7 +34,7 @@ const CreateFolder = ({ placeholder = '태그를 입력하세요', onClose, onBa
 
   return (
     <CommonBottomSheet
-      snapPoints={[!showKeyboard ? size.height * 490 : size.height * 804]}
+      snapPoints={[showKeyboard ? '95%' : '60%', '60%']}
       title="새로운 폴더"
       leftButtonType="back"
       onLeftButtonPress={onBack}
@@ -48,7 +57,17 @@ const CreateFolder = ({ placeholder = '태그를 입력하세요', onClose, onBa
         </InputContainer>
       </CreateContainer>
       <ButtonContainer>
-        <Button width={350} height={54} text="선택하기" varient="filled" color="primary" />
+        <Button
+          width={350}
+          height={54}
+          text="선택하기"
+          varient="filled"
+          color="primary"
+          onPress={() => {
+            setDataByLink({ ...dataByLink, folderId: 1 });
+            onPressNext();
+          }}
+        />
       </ButtonContainer>
     </CommonBottomSheet>
   );
@@ -74,6 +93,9 @@ const ImageBox = styled(TouchableOpacity)`
 
 const InputContainer = styled(View)`
   margin: ${size.height * 16}px ${size.width * 23}px;
+  padding-bottom: ${size.height * 13}px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${colors.orange};
 `;
 
 const FolderImage = styled(Image)`

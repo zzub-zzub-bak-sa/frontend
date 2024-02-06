@@ -5,6 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
+import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import StackNavigation from './src/navigations/StackNavigation';
 import size from './src/utils/size';
 import { colors } from './src/styles/colors';
@@ -23,15 +25,21 @@ const toastConfig = {
   ),
 };
 
-function App(props) {
+function App() {
+  const queryClient = new QueryClient();
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <NavigationContainer>
-          <StackNavigation />
-        </NavigationContainer>
-        <Toast config={toastConfig} />
-      </BottomSheetModalProvider>
+      <RecoilRoot>
+        <QueryClientProvider client={queryClient}>
+          <BottomSheetModalProvider>
+            <NavigationContainer>
+              <StackNavigation />
+            </NavigationContainer>
+            <Toast config={toastConfig} />
+          </BottomSheetModalProvider>
+        </QueryClientProvider>
+      </RecoilRoot>
     </GestureHandlerRootView>
   );
 }

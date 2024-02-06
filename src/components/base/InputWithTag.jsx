@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import styled from 'styled-components';
 import size from '../../utils/size';
@@ -14,10 +14,10 @@ const InputWithTag = ({
   onChangeValue,
   inputStyle = null,
   onFocus = () => null,
+  tags,
+  setTags,
   max = 10,
 }) => {
-  const [tags, setTags] = useState([]);
-
   const handleTagAdd = () => {
     setTags([...tags, value]);
     onChangeValue('');
@@ -50,7 +50,7 @@ const InputWithTag = ({
                   placeholder={placeholder}
                   placeholderTextColor={colors.grey[200]}
                   value={value}
-                  onChangeText={text => onChangeValue(text)}
+                  onChangeValue={onChangeValue}
                   inputStyle={inputStyle}
                   onFocus={onFocus}
                   onEndEditing={handleTagAdd}
@@ -64,11 +64,19 @@ const InputWithTag = ({
       </Container>
       {value && (
         <SearchDropDown>
-          {['양고기', '수우미양가', '양식 맛있겠다'].map(name => (
-            <MatchedTagsBox key={name}>
-              <MatchedTagsText>{name}</MatchedTagsText>
-            </MatchedTagsBox>
-          ))}
+          {['맛집', '연남맛집', '초이다이닝'].map(name => {
+            if (name.includes(value)) {
+              return (
+                <MatchedTagsBox key={name}>
+                  <Text>
+                    <MatchedTagsText>{name.split(value)[0]}</MatchedTagsText>
+                    <KeywordText>{value}</KeywordText>
+                    <MatchedTagsText>{name.split(value)[1]}</MatchedTagsText>
+                  </Text>
+                </MatchedTagsBox>
+              );
+            }
+          })}
         </SearchDropDown>
       )}
     </>
@@ -120,4 +128,10 @@ const MatchedTagsText = styled(Text)`
   font-family: ${body1.medium.fontFamily};
   font-size: ${size.width * body1.medium.fontSize}px;
   color: white;
+`;
+
+const KeywordText = styled(Text)`
+  font-family: ${body1.medium.fontFamily};
+  font-size: ${size.width * body1.medium.fontSize}px;
+  color: ${colors.orange};
 `;

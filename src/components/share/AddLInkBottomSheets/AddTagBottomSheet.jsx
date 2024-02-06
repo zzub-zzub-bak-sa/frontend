@@ -12,7 +12,7 @@ const AddTagBottomSheet = ({ onPressClose }) => {
     <CommonBottomSheet
       rightButtonType="close"
       onRightButtonPress={onPressClose}
-      snapPoints={['70%', '55%']}
+      snapPoints={[size.height * 449]}
     >
       <TitleWrapper>
         <Title>저장 완료!</Title>
@@ -23,11 +23,12 @@ const AddTagBottomSheet = ({ onPressClose }) => {
       </ImageBox>
       <ButtonWrapper>
         <Button
-          width={WIDTH - 60}
+          width={WIDTH - 40}
           height={54}
           varient="filled"
           color="primary"
           text="앱에서 보기"
+          onPress={onPressClose}
         />
       </ButtonWrapper>
     </CommonBottomSheet>
@@ -61,7 +62,6 @@ const FolderImage = styled(Image)`
 `;
 
 const ButtonWrapper = styled(View)`
-  width: ${WIDTH - size.width * 20 * 2}px;
-  padding: 0 ${size.height * 20}px;
+  padding: 0 ${size.height * 30}px;
   margin-top: ${size.height * -10}px;
 `;

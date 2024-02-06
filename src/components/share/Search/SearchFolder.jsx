@@ -10,7 +10,6 @@ import Folder from '../../../assets/icons/Folder';
 import IcSearch from '../../../assets/icons/IcSearch';
 import { WIDTH } from '../../../constants/constants';
 import NoSearchResult from './NoSearchResult';
-import { colors } from '../../../styles/colors';
 
 const SearchFolder = ({ onPressCard, selected, onClose, onPressNewFolder, data }) => {
   const [doSearch, setDoSearch] = useState(false);
@@ -63,7 +62,7 @@ const SearchFolder = ({ onPressCard, selected, onClose, onPressNewFolder, data }
         color="primary"
         onPress={() => (selected ? onClose() : null)}
       />
-      {data.length === 0 && <NoSearchResult />}
+      {data.length === 0 && <NoSearchResult onAddFolder={onPressNewFolder} />}
     </CommonBottomSheet>
   );
 };

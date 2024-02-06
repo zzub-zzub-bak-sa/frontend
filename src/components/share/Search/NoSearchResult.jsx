@@ -6,10 +6,10 @@ import { body1 } from '../../../styles/fonts';
 import size from '../../../utils/size';
 
 const NoSearchResult = ({ onAddFolder }) => (
-  <NoResultsContainer onPress={onAddFolder}>
+  <NoResultsContainer>
     <NoResultText>검색 결과가 없어요.</NoResultText>
     <NoResultText>새 폴더를 추가하시겠어요?</NoResultText>
-    <StyledButton>
+    <StyledButton onPress={onAddFolder}>
       <StyledButtonText>새 폴더 추가하기</StyledButtonText>
     </StyledButton>
   </NoResultsContainer>
