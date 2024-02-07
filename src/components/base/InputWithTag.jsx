@@ -64,7 +64,7 @@ const InputWithTag = ({
       </Container>
       {value && (
         <SearchDropDown>
-          {['맛집', '연남맛집', '초이다이닝'].map(name => {
+          {tags.map(name => {
             if (name.includes(value)) {
               return (
                 <MatchedTagsBox key={name}>
@@ -86,7 +86,7 @@ const InputWithTag = ({
 export default InputWithTag;
 
 const Container = styled(View)`
-  height: ${size.height * 68}px;
+  height: ${size.height * 55}px;
   border-bottom-width: 1px;
   border-bottom-color: ${colors.orange};
   ${({ containerStyle }) => containerStyle};
