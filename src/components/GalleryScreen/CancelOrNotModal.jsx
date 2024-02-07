@@ -8,7 +8,7 @@ import size from '../../utils/size';
 import { body1, title3 } from '../../styles/fonts';
 import Button from '../base/Button';
 
-const CancelOrNotModal = ({ show, onClose, onEndEdit }) => {
+const CancelOrNotModal = ({ show, onClose, onStop }) => {
   return (
     <CommonModal
       width={350}
@@ -45,7 +45,7 @@ const CancelOrNotModal = ({ show, onClose, onEndEdit }) => {
               text="종료하기"
               onPress={() => {
                 onClose();
-                onEndEdit();
+                onStop();
               }}
             />
           </Buttons>
