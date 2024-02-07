@@ -19,6 +19,7 @@ import CreateFolder from '../components/share/Create/CreateFolder';
 import ChangeImage from '../components/share/Create/ChangeImage';
 import Grid from '../components/GalleryScreen/Grid';
 import YesNoModal from '../components/base/modal/YesNoModal';
+import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
 
 const GalleryScreen = () => {
   const navigation = useNavigation();
@@ -78,7 +79,7 @@ const GalleryScreen = () => {
         <CancelOrNotModal
           show={openCancel}
           onClose={() => setOpenCancel(false)}
-          onEndEdit={() => setCurrentEdit('')}
+          onStop={() => setCurrentEdit('')}
         />
       )}
       {openDelete && (
@@ -102,22 +103,15 @@ const GalleryScreen = () => {
         />
       )}
       {currentEdit && (
-        <Select>
-          <SelectText>
-            {selected.length > 0
+        <SelectBottomSheet
+          text={
+            selected.length > 0
               ? `${selected.length}개의 항목이 선택되었어요.`
-              : `${currentEdit}할 항목을 선택해 주세요.`}
-          </SelectText>
-          <Button
-            height={36}
-            width={51}
-            text="다음"
-            varient="filled"
-            color={selected.length ? 'primary' : 'disable'}
-            disabled={!selected.length}
-            onPress={() => (currentEdit === '삭제' ? setOpenDelete(true) : setOpenFolder(true))}
-          />
-        </Select>
+              : `${currentEdit}할 항목을 선택해 주세요.`
+          }
+          disable={!selected.length}
+          onPress={() => (currentEdit === '삭제' ? setOpenDelete(true) : setOpenFolder(true))}
+        />
       )}
       {openFolder && (
         <SearchFolder
