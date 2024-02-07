@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
 import Layout from '../components/layout/Layout';
@@ -10,7 +10,6 @@ import IcSearch from '../assets/icons/IcSearch';
 import IcArrowDown from '../assets/icons/IcArrowDown';
 import { colors } from '../styles/colors';
 import CommonShortBottomSheet from '../components/base/modal/CommonShortBottomSheet';
-import Check from '../assets/icons/Check';
 import { WIDTH } from '../constants/constants';
 import Button from '../components/base/Button';
 import CancelOrNotModal from '../components/GalleryScreen/CancelOrNotModal';
@@ -19,6 +18,7 @@ import { showSuccessToast } from '../utils/showSuccessToast';
 import CreateFolder from '../components/share/Create/CreateFolder';
 import ChangeImage from '../components/share/Create/ChangeImage';
 import Grid from '../components/GalleryScreen/Grid';
+import YesNoModal from '../components/base/modal/YesNoModal';
 
 const GalleryScreen = () => {
   const navigation = useNavigation();
@@ -28,28 +28,29 @@ const GalleryScreen = () => {
   const [openCancel, setOpenCancel] = useState(false);
   const [openFolder, setOpenFolder] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState('');
-  const [showToast, setShowToast] = useState(false);
+  const [showMoveToast, setShowMoveToast] = useState(false);
   const [openSort, setOpenSort] = useState(false);
   const [selectedSort, setSelectedSort] = useState('정렬기준');
   const [createNewFolder, setCreateNewFolder] = useState(false);
   const [openChangeImage, setOpenChangeImage] = useState(false);
   const [folderImage, setFolderImage] = useState('');
+  const [openDelete, setOpenDelete] = useState(false);
 
   useEffect(() => {
-    if (showToast) {
+    if (showMoveToast) {
       showSuccessToast({
         text1: '이동되었습니다.',
         text2: '보러가기',
         onPressMove: () => null,
       });
-      setShowToast(false);
+      setShowMoveToast(false);
     }
-  }, [showToast]);
+  }, [showMoveToast]);
 
   return (
     <Layout>
       <Header>
-        <TitleBox>
+        <TitleBox onPress={() => navigation.navigate('Main')}>
           <IcBack size={24} color="white" />
           <Title>폴더제목 최대글자수 16자입</Title>
         </TitleBox>
@@ -80,6 +81,18 @@ const GalleryScreen = () => {
           onEndEdit={() => setCurrentEdit('')}
         />
       )}
+      {openDelete && (
+        <YesNoModal
+          show={openDelete}
+          onClose={() => setOpenDelete(false)}
+          title="정말 삭제하시겠어요?"
+          subtitle="삭제된 콘텐츠는 휴지통으로 이동해요."
+          leftText="취소하기"
+          onPressLeft={() => setOpenDelete(false)}
+          rightText="삭제하기"
+          onPressRight={() => null}
+        />
+      )}
       {openEdit && (
         <CommonShortBottomSheet
           snapPoints={['20.8%']}
@@ -88,16 +101,21 @@ const GalleryScreen = () => {
           data={['이동', '삭제']}
         />
       )}
-      {currentEdit === '이동' && (
+      {currentEdit && (
         <Select>
-          <SelectText>이동할 항목을 선택해 주세요.</SelectText>
+          <SelectText>
+            {selected.length > 0
+              ? `${selected.length}개의 항목이 선택되었어요.`
+              : `${currentEdit}할 항목을 선택해 주세요.`}
+          </SelectText>
           <Button
             height={36}
             width={51}
             text="다음"
             varient="filled"
-            color="disable"
-            onPress={() => setOpenFolder(true)}
+            color={selected.length ? 'primary' : 'disable'}
+            disabled={!selected.length}
+            onPress={() => (currentEdit === '삭제' ? setOpenDelete(true) : setOpenFolder(true))}
           />
         </Select>
       )}
@@ -110,7 +128,7 @@ const GalleryScreen = () => {
             setOpenFolder(false);
             setCurrentEdit('');
             setSelected([]);
-            setShowToast(true);
+            setShowMoveToast(true);
           }}
           onPressNewFolder={() => {
             setOpenFolder(false);
