@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
-import { Keyboard, Text, View, TouchableOpacity } from 'react-native';
+import { Keyboard, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
 import size from '../../utils/size';
 import CommonBottomSheet from '../base/modal/CommonBottomSheet';
-import InputField from '../../components/base/InputField';
+import InputWithTag from '../base/InputWithTag';
 import { body1, subtitle3 } from '../../styles/fonts';
 import Tags from '../base/Tags';
-import CommonModal from '../base/modal/CommonModal';
+import DeleteOrNoModal from './DeleteOrNotModal';
+import CancelOrNotModal from './CancelOrNotModal';
+import { colors } from '../../styles/colors';
 
-const TagEditBottomSheet = ({ onPressBack, onPressClose }) => {
-  const tags = ['태그예시1', '태그예시2'];
+const TagEditBottomSheet = ({ onClose }) => {
+  const [tags, setTags] = useState(['태그예시1', '태그예시2']);
   const [value, setValue] = useState('');
   const [keyboard, setShowKeyboard] = useState(false);
+  const [showEndEditModal, setShowEndEditModal] = useState(false);
+  const [showDeleteButton, setShowDeleteButton] = useState(true);
   const [editMode, setEditMode] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [bottomSheetTitle, setBottomSheetTitle] = useState('태그 편집');
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [selectedTag, setSelectedTag] = useState(null);
+  const [showCancelConfirmModal, setShowCancelConfirmModal] = useState(false);
+
+  const navigation = useNavigation();
 
   const handleInputFocus = () => {
     setShowKeyboard(true);
@@ -22,6 +31,7 @@ const TagEditBottomSheet = ({ onPressBack, onPressClose }) => {
     function onKeyboardDidShow(e) {
       setShowKeyboard(true);
     }
+    setShowDeleteButton(false);
 
     const showSubscription = Keyboard.addListener('keyboardDidShow', onKeyboardDidShow);
     return () => {
@@ -31,18 +41,35 @@ const TagEditBottomSheet = ({ onPressBack, onPressClose }) => {
 
   const calculateSnapPoints = () => {
     if (tags.length < 3) {
-      return [keyboard ? size.height * 500 : size.height * 342];
+      return [keyboard ? size.height * 500 : size.height * 400];
     } else {
       return [size.height * 246, size.height * 246];
     }
   };
 
+  // 태그 삭제 관련
   const toggleEditMode = () => {
-    if (editMode) {
-      setShowConfirmModal(true);
-    } else {
-      setEditMode(true);
-    }
+    setEditMode(!editMode);
+  };
+
+  const handleTagClick = tag => {
+    setSelectedTag(tag);
+    setShowDeleteConfirmModal(true);
+  };
+
+  const handleDeleteTag = () => {
+    setTags(currentTags => currentTags.filter(tag => tag !== selectedTag));
+    setShowDeleteConfirmModal(false);
+  };
+
+  const toggleCancelConfirmModal = () => {
+    setShowCancelConfirmModal(!showCancelConfirmModal);
+  };
+
+  const handleEndEdit = () => {
+    setEditMode(false);
+    setShowCancelConfirmModal(false);
+    toggleEditMode();
   };
 
   return (
@@ -50,18 +77,19 @@ const TagEditBottomSheet = ({ onPressBack, onPressClose }) => {
       <CommonBottomSheet
         title={bottomSheetTitle}
         leftButtonType="back"
-        onLeftButtonPress={onPressBack}
+        onLeftButtonPress={() => setShowEndEditModal(true)}
         rightButtonType="done"
-        onRightButtonPress={onPressClose}
+        onRightButtonPress={onClose}
         snapPoints={calculateSnapPoints()}
       >
         {tags.length < 3 && (
           <InputWrapper>
-            <Input
-              placeholder="태그를 추가해 주세요."
+            <InputWithTag
+              tags={tags}
+              setTags={setTags}
               value={value}
-              onChangeValue={text => setValue(text)}
-              isEditPossible={false}
+              onChangeValue={setValue}
+              placeholder="태그를 추가해 주세요."
               onFocus={handleInputFocus}
               max={7}
             />
@@ -71,41 +99,53 @@ const TagEditBottomSheet = ({ onPressBack, onPressClose }) => {
           <TagsWrapper>
             <TagsHeader>
               <Title>등록된 태그</Title>
-              <TouchableOpacity onPress={toggleEditMode}>
-                <Delete>{!editMode ? '삭제' : '취소'}</Delete>
-              </TouchableOpacity>
+              {showDeleteButton && (
+                <TouchableOpacity
+                  onPress={editMode ? toggleCancelConfirmModal : () => setEditMode(true)}
+                >
+                  <Delete>{!editMode ? '삭제' : '취소'}</Delete>
+                </TouchableOpacity>
+              )}
             </TagsHeader>
             <TagBox>
               {tags.map((tag, idx) => (
-                <Tags key={idx} text={tag} height={42} color="default" isEditPossible={editMode} />
+                <Tags
+                  key={idx}
+                  text={tag}
+                  height={42}
+                  color="default"
+                  isEditPossible={editMode}
+                  onDelete={() => handleTagClick(tag)}
+                />
               ))}
             </TagBox>
           </TagsWrapper>
         )}
       </CommonBottomSheet>
-      <CommonModal
-        isVisible={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
-        title="정말 취소하시겠습니까?"
-        message="변경사항이 사라져요."
-        buttons={[
-          {
-            text: '취소하기',
-            onPress: () => {
-              setEditMode(false);
-              setShowConfirmModal(false);
-            },
-            varient: 'yes',
-            color: 'mdright',
-          },
-          {
-            text: '삭제하기',
-            onPress: () => setShowConfirmModal(false),
-            varient: 'no',
-            color: 'mdright',
-          },
-        ]}
-      />
+      {showEndEditModal && (
+        <CancelOrNotModal
+          show={showEndEditModal}
+          onClose={() => setShowEndEditModal(false)}
+          onEndEdit={() => {
+            setShowEndEditModal(false);
+            onClose();
+          }}
+        />
+      )}
+      {showDeleteConfirmModal && (
+        <DeleteOrNoModal
+          show={showDeleteConfirmModal}
+          onClose={() => setShowDeleteConfirmModal(false)}
+          onEndEdit={handleDeleteTag}
+        />
+      )}
+      {showCancelConfirmModal && (
+        <CancelOrNotModal
+          show={showCancelConfirmModal}
+          onClose={() => setShowCancelConfirmModal(false)}
+          onEndEdit={handleEndEdit}
+        />
+      )}
     </>
   );
 };
@@ -113,16 +153,9 @@ const TagEditBottomSheet = ({ onPressBack, onPressClose }) => {
 export default TagEditBottomSheet;
 
 const InputWrapper = styled(View)`
-  margin: ${size.height * 25}px ${size.width * 32}px ${size.height * 16}px;
-`;
-
-const Input = styled(InputField)`
-  width: '100%';
-  margin: 0 ${size.height * 16}px;
-  align-items: center;
-  justify-content: center;
-  font-family: ${body1.medium.fontFamily};
-  font-size: ${body1.medium.fontSize}px;
+  margin-left: ${size.height * 16}px;
+  margin-right: ${size.height * 16}px;
+  padding: ${size.width * 32}px ${size.height * 16}px;
 `;
 
 const TagsWrapper = styled(View)`
@@ -154,4 +187,26 @@ const TagBox = styled(View)`
   flex-direction: row;
   gap: ${size.width * 11}px;
   flex-wrap: wrap;
+`;
+
+const SearchDropDown = styled(View)`
+  height: ${size.height * 155}px;
+  border-radius: 0 0 12px 12px;
+  background-color: ${colors.grey[100]};
+  padding: 0 ${size.width * 20}px;
+  padding-top: ${size.height * 5}px;
+  position: absolute;
+  left: ${size.width * 23}px;
+  right: ${size.width * 23}px;
+  top: ${size.height * 114}px;
+`;
+
+const MatchedTagsBox = styled(View)`
+  padding: ${size.height * 10}px 0;
+`;
+
+const MatchedTagsText = styled(Text)`
+  font-family: ${body1.medium.fontFamily};
+  font-size: ${size.width * body1.medium.fontSize}px;
+  color: white;
 `;

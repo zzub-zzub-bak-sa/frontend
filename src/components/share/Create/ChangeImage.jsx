@@ -39,7 +39,6 @@ const icons = iconComponents.flatMap((IconComponent, idx) =>
   })),
 );
 
-
 const ChangeImage = ({ folderImage, onPressSelect, onClose }) => {
   const renderItem = ({ item }) => (
     <IconContainer selected={item.id === folderImage} onPress={() => onPressSelect(item.id)}>
@@ -53,6 +52,7 @@ const ChangeImage = ({ folderImage, onPressSelect, onClose }) => {
         snapPoints={[size.height * 640, size.height * 844]}
         title="이미지 변경"
         leftButtonType="back"
+        onLeftButtonPress={onClose}
         rightButtonType="none"
       >
         <FlatList

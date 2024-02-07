@@ -15,10 +15,10 @@ import { subtitle3 } from './src/styles/fonts';
 GestureHandlerRootView;
 
 const toastConfig = {
-  showSuccess: ({ text1, text2, onPressMove }) => (
+  showSuccess: ({ text1, text2, onPress }) => (
     <SuccessToastContainer>
       <SuccessToastText>{text1}</SuccessToastText>
-      <TouchableOpacity onPress={onPressMove}>
+      <TouchableOpacity onPress={onPress}>
         <SuccessToastLink>{text2}</SuccessToastLink>
       </TouchableOpacity>
     </SuccessToastContainer>
