@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, Keyboard, TouchableOpacity } from 'react-native';
+import { View, Image, Keyboard, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
@@ -14,7 +14,7 @@ const CreateFolder = ({
   onClose,
   onBack,
   onChangeImage,
-  onPressNext,
+  onFolderCreationSuccess,
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [showKeyboard, setShowKeyboard] = useState(false);
@@ -65,7 +65,7 @@ const CreateFolder = ({
           color="primary"
           onPress={() => {
             setDataByLink({ ...dataByLink, folderId: 1 });
-            onPressNext();
+            onFolderCreationSuccess();
           }}
         />
       </ButtonContainer>

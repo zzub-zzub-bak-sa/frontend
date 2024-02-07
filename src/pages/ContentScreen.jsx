@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components';
 import size from '../utils/size';
 import IcBack from '../assets/icons/IcBack';
@@ -8,15 +9,35 @@ import { body2, subtitle1 } from '../styles/fonts';
 import Tags from '../components/base/Tags';
 import Instagram from '../assets/icons/Instagram';
 import TagEditSelectBottomSheet from '../components/ContentScreen/TagEditSelectBottomSheet';
+import TagEditBottomSheet from '../components/ContentScreen/TagEditBottomSheet';
+import SearchFolder from '../components/share/Search/SearchFolder';
+import CreateFolder from '../components/share/Create/CreateFolder';
+import ChangeImage from '../components/share/Create/ChangeImage';
+import ContentDeleteModal from '../components/ContentScreen/ContentDeleteModal';
 
 const ContentSceen = () => {
   const tags = ['해당 태그는', '만약길이가길면', '세번째는아래로'];
   const [openTagEdit, setOpenTagEdit] = useState(false);
+  const [selectEditOption, setSelectEditOption] = useState('');
+  const [openFolder, setOpenFolder] = useState(false);
+  const [createNewFolder, setCreateNewFolder] = useState(false);
+  const [openChangeImage, setOpenChangeImage] = useState(false);
+  const [folderImage, setFolderImage] = useState('');
+  const [showToast, setShowToast] = useState(false);
+
+  const navigation = useNavigation();
+
+  const handleSelectEditOption = option => {
+    console.log(option);
+    setSelectEditOption(option);
+    console.log(selectEditOption);
+    setOpenTagEdit(false);
+  };
 
   return (
     <Layout>
       <Header>
-        <TitleBox>
+        <TitleBox onPress={() => navigation.goBack()}>
           <IcBack size={24} color="white" />
         </TitleBox>
         <TouchableOpacity onPress={() => setOpenTagEdit(true)}>
@@ -41,7 +62,57 @@ const ContentSceen = () => {
           <GoSnsText>SNS에서 보기 ></GoSnsText>
         </GoSns>
       </GoSnsContainer>
-      {openTagEdit && <TagEditSelectBottomSheet onClose={() => setOpenTagEdit(false)} />}
+      {openTagEdit && (
+        <TagEditSelectBottomSheet
+          onClose={() => setOpenTagEdit(false)}
+          onSelectOption={handleSelectEditOption}
+        />
+      )}
+      {selectEditOption === '태그 편집' && (
+        <TagEditBottomSheet onClose={() => setSelectEditOption('')} />
+      )}
+      {selectEditOption === '이동' && (
+        <SearchFolder
+          data={[]}
+          onClose={() => setSelectEditOption('')}
+          onPressNewFolder={() => {
+            setOpenFolder(false);
+            setCreateNewFolder(true);
+          }}
+        />
+      )}
+      {createNewFolder && (
+        <CreateFolder
+          placeholder="폴더의 이름을 지어주세요."
+          onClose={() => {
+            setCreateNewFolder(false);
+            setSelectEditOption(false);
+          }}
+          onBack={() => {
+            setCreateNewFolder(false);
+            setOpenFolder(true);
+          }}
+          onChangeImage={() => {
+            setOpenChangeImage(true);
+          }}
+          onFolderCreationSuccess={() => {
+            navigation.navigate('Gallery', { showToast: true });
+            setShowToast(true);
+          }}
+        />
+      )}
+      {openChangeImage && (
+        <ChangeImage
+          folderImage={folderImage}
+          onPressSelect={setFolderImage}
+          onClose={() => {
+            setOpenChangeImage(false);
+          }}
+        />
+      )}
+      {selectEditOption === '삭제' && (
+        <ContentDeleteModal onClose={() => setSelectEditOption('')} />
+      )}
     </Layout>
   );
 };
