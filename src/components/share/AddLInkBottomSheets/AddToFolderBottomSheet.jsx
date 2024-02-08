@@ -78,7 +78,7 @@ const ImageBox = styled(View)`
   justify-content: center;
   margin-top: ${size.height * 15}px;
   margin-bottom: ${size.height * 31}px;
-  padding: ${size.height * 45}px 0 0 0;
+  padding-top: ${size.height * 45}px;
 `;
 
 const FolderImage = styled(Image)`

@@ -34,28 +34,26 @@ const CreateFolder = ({
 
   return (
     <CommonBottomSheet
-      snapPoints={[showKeyboard ? size.height * 785 : size.height * 467]}
+      snapPoints={[showKeyboard ? size.height * 803 : size.height * 467]}
       title="새로운 폴더"
       leftButtonType="back"
       onLeftButtonPress={onBack}
       rightButtonType="done"
       // onRightButtonPress={onClose}
     >
-      <CreateContainer>
-        <ImageBox onPress={onChangeImage}>
-          <FolderImage source={require('../../../assets/images/editFolder.png')} />
-        </ImageBox>
-        <InputContainer>
-          <InputField
-            placeholder={placeholder}
-            placeholderTextColor={colors.grey[200]}
-            value={inputValue}
-            onChangeValue={setInputValue}
-            maxLength={16}
-            onFocus={() => handleInputFocus()}
-          />
-        </InputContainer>
-      </CreateContainer>
+      <ImageBox onPress={onChangeImage}>
+        <FolderImage source={require('../../../assets/images/editFolder.png')} />
+      </ImageBox>
+      <InputContainer>
+        <InputField
+          placeholder={placeholder}
+          placeholderTextColor={colors.grey[200]}
+          value={inputValue}
+          onChangeValue={setInputValue}
+          maxLength={16}
+          onFocus={() => handleInputFocus()}
+        />
+      </InputContainer>
       <ButtonContainer>
         <Button
           width={350}
@@ -74,8 +72,6 @@ const CreateFolder = ({
 };
 
 export default CreateFolder;
-
-const CreateContainer = styled(View)``;
 
 const ButtonContainer = styled(View)`
   border-radius: 12px;

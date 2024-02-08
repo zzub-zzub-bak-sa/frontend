@@ -52,7 +52,7 @@ const Title = styled(Text)`
 const ImageBox = styled(View)`
   align-items: center;
   justify-content: center;
-  padding: ${size.height * 45}px 0 0 0;
+  padding-top: ${size.height * 45}px;
 `;
 
 const FolderImage = styled(Image)`

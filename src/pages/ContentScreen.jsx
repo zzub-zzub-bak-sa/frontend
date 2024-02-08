@@ -13,7 +13,7 @@ import TagEditBottomSheet from '../components/ContentScreen/TagEditBottomSheet';
 import CreateFolder from '../components/share/Create/CreateFolder';
 import ChangeImage from '../components/share/Create/ChangeImage';
 import ContentDeleteModal from '../components/ContentScreen/ContentDeleteModal';
-import Default from '../components/share/Default';
+import SelectFolderBottomSheets from '../components/share/SelectFolderBottomSheets';
 
 const ContentSceen = () => {
   const tags = ['해당 태그는', '만약길이가길면', '세번째는아래로'];
@@ -72,7 +72,7 @@ const ContentSceen = () => {
         <TagEditBottomSheet onClose={() => setSelectEditOption('')} />
       )}
       {selectEditOption === '이동' && (
-        <Default
+        <SelectFolderBottomSheets
           onClose={() => setSelectEditOption('')}
           onNext={() => {
             setSelectEditOption('');

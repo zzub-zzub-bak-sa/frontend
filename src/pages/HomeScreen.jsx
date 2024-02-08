@@ -22,7 +22,6 @@ import SearchResults from '../components/HomeScreen/SearchResults';
 import CommonShortBottomSheet from '../components/base/modal/CommonShortBottomSheet';
 import EditBottomSheet from '../components/HomeScreen/EditBottomSheet';
 import AddLinkBottomSheet from '../components/HomeScreen/AddLinkBottomSheet';
-import SearchFolder from '../components/share/Search/SearchFolder';
 import CreateFolder from '../components/share/Create/CreateFolder';
 import ChangeImage from '../components/share/Create/ChangeImage';
 import AddToFolderBottomSheet from '../components/share/AddLInkBottomSheets/AddToFolderBottomSheet';
@@ -30,7 +29,7 @@ import AddTagBottomSheet from '../components/share/AddLInkBottomSheets/AddTagBot
 import { createPosts } from '../api/apis/posts';
 import { dataByLinkState } from '../store/store';
 import AddTagBottomSheets from '../components/share/AddTagBottomSheets/AddTagBottomSheets';
-import Default from '../components/share/Default';
+import SelectFolderBottomSheets from '../components/share/SelectFolderBottomSheets';
 
 let data = [
   {
@@ -80,9 +79,8 @@ const HomeScreen = () => {
     id: 0,
   });
   const [openAddLink, setOpenAddLink] = useState(false);
-  const [openDefault, setOpenDefault] = useState(false);
+  const [openSelectFolder, setOpenSelectFolder] = useState(false);
   const [openSearchFolder, setOpenSearchFolder] = useState(false);
-  const [selectedFolder, setSelectedFolder] = useState(null);
   const [createNewFolder, setCreateNewFolder] = useState(false);
   const [openChangeImage, setOpenChangeImage] = useState(false);
   const [folderImage, setFolderImage] = useState(0);
@@ -189,23 +187,23 @@ const HomeScreen = () => {
           onPress={() => setOpenAddLink(false)}
           onNext={() => {
             setOpenAddLink(false);
-            setOpenDefault(true);
+            setOpenSelectFolder(true);
           }}
         />
       )}
-      {openDefault && (
-        <Default
-          onClose={() => setOpenDefault('')}
+      {openSelectFolder && (
+        <SelectFolderBottomSheets
+          onClose={() => setOpenSelectFolder('')}
           onNext={() => {
-            setOpenDefault('');
+            setOpenSelectFolder('');
             setOpenFinishSavingFolder(true);
           }}
           onSearch={() => {
-            setOpenDefault(false);
+            setOpenSelectFolder(false);
             setOpenSearchFolder(true);
           }}
           onPressNewFolder={() => {
-            setOpenDefault(false);
+            setOpenSelectFolder(false);
             setCreateNewFolder(true);
           }}
         />
@@ -220,7 +218,7 @@ const HomeScreen = () => {
           }}
           onBack={() => {
             setCreateNewFolder(false);
-            setOpenDefault(true);
+            setOpenSelectFolder(true);
           }}
           onChangeImage={() => {
             setOpenChangeImage(true);

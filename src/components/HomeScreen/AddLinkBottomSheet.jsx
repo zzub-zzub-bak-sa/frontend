@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { Keyboard, View } from 'react-native';
 import styled from 'styled-components/native';
-import { useMutation } from 'react-query';
 import { useRecoilState } from 'recoil';
 import CommonBottomSheet from '../base/modal/CommonBottomSheet';
 import size from '../../utils/size';
 import Button from '../base/Button';
 import InputField from '../base/InputField';
 import { colors } from '../../styles/colors';
-import { HEIGHT, WIDTH } from '../../constants/constants';
 import { dataByLinkState } from '../../store/store';
 
 const AddLinkBottomSheet = ({ onPress, onNext }) => {
@@ -37,7 +35,7 @@ const AddLinkBottomSheet = ({ onPress, onNext }) => {
 
   return (
     <CommonBottomSheet
-      snapPoints={[showKeyboard ? size.height * 540 : size.height * 305]}
+      snapPoints={[showKeyboard ? size.height * 605 : size.height * 305]}
       title="링크 추가하기"
       rightButtonType="close"
       onRightButtonPress={onPress}
@@ -62,9 +60,7 @@ const AddLinkBottomSheet = ({ onPress, onNext }) => {
           onPress={() => {
             if (inputValue.startsWith('http') || inputValue.startsWith('www.')) {
               setDataByLink({ ...dataByLink, url: inputValue });
-              {
-                onNext();
-              }
+              onNext();
             }
           }}
         />
@@ -76,7 +72,7 @@ const AddLinkBottomSheet = ({ onPress, onNext }) => {
 export default AddLinkBottomSheet;
 
 const ButtonContainer = styled(View)`
-  margin: ${size.height * 20}px ${size.width * 20}px ${size.height * 40}px ${size.width * 20}px;
+  margin: ${size.height * 20}px ${size.width * 20}px ${size.height * 40}px;
 `;
 
 const InputContainer = styled(View)`

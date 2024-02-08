@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 import { View } from 'react-native';
@@ -43,7 +43,7 @@ const CommonBottomSheet = forwardRef(
           );
         case 'close':
           return (
-            <ButtonImage onPress={() => ref?.current?.close()}>
+            <ButtonImage onPress={onPress}>
               <IcClear size={24} color="white" />
             </ButtonImage>
           );
@@ -65,7 +65,7 @@ const CommonBottomSheet = forwardRef(
           <Title>{title}</Title>
           {renderButton(rightButtonType, onRightButtonPress)}
         </Header>
-        <StyledBottomSheetScrollView>{children}</StyledBottomSheetScrollView>
+        <ChildrenView>{children}</ChildrenView>
       </BottomSheet>
     );
   },
@@ -100,6 +100,7 @@ const ButtonText = styled.Text`
   font-size: ${body2.medium.fontSize}px;
 `;
 
-const StyledBottomSheetScrollView = styled(BottomSheetScrollView)`
+const ChildrenView = styled(View)`
   background-color: ${colors.bg[400]};
+  flex: 1;
 `;

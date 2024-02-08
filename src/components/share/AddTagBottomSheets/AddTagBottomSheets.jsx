@@ -40,7 +40,7 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose, tags, setTags }) => {
       onLeftButtonPress={onPressBack}
       rightButtonType="done"
       onRightButtonPress={onPressClose}
-      snapPoints={[keyboard ? size.height * 668 : size.height * 362]}
+      snapPoints={[keyboard ? size.height * 800 : size.height * 362]}
     >
       <InputWrapper>
         <Input

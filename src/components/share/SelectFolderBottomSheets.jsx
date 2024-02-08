@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Keyboard, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components';
 import { ScrollView, TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import CommonBottomSheet from '../base/modal/CommonBottomSheet';
@@ -15,9 +14,8 @@ import SearchFolder from './Search/SearchFolder';
 import SearchInput from '../base/SearchInput';
 import NoSearchResult from './Search/NoSearchResult';
 
-const Default = ({ onClose, onPressNewFolder, onNext }) => {
+const SelectFolderBottomSheets = ({ onClose, onPressNewFolder, onNext }) => {
   const bottomSheetRef = useRef(null);
-  const navigation = useNavigation();
 
   const [showKeyboard, setShowKeyboard] = useState(false);
   const [doSearch, setDoSearch] = useState(false);
@@ -53,17 +51,22 @@ const Default = ({ onClose, onPressNewFolder, onNext }) => {
   };
 
   const calculateSnapPoints = () => {
+    let snapPointdefault = 640;
+
     if (showKeyboard) {
-      return [size.height * 593];
+      snapPointdefault = 803;
     } else if (doSearch) {
-      if (searchResults.length > 0) {
-        return [size.height * 310];
-      } else {
-        return [size.height * 360];
-      }
-    } else {
-      return [size.height * 640];
+      snapPointdefault = searchResults.length ? 310 : 360;
     }
+
+    return [size.height * snapPointdefault];
+  };
+
+  const calculateHeight = () => {
+    if (doSearch) {
+      return searchResults.length ? 310 : 230;
+    }
+    return 395;
   };
 
   return (
@@ -94,7 +97,11 @@ const Default = ({ onClose, onPressNewFolder, onNext }) => {
             <SearchInput width={size.width * (WIDTH - 163)} onFocus={handleInputFocus} />
           )}
         </ButtonsContainer>
-        <StyledScrollView doSearch={doSearch} searchResultsLength={searchResults.length}>
+        <StyledScrollView
+          doSearch={doSearch}
+          searchResultsLength={searchResults.length}
+          height={calculateHeight()}
+        >
           {doSearch ? (
             searchResults.length > 0 ? (
               searchResults.map(el => (
@@ -129,9 +136,7 @@ const Default = ({ onClose, onPressNewFolder, onNext }) => {
               text="선택하기"
               varient="filled"
               color="primary"
-              onPress={() => {
-                onNext();
-              }}
+              onPress={onNext}
             />
           </ButtonContainer>
         )}
@@ -156,7 +161,7 @@ const Default = ({ onClose, onPressNewFolder, onNext }) => {
   );
 };
 
-export default Default;
+export default SelectFolderBottomSheets;
 
 const ButtonsContainer = styled.View`
   flex-direction: row;
@@ -177,10 +182,5 @@ const ButtonContainer = styled(View)`
   margin-bottom: ${size.height * 33}px;
 `;
 const StyledScrollView = styled(ScrollView)`
-  height: ${({ doSearch, searchResultsLength }) =>
-    doSearch
-      ? searchResultsLength > 0
-        ? size.height * 310
-        : size.height * 230
-      : size.height * 395}px;
+  height: ${({ height }) => size.height * height}px;
 `;
