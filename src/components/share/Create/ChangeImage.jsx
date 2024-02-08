@@ -49,7 +49,7 @@ const ChangeImage = ({ folderImage, onPressSelect, onClose }) => {
   return (
     <>
       <CommonBottomSheet
-        snapPoints={[size.height * 640, size.height * 844]}
+        snapPoints={[size.height * 630]}
         title="이미지 변경"
         leftButtonType="back"
         onLeftButtonPress={onClose}
@@ -95,5 +95,5 @@ const ButtonContainer = styled(View)`
 `;
 
 const LastComponent = styled(View)`
-  height: ${size.height * 120}px;
+  height: ${size.height * 100}px;
 `;
