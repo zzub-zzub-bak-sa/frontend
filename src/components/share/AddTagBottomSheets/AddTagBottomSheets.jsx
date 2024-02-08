@@ -40,7 +40,7 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose, tags, setTags }) => {
       onLeftButtonPress={onPressBack}
       rightButtonType="done"
       onRightButtonPress={onPressClose}
-      snapPoints={[keyboard ? '94.3%' : '62.7%', '105.7%']}
+      snapPoints={[keyboard ? size.height * 668 : size.height * 362]}
     >
       <InputWrapper>
         <Input
@@ -85,6 +85,7 @@ const Input = styled(InputWithTag)`
 
 const TagsWrapper = styled(View)`
   padding: 0 ${size.width * 20}px;
+  margin-bottom: ${size.height * 32}px;
 `;
 
 const Title = styled(Text)`

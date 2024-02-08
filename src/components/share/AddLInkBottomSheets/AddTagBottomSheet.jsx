@@ -7,12 +7,12 @@ import size from '../../../utils/size';
 import Button from '../../base/Button';
 import { WIDTH } from '../../../constants/constants';
 
-const AddTagBottomSheet = ({ onPressClose }) => {
+const AddTagBottomSheet = ({ onPressClose, fromHomeScreen }) => {
   return (
     <CommonBottomSheet
       rightButtonType="close"
       onRightButtonPress={onPressClose}
-      snapPoints={[size.height * 449]}
+      snapPoints={[size.height * 430]}
     >
       <TitleWrapper>
         <Title>저장 완료!</Title>
@@ -27,7 +27,7 @@ const AddTagBottomSheet = ({ onPressClose }) => {
           height={54}
           varient="filled"
           color="primary"
-          text="앱에서 보기"
+          text={fromHomeScreen ? '콘텐츠 보기' : '앱에서 보기'}
           onPress={onPressClose}
         />
       </ButtonWrapper>
@@ -52,7 +52,7 @@ const Title = styled(Text)`
 const ImageBox = styled(View)`
   align-items: center;
   justify-content: center;
-  padding: ${size.height * 45}px 0;
+  padding: ${size.height * 45}px 0 0 0;
 `;
 
 const FolderImage = styled(Image)`
@@ -62,6 +62,5 @@ const FolderImage = styled(Image)`
 `;
 
 const ButtonWrapper = styled(View)`
-  padding: 0 ${size.height * 30}px;
-  margin-top: ${size.height * -10}px;
+  margin: ${size.height * 33}px ${size.width * 20}px;
 `;
