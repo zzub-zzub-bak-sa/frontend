@@ -30,6 +30,7 @@ import AddTagBottomSheet from '../components/share/AddLInkBottomSheets/AddTagBot
 import { createPosts } from '../api/apis/posts';
 import { dataByLinkState } from '../store/store';
 import AddTagBottomSheets from '../components/share/AddTagBottomSheets/AddTagBottomSheets';
+import Default from '../components/share/Default';
 
 let data = [
   {
@@ -80,8 +81,9 @@ const HomeScreen = () => {
   });
   const [openAddLink, setOpenAddLink] = useState(false);
   const [openDefault, setOpenDefault] = useState(false);
+  const [openSearchFolder, setOpenSearchFolder] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
-  const [openCreateNewFolder, setOpenCreateNewFolder] = useState(false);
+  const [createNewFolder, setCreateNewFolder] = useState(false);
   const [openChangeImage, setOpenChangeImage] = useState(false);
   const [folderImage, setFolderImage] = useState(0);
   const [openFinishSavingFolder, setOpenFinishSavingFolder] = useState(false);
@@ -112,11 +114,6 @@ const HomeScreen = () => {
   useEffect(() => {
     storage();
   }, []);
-
-  const handleNext = () => {
-    setOpenAddLink(false); // AddLinkBottomSheet 닫기
-    setOpenDefault(true); // Default 바텀시트 열기
-  };
 
   return (
     <Layout>
@@ -188,41 +185,49 @@ const HomeScreen = () => {
       )}
       {fixedKeyword && <SearchResults />}
       {openAddLink && (
-        <AddLinkBottomSheet onPressClose={() => setOpenAddLink(false)} onNext={handleNext} />
-      )}
-
-      {openDefault && (
-        <SearchFolder
-          selected={selectedFolder}
-          onPressCard={setSelectedFolder}
-          data={[]}
-          onClose={() => {
-            setOpenDefault(false);
-          }}
-          onPressNewFolder={() => {
-            setOpenDefault(false);
-            setOpenCreateNewFolder(true);
+        <AddLinkBottomSheet
+          onPress={() => setOpenAddLink(false)}
+          onNext={() => {
+            setOpenAddLink(false);
+            setOpenDefault(true);
           }}
         />
       )}
-
-      {openCreateNewFolder && (
+      {openDefault && (
+        <Default
+          onClose={() => setOpenDefault('')}
+          onNext={() => {
+            setOpenDefault('');
+            setOpenFinishSavingFolder(true);
+          }}
+          onSearch={() => {
+            setOpenDefault(false);
+            setOpenSearchFolder(true);
+          }}
+          onPressNewFolder={() => {
+            setOpenDefault(false);
+            setCreateNewFolder(true);
+          }}
+        />
+      )}
+      {createNewFolder && (
         <CreateFolder
           placeholder="폴더의 이름을 지어주세요."
           folderImage={folderImage}
           imageChange={folderImage !== 0}
           onClose={() => {
-            setOpenCreateNewFolder(false);
+            setCreateNewFolder(false);
           }}
           onBack={() => {
-            setOpenCreateNewFolder(false);
+            setCreateNewFolder(false);
             setOpenDefault(true);
           }}
           onChangeImage={() => {
             setOpenChangeImage(true);
+            setCreateNewFolder(false);
           }}
-          onPressNext={() => {
-            setOpenCreateNewFolder(false);
+          onNext={() => {
+            setCreateNewFolder(false);
             setOpenFinishSavingFolder(true);
           }}
         />
@@ -235,12 +240,14 @@ const HomeScreen = () => {
           onClose={() => {
             setOpenChangeImage(false);
             setImageChange(true);
+            setCreateNewFolder(true);
           }}
         />
       )}
 
       {openFinishSavingFolder && (
         <AddToFolderBottomSheet
+          fromHomeScreen={true}
           onPressClose={() => {
             setOpenFinishSavingFolder(false);
           }}
@@ -268,6 +275,7 @@ const HomeScreen = () => {
 
       {openFinish && (
         <AddTagBottomSheet
+          fromHomeScreen={true}
           onPressClose={() => {
             setOpenFinish(false);
             data = [

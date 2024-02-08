@@ -10,10 +10,10 @@ import Tags from '../components/base/Tags';
 import Instagram from '../assets/icons/Instagram';
 import TagEditSelectBottomSheet from '../components/ContentScreen/TagEditSelectBottomSheet';
 import TagEditBottomSheet from '../components/ContentScreen/TagEditBottomSheet';
-import SearchFolder from '../components/share/Search/SearchFolder';
 import CreateFolder from '../components/share/Create/CreateFolder';
 import ChangeImage from '../components/share/Create/ChangeImage';
 import ContentDeleteModal from '../components/ContentScreen/ContentDeleteModal';
+import Default from '../components/share/Default';
 
 const ContentSceen = () => {
   const tags = ['해당 태그는', '만약길이가길면', '세번째는아래로'];
@@ -72,11 +72,15 @@ const ContentSceen = () => {
         <TagEditBottomSheet onClose={() => setSelectEditOption('')} />
       )}
       {selectEditOption === '이동' && (
-        <SearchFolder
-          data={[]}
+        <Default
           onClose={() => setSelectEditOption('')}
+          onNext={() => {
+            setSelectEditOption('');
+            navigation.navigate('Gallery', { showToast: true });
+            setShowToast(true);
+          }}
           onPressNewFolder={() => {
-            setOpenFolder(false);
+            setSelectEditOption('');
             setCreateNewFolder(true);
           }}
         />
@@ -84,18 +88,21 @@ const ContentSceen = () => {
       {createNewFolder && (
         <CreateFolder
           placeholder="폴더의 이름을 지어주세요."
+          folderImage={folderImage}
+          imageChange={folderImage !== 0}
           onClose={() => {
             setCreateNewFolder(false);
             setSelectEditOption(false);
           }}
           onBack={() => {
             setCreateNewFolder(false);
-            setOpenFolder(true);
+            setSelectEditOption('이동');
           }}
           onChangeImage={() => {
             setOpenChangeImage(true);
+            setCreateNewFolder(false);
           }}
-          onFolderCreationSuccess={() => {
+          onNext={() => {
             navigation.navigate('Gallery', { showToast: true });
             setShowToast(true);
           }}
@@ -107,6 +114,7 @@ const ContentSceen = () => {
           onPressSelect={setFolderImage}
           onClose={() => {
             setOpenChangeImage(false);
+            setCreateNewFolder(true);
           }}
         />
       )}
