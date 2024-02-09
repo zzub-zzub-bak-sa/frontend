@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -15,12 +15,30 @@ import Grid from '../components/GalleryScreen/Grid';
 import { colors } from '../styles/colors';
 import IcTrash from '../assets/icons/IcTrash';
 import YesNoModal from '../components/base/modal/YesNoModal';
+import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
+import CancelOrNotModal from '../components/GalleryScreen/CancelOrNotModal';
+import { showSuccessToast } from '../utils/showSuccessToast';
 
 const TrashBinScreen = () => {
   const navigation = useNavigation();
   const [selectedSort, setSelectedSort] = useState('정렬기준');
   const [openSort, setOpenSort] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openRestore, setOpenRestore] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [openCancel, setOpenCancel] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    if (showToast) {
+      showSuccessToast({
+        text1: '이동되었습니다.',
+        text2: '보러가기',
+        onPressMove: () => null,
+      });
+      setShowToast(false);
+    }
+  }, [showToast]);
 
   return (
     <Layout>
@@ -30,8 +48,10 @@ const TrashBinScreen = () => {
             <IcBack size={24} color="white" />
             <Title>휴지통</Title>
           </LeftHeader>
-          <TouchableOpacity>
-            <Restore>복구</Restore>
+          <TouchableOpacity
+            onPress={() => (openRestore ? setOpenCancel(true) : setOpenRestore(true))}
+          >
+            <Restore>{openRestore ? '취소' : '복구'}</Restore>
           </TouchableOpacity>
         </Header>
         <Row>
@@ -45,7 +65,7 @@ const TrashBinScreen = () => {
         </Row>
       </Container>
       <GridBox>
-        <Grid />
+        <Grid selected={selectedItems} onSelect={setSelectedItems} currentEdit={openRestore} />
       </GridBox>
       {openSort && (
         <CommonShortBottomSheet
@@ -67,6 +87,30 @@ const TrashBinScreen = () => {
           onPressLeft={() => setOpenDelete(false)}
           rightText="삭제하기"
           onPressRight={() => navigation.navigate('MyPage')}
+        />
+      )}
+      {openCancel && (
+        <CancelOrNotModal
+          show={openCancel}
+          onClose={() => setOpenCancel(false)}
+          onStop={() => {
+            setSelectedItems([]);
+            setOpenRestore(false);
+          }}
+        />
+      )}
+      {openRestore && (
+        <SelectBottomSheet
+          text={
+            selectedItems.length > 0
+              ? `${selectedItems.length}개의 항목이 선택되었어요.`
+              : `복구할 항목을 선택해 주세요.`
+          }
+          disable={!selectedItems.length}
+          onPress={() => {
+            setOpenRestore(false);
+            setShowToast(true);
+          }}
         />
       )}
     </Layout>

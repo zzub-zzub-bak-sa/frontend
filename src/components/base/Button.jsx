@@ -13,6 +13,7 @@ const Button = ({
   text,
   renderIcon = () => null,
   onPress,
+  disabled,
   style,
 }) => {
   const [buttonStyle, setButtonStyle] = useState({
@@ -110,6 +111,7 @@ const Button = ({
       onPress={onPress}
       buttonStyle={buttonStyle}
       style={style}
+      disabled={disabled}
     >
       {renderIcon()}
       <ButtonText buttonStyle={buttonStyle}>{text}</ButtonText>
