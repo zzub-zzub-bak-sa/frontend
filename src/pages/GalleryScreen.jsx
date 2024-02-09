@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Layout from '../components/layout/Layout';
 import size from '../utils/size';
 import IcBack from '../assets/icons/IcBack';
@@ -37,16 +37,26 @@ const GalleryScreen = () => {
   const [folderImage, setFolderImage] = useState('');
   const [openDelete, setOpenDelete] = useState(false);
 
+  const route = useRoute();
+
   useEffect(() => {
-    if (showMoveToast) {
-      showSuccessToast({
-        text1: '이동되었습니다.',
-        text2: '보러가기',
-        onPressMove: () => null,
-      });
-      setShowMoveToast(false);
+    if (route.params?.showToast) {
+      if (route.params.toastType === 'deleted') {
+        showSuccessToast({
+          text1: '삭제되었습니다.',
+          text2: '휴지통',
+          onPress: () => navigation.navigate('Trash'),
+        });
+      } else {
+        showSuccessToast({
+          text1: '이동되었습니다.',
+          text2: '보러가기',
+          onPressMove: () => {},
+        });
+      }
+      navigation.setParams({ showToast: false, toastType: null });
     }
-  }, [showMoveToast]);
+  }, [navigation, route.params]);
 
   return (
     <Layout>

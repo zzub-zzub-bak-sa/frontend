@@ -6,8 +6,16 @@ import { colors } from '../../styles/colors';
 import IcClear from '../../assets/icons/IcClear';
 import { body1 } from '../../styles/fonts';
 
-const Tags = ({ text, onPressTag, style, color = 'primary', isEditPossible, height = 42 }) => {
-  const [bgColor, setBgColor] = useState('');
+const Tags = ({
+  text,
+  onPressTag,
+  onDelete,
+  style,
+  color = 'primary',
+  isEditPossible,
+  height = 42,
+}) => {
+  const [bgColor, setBgColor] = useState('false');
 
   useEffect(() => {
     if (color === 'primary') {
@@ -21,10 +29,19 @@ const Tags = ({ text, onPressTag, style, color = 'primary', isEditPossible, heig
     return text.length > 7 ? `${text.slice(0, 7)}...` : text;
   };
 
+  const handleDeleteClick = e => {
+    e.stopPropagation();
+    onDelete && onDelete(text);
+  };
+
   return (
     <TagWrapper onPress={onPressTag} style={style} bgColor={bgColor} height={height}>
       <TagText>{handleSliceText()}</TagText>
-      {isEditPossible && <IcClear size={20} color="white" />}
+      {isEditPossible && (
+        <TouchableOpacity onPress={handleDeleteClick}>
+          <IcClear size={20} color="white" />
+        </TouchableOpacity>
+      )}
     </TagWrapper>
   );
 };
