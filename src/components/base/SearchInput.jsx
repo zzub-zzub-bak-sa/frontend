@@ -5,8 +5,8 @@ import size from '../../utils/size';
 import { colors } from '../../styles/colors';
 import { body2 } from '../../styles/fonts';
 
-const SearchInput = ({ width, value, onChangeText }) => {
-  return <Input width={width} value={value} onChangeText={onChangeText} />;
+const SearchInput = ({ width, value, onChangeText, onFocus }) => {
+  return <Input width={width} value={value} onChangeText={onChangeText} onFocus={onFocus} />;
 };
 
 export default SearchInput;

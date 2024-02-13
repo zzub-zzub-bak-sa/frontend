@@ -19,7 +19,7 @@ const Card = ({ title = '', numberOfLinks = 0, onPress, isSelected }) => {
   return (
     <CardWrapper onPress={onPress}>
       <ImageBox>
-        <IcFolderFolder size={64} color={colors.folders.yellow} />
+        <IcFolderFolder size={64} backgroundColor={colors.yellow} />
       </ImageBox>
       <TextWrapper>
         <Title>{handleSliceText()}</Title>

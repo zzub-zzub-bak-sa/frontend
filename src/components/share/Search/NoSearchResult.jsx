@@ -18,11 +18,9 @@ const NoSearchResult = ({ onAddFolder }) => (
 export default NoSearchResult;
 
 const NoResultsContainer = styled(View)`
-  height: 150%;
-  background-color: ${colors.bg[400]};
+  margin: ${size.height * 40}px ${size.width * 100}px;
   align-items: center;
   justify-content: center;
-  padding: ${size.width * 20}px;
 `;
 
 const NoResultText = styled(Text)`
@@ -30,7 +28,6 @@ const NoResultText = styled(Text)`
   font-size: ${body1.medium.fontSize}px;
   line-height: ${size.width * 16 * 1.2}px;
   color: white;
-  font-size: ${size.width * 16}px;
   text-align: center;
   margin-bottom: ${size.height * 4}px;
 `;
@@ -43,7 +40,7 @@ const StyledButton = styled(TouchableOpacity)`
   border: 1px solid white;
   color: white;
   padding: ${size.height * 4}px ${size.width * 12}px;
-  margin-top: ${size.height * 16}px;
+  margin-top: ${size.height * 20}px;
 `;
 
 const StyledButtonText = styled(Text)`

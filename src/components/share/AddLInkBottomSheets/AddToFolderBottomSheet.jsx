@@ -8,12 +8,12 @@ import FolderBox from '../../base/FolderBox';
 import Button from '../../base/Button';
 import { WIDTH } from '../../../constants/constants';
 
-const AddToFolderBottomSheet = ({ onPressClose, onPressGoTag }) => {
+const AddToFolderBottomSheet = ({ onPressClose, onPressGoTag, fromHomeScreen }) => {
   return (
     <CommonBottomSheet
       rightButtonType="close"
       onRightButtonPress={onPressClose}
-      snapPoints={[size.height * 399, size.height * 399]}
+      snapPoints={[size.height * 399]}
     >
       <TitleWrapper>
         <Title>폴더에 저장완료!</Title>
@@ -23,24 +23,37 @@ const AddToFolderBottomSheet = ({ onPressClose, onPressGoTag }) => {
           <FolderImage source={require('../../../assets/images/folder-yellow.png')} />
         </FolderBox>
       </ImageBox>
-      <ButtonWrapper>
-        <Button
-          width={(WIDTH - 64) / 2}
-          height={54}
-          varient="filled"
-          color="primary"
-          text="태그 추가"
-          onPress={onPressGoTag}
-        />
-        <Button
-          width={(WIDTH - 64) / 2}
-          height={54}
-          varient="filled"
-          color="default"
-          text="앱에서 보기"
-          onPress={onPressClose}
-        />
-      </ButtonWrapper>
+      {fromHomeScreen ? (
+        <SingleButtonWrapper>
+          <Button
+            width={WIDTH - 40}
+            height={54}
+            varient="filled"
+            color="primary"
+            text="태그 추가"
+            onPress={onPressGoTag}
+          />
+        </SingleButtonWrapper>
+      ) : (
+        <ButtonWrapper>
+          <Button
+            width={(WIDTH - 64) / 2}
+            height={54}
+            varient="filled"
+            color="primary"
+            text="태그 추가"
+            onPress={onPressGoTag}
+          />
+          <Button
+            width={(WIDTH - 64) / 2}
+            height={54}
+            varient="filled"
+            color="default"
+            text="앱에서 보기"
+            onPress={onPressClose}
+          />
+        </ButtonWrapper>
+      )}
     </CommonBottomSheet>
   );
 };
@@ -64,8 +77,8 @@ const ImageBox = styled(View)`
   align-items: center;
   justify-content: center;
   margin-top: ${size.height * 15}px;
-  margin-bottom: ${size.height * 20}px;
-  padding: ${size.height * 45}px 0;
+  margin-bottom: ${size.height * 31}px;
+  padding-top: ${size.height * 45}px;
 `;
 
 const FolderImage = styled(Image)`
@@ -78,4 +91,8 @@ const ButtonWrapper = styled(View)`
   gap: ${size.width * 8}px;
   padding: 0 ${size.height * 20}px;
   margin-left: ${size.width * 18}px;
+`;
+
+const SingleButtonWrapper = styled(View)`
+  margin: ${size.height * 38}px ${size.width * 20}px;
 `;

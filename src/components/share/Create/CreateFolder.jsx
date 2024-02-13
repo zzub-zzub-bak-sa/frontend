@@ -14,7 +14,7 @@ const CreateFolder = ({
   onClose,
   onBack,
   onChangeImage,
-  onFolderCreationSuccess,
+  onNext,
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [showKeyboard, setShowKeyboard] = useState(false);
@@ -34,28 +34,26 @@ const CreateFolder = ({
 
   return (
     <CommonBottomSheet
-      snapPoints={[showKeyboard ? '95%' : '60%', '60%']}
+      snapPoints={[showKeyboard ? size.height * 803 : size.height * 467]}
       title="새로운 폴더"
       leftButtonType="back"
       onLeftButtonPress={onBack}
       rightButtonType="done"
-      onRightButtonPress={onClose}
+      // onRightButtonPress={onClose}
     >
-      <CreateContainer>
-        <ImageBox onPress={onChangeImage}>
-          <FolderImage source={require('../../../assets/images/editFolder.png')} />
-        </ImageBox>
-        <InputContainer>
-          <InputField
-            placeholder={placeholder}
-            placeholderTextColor={colors.grey[200]}
-            value={inputValue}
-            onChangeValue={setInputValue}
-            maxLength={16}
-            onFocus={() => handleInputFocus()}
-          />
-        </InputContainer>
-      </CreateContainer>
+      <ImageBox onPress={onChangeImage}>
+        <FolderImage source={require('../../../assets/images/editFolder.png')} />
+      </ImageBox>
+      <InputContainer>
+        <InputField
+          placeholder={placeholder}
+          placeholderTextColor={colors.grey[200]}
+          value={inputValue}
+          onChangeValue={setInputValue}
+          maxLength={16}
+          onFocus={() => handleInputFocus()}
+        />
+      </InputContainer>
       <ButtonContainer>
         <Button
           width={350}
@@ -65,7 +63,7 @@ const CreateFolder = ({
           color="primary"
           onPress={() => {
             setDataByLink({ ...dataByLink, folderId: 1 });
-            onFolderCreationSuccess();
+            onNext();
           }}
         />
       </ButtonContainer>
@@ -74,10 +72,6 @@ const CreateFolder = ({
 };
 
 export default CreateFolder;
-
-const CreateContainer = styled(View)`
-  flex: 1;
-`;
 
 const ButtonContainer = styled(View)`
   border-radius: 12px;

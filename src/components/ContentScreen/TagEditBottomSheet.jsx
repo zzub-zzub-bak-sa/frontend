@@ -41,7 +41,7 @@ const TagEditBottomSheet = ({ onClose }) => {
 
   const calculateSnapPoints = () => {
     if (tags.length < 3) {
-      return [keyboard ? size.height * 500 : size.height * 400];
+      return [keyboard ? size.height * 500 : size.height * 342];
     } else {
       return [size.height * 246, size.height * 246];
     }
