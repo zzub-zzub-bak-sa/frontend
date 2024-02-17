@@ -9,7 +9,13 @@ const dataByLinkState = atom({
   },
 });
 
-export {
-  dataByLinkState,
-  //
-};
+const userState = atom({
+  key: 'userState',
+  default: {
+    isLogIn: false,
+    id: '',
+    nickname: '',
+  },
+});
+
+export { dataByLinkState, userState };

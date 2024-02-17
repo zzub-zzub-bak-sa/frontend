@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -10,11 +11,33 @@ import { body2, body3, subtitle1, title3 } from '../styles/fonts';
 import { colors } from '../styles/colors';
 import IcUser from '../assets/icons/IcUser';
 import EditNicknameBottomSheet from '../components/MyPageScreen/EditNicknameBottomSheet';
+import { useRecoilState } from 'recoil';
+import { userState } from '../store/store';
+import { getMe, updateUser } from '../api/apis/account';
 
 const MyPageScreen = () => {
   const navigation = useNavigation();
+  const [user, setUser] = useRecoilState(userState);
   const [editNickname, setEditNickname] = useState(false);
   const [nickname, setNickname] = useState('');
+
+  const { data: userData } = useQuery('userData', getMe, {
+    enabled: user.isLogIn,
+    onSuccess: data => {
+      setUser(oldUser => ({ ...oldUser, nickname: data.nickname }));
+    },
+  });
+
+  // 닉네임 변경
+  const { mutate: changeNickname } = useMutation(updateUser, {
+    onSuccess: data => {
+      setUser(oldUser => ({ ...oldUser, nickname: data.nickname }));
+      console.log('Success', '닉네임이 변경 성공');
+    },
+    onError: error => {
+      console.error('Error', '닉네임 변경 실패');
+    },
+  });
 
   return (
     <Layout>
@@ -25,7 +48,7 @@ const MyPageScreen = () => {
       <UserBox>
         <IcUser size={32} color="white" />
         <View>
-          <UserName>Username</UserName>
+          <UserName>{user.nickname}</UserName>
           <TouchableOpacity onPress={() => setEditNickname(true)}>
             <EditProfile>내 정보 수정</EditProfile>
           </TouchableOpacity>
@@ -36,9 +59,10 @@ const MyPageScreen = () => {
       </BinTextBox>
       {editNickname && (
         <EditNicknameBottomSheet
-          value={nickname}
-          onChangeText={setNickname}
+          value={user.nickname}
+          onChangeText={newNickname => setNickname(newNickname)}
           onPressClose={() => setEditNickname(false)}
+          onSave={() => changeNickname({ nickname: nickname })}
         />
       )}
       <PolicyBox>

@@ -3,10 +3,10 @@ import { FlatList, Platform, Text, TextInput, View } from 'react-native';
 import styled from 'styled-components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { useMutation } from 'react-query';
-import { useRecoilValue } from 'recoil';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import DeviceInfo from 'react-native-device-info';
-import { AsyncStorage } from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Layout from '../components/layout/Layout';
 import Header from '../components/layout/Header';
 import size from '../utils/size';
@@ -27,9 +27,10 @@ import ChangeImage from '../components/share/Create/ChangeImage';
 import AddToFolderBottomSheet from '../components/share/AddLInkBottomSheets/AddToFolderBottomSheet';
 import AddTagBottomSheet from '../components/share/AddLInkBottomSheets/AddTagBottomSheet';
 import { createPosts } from '../api/apis/posts';
-import { dataByLinkState } from '../store/store';
+import { dataByLinkState, userState } from '../store/store';
 import AddTagBottomSheets from '../components/share/AddTagBottomSheets/AddTagBottomSheets';
 import SelectFolderBottomSheets from '../components/share/SelectFolderBottomSheets';
+import { createUser, signin, withdrawApproval } from '../api/apis/account';
 
 let data = [
   {
@@ -69,6 +70,8 @@ let data = [
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
+  const [user, setUser] = useRecoilState(userState);
   const dataByLink = useRecoilValue(dataByLinkState);
   const [keyword, setKeyword] = useState('');
   const [focus, setFocus] = useState(false);
@@ -91,26 +94,70 @@ const HomeScreen = () => {
   const [imageChange, setImageChange] = useState(false);
   const [fixedKeyword, setFixedKeyword] = useState('');
 
-  const { mutate } = useMutation(createPosts, {
-    onSuccess: data => {
-      console.log(data);
-      setOpenFinishSavingFolder(true);
-    },
-  });
+  // const { mutate } = useMutation(createPosts, {
+  //   onSuccess: data => {
+  //     console.log(data);
+  //     setOpenFinishSavingFolder(true);
+  //   },
+  // });
 
-  const storage = async () => {
-    // try {
-    //   const uuid = await AsyncStorage.getItem('@device-id');
-    //   if (!uuid) {
-    //     await AsyncStorage.setItem('@device-id', DeviceInfo.getUniqueId());
-    //   }
-    // } catch (error) {
-    //   console.error('An error occurred while accessing storage:', error);
-    // }
-  };
+  // const deleteDeviceId = async () => {
+  //   try {
+  //     await AsyncStorage.removeItem('@device-id');
+  //     console.log('디바이스 ID 삭제됨');
+
+  //     // 삭제 확인
+  //     const deviceId = await AsyncStorage.getItem('@device-id');
+  //     if (deviceId === null) {
+  //       console.log('삭제 확인됨');
+  //     } else {
+  //       console.log('아직 삭제되지 않음:', deviceId);
+  //     }
+  //   } catch (error) {
+  //     console.error('디바이스 ID 삭제 중 오류 발생:', error);
+  //   }
+  // };
+
+  // const handleAccountWithdrawal = async () => {
+  //   try {
+  //     const response = await withdrawApproval();
+  //     console.log('계정 탈퇴 성공:', response);
+  //     await deleteDeviceId();
+  //   } catch (error) {
+  //     console.error('계정 탈퇴 처리 중 오류 발생:', error);
+  //     // 에러 처리 로직 구현
+  //   }
+  // };
+
+  // handleAccountWithdrawal();
+
+  // 로그인, 회원가입
+  const { mutate: signInOrSignUp } = useMutation(
+    async () => {
+      let deviceId = await AsyncStorage.getItem('@device-id');
+      console.log('device ID:', deviceId); // 확인
+      if (!deviceId) {
+        let uuid = DeviceInfo.getUniqueId();
+        deviceId = uuid._j;
+        await AsyncStorage.setItem('@device-id', deviceId);
+        console.log('새 디바이스 ID 생성:', deviceId); // 확인
+        return await createUser({ id: deviceId, nickname: 'Username' });
+      } else {
+        console.log('기존 디바이스 ID 사용:', deviceId); // 확인
+        return await signin({ id: deviceId });
+      }
+    },
+    {
+      onSuccess: data => {
+        console.log('로그인/회원가입 성공:', data); // 확인
+        setUser(oldUser => ({ ...oldUser, isLogIn: true, id: data.id, nickname: data.nickname }));
+        queryClient.invalidateQueries('userData');
+      },
+    },
+  );
 
   useEffect(() => {
-    storage();
+    signInOrSignUp();
   }, []);
 
   return (
