@@ -101,64 +101,54 @@ const HomeScreen = () => {
   //   },
   // });
 
-  // const deleteDeviceId = async () => {
-  //   try {
-  //     await AsyncStorage.removeItem('@device-id');
-  //     console.log('디바이스 ID 삭제됨');
+  const updateUserState = data => {
+    setUser(user => ({
+      ...user,
+      isLogIn: true,
+      id: data.id,
+      nickname: data.nickname,
+    }));
+    queryClient.invalidateQueries('userData');
+  };
 
-  //     // 삭제 확인
-  //     const deviceId = await AsyncStorage.getItem('@device-id');
-  //     if (deviceId === null) {
-  //       console.log('삭제 확인됨');
-  //     } else {
-  //       console.log('아직 삭제되지 않음:', deviceId);
-  //     }
-  //   } catch (error) {
-  //     console.error('디바이스 ID 삭제 중 오류 발생:', error);
-  //   }
-  // };
-
-  // const handleAccountWithdrawal = async () => {
-  //   try {
-  //     const response = await withdrawApproval();
-  //     console.log('계정 탈퇴 성공:', response);
-  //     await deleteDeviceId();
-  //   } catch (error) {
-  //     console.error('계정 탈퇴 처리 중 오류 발생:', error);
-  //     // 에러 처리 로직 구현
-  //   }
-  // };
-
-  // handleAccountWithdrawal();
-
-  // 로그인, 회원가입
-  const { mutate: signInOrSignUp } = useMutation(
-    async () => {
-      let deviceId = await AsyncStorage.getItem('@device-id');
-      console.log('device ID:', deviceId); // 확인
-      if (!deviceId) {
-        let uuid = DeviceInfo.getUniqueId();
-        deviceId = uuid._j;
-        await AsyncStorage.setItem('@device-id', deviceId);
-        console.log('새 디바이스 ID 생성:', deviceId); // 확인
-        return await createUser({ id: deviceId, nickname: 'Username' });
-      } else {
-        console.log('기존 디바이스 ID 사용:', deviceId); // 확인
-        return await signin({ id: deviceId });
-      }
+  // 회원가입
+  const { mutate: createUserMutate } = useMutation(createUser, {
+    onSuccess: data => {
+      console.log('회원가입 성공', data);
+      updateUserState(data);
     },
-    {
-      onSuccess: data => {
-        console.log('로그인/회원가입 성공:', data); // 확인
-        setUser(oldUser => ({ ...oldUser, isLogIn: true, id: data.id, nickname: data.nickname }));
-        queryClient.invalidateQueries('userData');
-      },
+    onError: error => {
+      console.error('회원가입 실패', error);
     },
-  );
+  });
+
+  // 로그인
+  const { mutate: signInMutate } = useMutation(signin, {
+    onSuccess: data => {
+      console.log('로그인 성공', data);
+      updateUserState(data);
+    },
+    onError: error => {
+      console.error('로그인 실패', error);
+    },
+  });
 
   useEffect(() => {
+    const signInOrSignUp = async () => {
+      const deviceId = await AsyncStorage.getItem('@device-id');
+      console.log('디바이스 ID:', deviceId);
+
+      if (!deviceId) {
+        let uuid = DeviceInfo.getUniqueId();
+        await AsyncStorage.setItem('@device-id', uuid);
+        createUserMutate({ id: uuid, nickname: 'Username' });
+      } else {
+        signInMutate({ id: deviceId });
+      }
+    };
+
     signInOrSignUp();
-  }, []);
+  }, [createUserMutate, signInMutate]);
 
   return (
     <Layout>
