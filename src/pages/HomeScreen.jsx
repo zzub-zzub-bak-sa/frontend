@@ -3,10 +3,10 @@ import { FlatList, Platform, Text, TextInput, View } from 'react-native';
 import styled from 'styled-components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { useMutation } from 'react-query';
-import { useRecoilValue } from 'recoil';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import DeviceInfo from 'react-native-device-info';
-import { AsyncStorage } from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Layout from '../components/layout/Layout';
 import Header from '../components/layout/Header';
 import size from '../utils/size';
@@ -27,9 +27,10 @@ import ChangeImage from '../components/share/Create/ChangeImage';
 import AddToFolderBottomSheet from '../components/share/AddLInkBottomSheets/AddToFolderBottomSheet';
 import AddTagBottomSheet from '../components/share/AddLInkBottomSheets/AddTagBottomSheet';
 import { createPosts } from '../api/apis/posts';
-import { dataByLinkState } from '../store/store';
+import { dataByLinkState, userState } from '../store/store';
 import AddTagBottomSheets from '../components/share/AddTagBottomSheets/AddTagBottomSheets';
 import SelectFolderBottomSheets from '../components/share/SelectFolderBottomSheets';
+import { createUser, signin, withdrawApproval } from '../api/apis/account';
 
 let data = [
   {
@@ -69,6 +70,8 @@ let data = [
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
+  const [user, setUser] = useRecoilState(userState);
   const dataByLink = useRecoilValue(dataByLinkState);
   const [keyword, setKeyword] = useState('');
   const [focus, setFocus] = useState(false);
@@ -91,27 +94,61 @@ const HomeScreen = () => {
   const [imageChange, setImageChange] = useState(false);
   const [fixedKeyword, setFixedKeyword] = useState('');
 
-  const { mutate } = useMutation(createPosts, {
+  // const { mutate } = useMutation(createPosts, {
+  //   onSuccess: data => {
+  //     console.log(data);
+  //     setOpenFinishSavingFolder(true);
+  //   },
+  // });
+
+  const updateUserState = data => {
+    setUser(user => ({
+      ...user,
+      isLogIn: true,
+      id: data.id,
+      nickname: data.nickname,
+    }));
+    queryClient.invalidateQueries('userData');
+  };
+
+  // 회원가입
+  const { mutate: createUserMutate } = useMutation(createUser, {
     onSuccess: data => {
-      console.log(data);
-      setOpenFinishSavingFolder(true);
+      console.log('회원가입 성공', data);
+      updateUserState(data);
+    },
+    onError: error => {
+      console.error('회원가입 실패', error);
     },
   });
 
-  const storage = async () => {
-    // try {
-    //   const uuid = await AsyncStorage.getItem('@device-id');
-    //   if (!uuid) {
-    //     await AsyncStorage.setItem('@device-id', DeviceInfo.getUniqueId());
-    //   }
-    // } catch (error) {
-    //   console.error('An error occurred while accessing storage:', error);
-    // }
-  };
+  // 로그인
+  const { mutate: signInMutate } = useMutation(signin, {
+    onSuccess: data => {
+      console.log('로그인 성공', data);
+      updateUserState(data);
+    },
+    onError: error => {
+      console.error('로그인 실패', error);
+    },
+  });
 
   useEffect(() => {
-    storage();
-  }, []);
+    const signInOrSignUp = async () => {
+      const deviceId = await AsyncStorage.getItem('@device-id');
+      console.log('디바이스 ID:', deviceId);
+
+      if (!deviceId) {
+        let uuid = DeviceInfo.getUniqueId();
+        await AsyncStorage.setItem('@device-id', uuid);
+        createUserMutate({ id: uuid, nickname: 'Username' });
+      } else {
+        signInMutate({ id: deviceId });
+      }
+    };
+
+    signInOrSignUp();
+  }, [createUserMutate, signInMutate]);
 
   return (
     <Layout>
