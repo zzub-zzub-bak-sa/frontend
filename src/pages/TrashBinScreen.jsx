@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -21,6 +21,7 @@ import { showSuccessToast } from '../utils/showSuccessToast';
 
 const TrashBinScreen = () => {
   const navigation = useNavigation();
+  const sortRef = useRef(null);
   const [selectedSort, setSelectedSort] = useState('정렬기준');
   const [openSort, setOpenSort] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -69,7 +70,11 @@ const TrashBinScreen = () => {
       </GridBox>
       {openSort && (
         <CommonShortBottomSheet
-          onClose={() => setOpenSort(false)}
+          ref={sortRef}
+          onClose={() => {
+            sortRef?.current?.close();
+            setOpenSort(false);
+          }}
           onSetValue={setSelectedSort}
           data={['가나다순', '최신순', '오래된순']}
         />
