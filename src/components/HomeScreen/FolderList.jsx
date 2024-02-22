@@ -9,23 +9,9 @@ import { caption1 } from '../../styles/fonts';
 import { colors } from '../../styles/colors';
 import IcArrowDown from '../../assets/icons/IcArrowDown';
 import Folder from './Folder';
-import { getFolder, getFolderForHome } from '../../api/apis/folders';
-import { userState } from '../../store/store';
 
-const FolderList = ({ onPressSort, sort, data, onPressKebab }) => {
+const FolderList = ({ onPressSort, sort, onPressKebab, folders }) => {
   const navigation = useNavigation();
-  const user = useRecoilValue(userState);
-  const [folders, setFolders] = useState([]);
-
-  useQuery(['get-folders'], () => getFolderForHome({ sort: 'newest', token: user.token }), {
-    enabled: user.isLogIn === true,
-    onSuccess: data => {
-      console.log(data.data);
-      setFolders(data.data);
-    },
-    onError: err => console.log(err),
-  });
-
   return (
     <Content>
       <SelectBox onPress={onPressSort}>
@@ -36,9 +22,9 @@ const FolderList = ({ onPressSort, sort, data, onPressKebab }) => {
         data={folders}
         renderItem={({ item, index }) => (
           <Folder
-            index={item.id}
+            id={item.id}
             title={item.name}
-            onPressKebab={() => onPressKebab(index)}
+            onPressKebab={() => onPressKebab(item)}
             onPress={() => navigation.navigate('Gallery')}
           />
         )}

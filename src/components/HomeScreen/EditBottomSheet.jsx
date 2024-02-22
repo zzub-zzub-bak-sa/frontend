@@ -1,16 +1,45 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
+import { useMutation } from 'react-query';
+import { useRecoilValue } from 'recoil';
 import CommonShortBottomSheet from '../base/modal/CommonShortBottomSheet';
+import { deleteFolder, updateFolder } from '../../api/apis/folders';
+import { tokenState } from '../../store/store';
 
-// TODO: API 연동 이후 index -> id로 변경하기
-const EditBottomSheet = ({ onClose, index }) => {
-  const [editCondition, setEditCondition] = useState('');
+const EditBottomSheet = ({ onClose, detailData }) => {
   const editRef = useRef(null);
+  const token = useRecoilValue(tokenState);
+  const [editCondition, setEditCondition] = useState('');
+
+  const { mutate: doUpdate } = useMutation(updateFolder, {
+    onSuccess: data => {
+      if (data.success) {
+        handleClose();
+      }
+    },
+  });
+
+  const { mutate: doDelete } = useMutation(deleteFolder, {
+    onSuccess: data => {
+      if (data.success) {
+        handleClose();
+      }
+    },
+  });
+
+  const handleClose = () => {
+    editRef?.current?.close();
+
+    setTimeout(() => {
+      onClose();
+    }, 1000);
+  };
 
   useEffect(() => {
     if (editCondition === '폴더삭제') {
-      // index
+      doUpdate({ id: detailData.id, name: detailData.nme, assetType: detailData.assetType, token });
     } else if (editCondition === '폴더편집') {
-      // index
+      doDelete({ id: detailData.id, token });
     }
   }, [editCondition]);
 
@@ -18,13 +47,7 @@ const EditBottomSheet = ({ onClose, index }) => {
     <CommonShortBottomSheet
       ref={editRef}
       onSetValue={setEditCondition}
-      onClose={() => {
-        editRef?.current?.close();
-
-        setTimeout(() => {
-          onClose();
-        }, 1000);
-      }}
+      onClose={handleClose}
       data={['폴더삭제', '폴더편집']}
       snapPoints={['20.8%']}
     />

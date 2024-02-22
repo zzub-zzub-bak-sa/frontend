@@ -12,11 +12,15 @@ const dataByLinkState = atom({
 const userState = atom({
   key: 'userState',
   default: {
-    token: '',
     isLogIn: false,
     id: '',
     nickname: '',
   },
 });
 
-export { dataByLinkState, userState };
+const tokenState = atom({
+  key: 'tokenState',
+  default: '',
+});
+
+export { dataByLinkState, userState, tokenState };

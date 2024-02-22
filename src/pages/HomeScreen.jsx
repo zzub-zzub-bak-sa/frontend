@@ -1,85 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, Platform, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Platform, Text, View } from 'react-native';
 import styled from 'styled-components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Layout from '../components/layout/Layout';
 import Header from '../components/layout/Header';
 import size from '../utils/size';
-import IcSearch from '../assets/icons/IcSearch';
-import { body1, caption1, subtitle3 } from '../styles/fonts';
+import { subtitle3 } from '../styles/fonts';
 import { colors } from '../styles/colors';
-import IcArrowDown from '../assets/icons/IcArrowDown';
-import Folder from '../components/HomeScreen/Folder';
 import { WIDTH } from '../constants/constants';
 import IcPlus from '../assets/icons/IcPlus';
-import IcClearCircle from '../assets/icons/IcClearCircle';
 import SearchResults from '../components/HomeScreen/SearchResults';
 import CommonShortBottomSheet from '../components/base/modal/CommonShortBottomSheet';
-import EditBottomSheet from '../components/HomeScreen/EditBottomSheet';
 import AddLinkBottomSheet from '../components/HomeScreen/AddLinkBottomSheet';
 import CreateFolder from '../components/share/Create/CreateFolder';
 import ChangeImage from '../components/share/Create/ChangeImage';
 import AddToFolderBottomSheet from '../components/share/AddLInkBottomSheets/AddToFolderBottomSheet';
 import AddTagBottomSheet from '../components/share/AddLInkBottomSheets/AddTagBottomSheet';
-import { createPosts } from '../api/apis/posts';
-import { dataByLinkState, userState } from '../store/store';
+import { tokenState, userState } from '../store/store';
 import AddTagBottomSheets from '../components/share/AddTagBottomSheets/AddTagBottomSheets';
 import SelectFolderBottomSheets from '../components/share/SelectFolderBottomSheets';
-import { createUser, signin, withdrawApproval } from '../api/apis/account';
+import { createUser, signin } from '../api/apis/account';
+import SearchBox from '../components/HomeScreen/SearchBox';
+import FolderList from '../components/HomeScreen/FolderList';
+import { getFolderForHome } from '../api/apis/folders';
 
-let data = [
-  {
-    title: '홍대맛집',
-    numberOfLinks: 20,
-  },
-  {
-    title: '송파',
-    numberOfLinks: 100,
-  },
-  {
-    title: '전주맛집',
-    numberOfLinks: 1000,
-  },
-  {
-    title: '짜장과짬뽕',
-    numberOfLinks: 10,
-  },
-  {
-    title: '엄마 생신 파티',
-    numberOfLinks: 20,
-  },
-  {
-    title: '역시밥은쌀밥이지',
-    numberOfLinks: 100,
-  },
+import EditBottomSheet from '../components/HomeScreen/EditBottomSheet';
 
-  {
-    title: '경남 맛집',
-    numberOfLinks: 1000,
-  },
-  {
-    title: '경주 맛집 투어',
-    numberOfLinks: 100,
-  },
-];
-
-const HomeScreen = () => {
-  const navigation = useNavigation();
+const HomeScreen = ({ navigation, route }) => {
   const queryClient = useQueryClient();
+  const sortRef = useRef(null);
+  const [token, setToken] = useRecoilState(tokenState);
   const [user, setUser] = useRecoilState(userState);
-  const dataByLink = useRecoilValue(dataByLinkState);
   const [keyword, setKeyword] = useState('');
   const [focus, setFocus] = useState(false);
   const [openSort, setOpenSort] = useState(false);
   const [sort, setSort] = useState('가나다순');
   const [openEdit, setOpenEdit] = useState({
     condition: false,
-    id: 0,
+    data: {},
   });
   const [openAddLink, setOpenAddLink] = useState(false);
   const [openSelectFolder, setOpenSelectFolder] = useState(false);
@@ -93,21 +55,17 @@ const HomeScreen = () => {
   const [tags, setTags] = useState([]);
   const [imageChange, setImageChange] = useState(false);
   const [fixedKeyword, setFixedKeyword] = useState('');
+  const [folders, setFolders] = useState([]);
 
-  // const { mutate } = useMutation(createPosts, {
-  //   onSuccess: data => {
-  //     console.log(data);
-  //     setOpenFinishSavingFolder(true);
-  //   },
-  // });
-
-  const updateUserState = data => {
+  const updateUserState = async data => {
     setUser(user => ({
       ...user,
       isLogIn: true,
       id: data.id,
       nickname: data.nickname,
     }));
+    setToken(data.data.accessToken);
+    await AsyncStorage.setItem('@token', String(data.data.accessToken));
     queryClient.invalidateQueries('userData');
   };
 
@@ -133,14 +91,23 @@ const HomeScreen = () => {
     },
   });
 
+  const { refetch } = useQuery(['get-folders'], () => getFolderForHome({ sort: 'newest', token }), {
+    enabled: user.isLogIn === true,
+    onSuccess: data => {
+      console.log(data.data);
+      setFolders(data.data);
+    },
+    onError: err => console.log(err),
+  });
+
   useEffect(() => {
     const signInOrSignUp = async () => {
       const deviceId = await AsyncStorage.getItem('@device-id');
       console.log('디바이스 ID:', deviceId);
 
       if (!deviceId) {
-        let uuid = DeviceInfo.getUniqueId();
-        await AsyncStorage.setItem('@device-id', uuid);
+        const uuid = DeviceInfo.getUniqueId();
+        await AsyncStorage.setItem('@device-id', String(uuid));
         createUserMutate({ id: uuid, nickname: 'Username' });
       } else {
         signInMutate({ id: deviceId });
@@ -153,69 +120,64 @@ const HomeScreen = () => {
   return (
     <Layout>
       <Header />
-      <InputWrapper>
-        <InputBox focus={focus}>
-          <IcSearch />
-          <Input
-            placeholder="폴더,태그를 검색해 보세요!"
-            placeholderTextColor={colors.grey[200]}
-            value={keyword}
-            onChangeText={text => setKeyword(text)}
-            onFocus={() => setFocus(true)}
-            onEndEditing={() => {
-              setFocus(false);
-              setFixedKeyword(keyword);
-            }}
-          />
-          {keyword && (
-            <TouchableOpacity onPress={() => setKeyword('')}>
-              <IcClearCircle />
-            </TouchableOpacity>
-          )}
-        </InputBox>
-      </InputWrapper>
+      <SearchBox
+        focus={focus}
+        keyword={keyword}
+        onSetKeyword={setKeyword}
+        onBlur={() => {
+          setFocus(false);
+          setFixedKeyword(keyword);
+        }}
+        onFocus={() => setFocus(true)}
+        onIntializeKeyword={() => setKeyword('')}
+      />
       {!keyword && !focus && (
-        <>
-          <Content>
-            <SelectBox onPress={() => setOpenSort(true)}>
-              <SelectText>{sort}</SelectText>
-              <IcArrowDown />
-            </SelectBox>
-            <FlatList
-              data={data.filter(el => el.title.includes(keyword))}
-              renderItem={({ item, index }) => (
-                <Folder
-                  index={index}
-                  title={item.title}
-                  numberOfLinks={item.numberOfLinks}
-                  onPressKebab={() => setOpenEdit({ condition: true, id: index })}
-                  onPress={() => navigation.navigate('Gallery')}
-                />
-              )}
-              keyExtractor={(_, index) => String(index)}
-              numColumns={2}
-              ListFooterComponent={<FooterComponent />}
-            />
-          </Content>
-          <FloatingBox>
-            <FloatingButton onPress={() => setOpenAddLink(true)}>
-              <IcPlus />
-              <FloatingButtonText>링크 추가하기</FloatingButtonText>
-            </FloatingButton>
-          </FloatingBox>
-        </>
+        <FolderList
+          onPressSort={() => {
+            if (!openSort) {
+              setOpenSort(true);
+            } else {
+              sortRef.current.close();
+
+              setTimeout(() => {
+                setOpenSort(false);
+              }, 1000);
+            }
+          }}
+          sort={sort}
+          onPressKebab={item => setOpenEdit({ condition: true, data: item })}
+          folders={folders}
+        />
+      )}
+      {!keyword && !focus && (
+        <FloatingBox>
+          <FloatingButton onPress={() => setOpenAddLink(true)}>
+            <IcPlus />
+            <FloatingButtonText>링크 추가하기</FloatingButtonText>
+          </FloatingButton>
+        </FloatingBox>
       )}
       {openSort && (
         <CommonShortBottomSheet
+          ref={sortRef}
           onSetValue={setSort}
-          onClose={() => setOpenSort(false)}
+          onClose={() => {
+            sortRef.current.close();
+
+            setTimeout(() => {
+              setOpenSort(false);
+            }, 1000);
+          }}
           data={['가나다순', '최신순', '오래된순']}
         />
       )}
       {openEdit.condition && (
         <EditBottomSheet
-          onClose={() => setOpenEdit({ ...openEdit, condition: false })}
-          index={openEdit.id}
+          onClose={() => {
+            setOpenEdit({ ...openEdit, condition: false });
+            refetch();
+          }}
+          detailData={openEdit.data}
         />
       )}
       {fixedKeyword && <SearchResults />}
@@ -313,13 +275,6 @@ const HomeScreen = () => {
           fromHomeScreen={true}
           onPressClose={() => {
             setOpenFinish(false);
-            data = [
-              {
-                title: '연남맛집',
-                numberOfLinks: 1,
-              },
-              ...data,
-            ];
           }}
         />
       )}
@@ -328,50 +283,6 @@ const HomeScreen = () => {
 };
 
 export default HomeScreen;
-
-const InputWrapper = styled(View)`
-  height: ${size.height * 72}px;
-  margin: 0 ${size.width * 24}px;
-  justify-content: center;
-`;
-
-const InputBox = styled(View)`
-  flex-direction: row;
-  gap: ${size.width * 16}px;
-  padding-bottom: ${size.height * 13}px;
-  border-bottom-color: ${({ focus }) => (focus ? colors.orange : 'white')};
-  border-bottom-width: 1px;
-`;
-
-const Input = styled(TextInput)`
-  width: ${size.width * (WIDTH - 125)}px;
-  font-family: ${body1.medium.fontFamily};
-  font-size: ${body1.medium.fontSize}px;
-  color: white;
-`;
-
-const Content = styled(View)`
-  margin-top: ${size.height * 4}px;
-  padding: 0 ${size.width * 20}px;
-`;
-
-const SelectBox = styled(TouchableOpacity)`
-  width: 100%;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  margin-bottom: ${size.height * 20}px;
-`;
-
-const SelectText = styled(Text)`
-  font-family: ${caption1.semibold.fontFamily};
-  font-size: ${caption1.semibold.fontSize}px;
-  color: ${colors.grey[500]};
-`;
-
-const FooterComponent = styled(View)`
-  height: ${size.height * 150}px;
-`;
 
 const FloatingBox = styled(View)`
   position: absolute;
