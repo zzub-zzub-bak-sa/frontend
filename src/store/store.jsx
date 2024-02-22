@@ -12,6 +12,7 @@ const dataByLinkState = atom({
 const userState = atom({
   key: 'userState',
   default: {
+    token: '',
     isLogIn: false,
     id: '',
     nickname: '',
