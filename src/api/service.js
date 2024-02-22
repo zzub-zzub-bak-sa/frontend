@@ -1,12 +1,15 @@
-import { Alert } from 'react-native';
 import instance from './instance';
 
 const handleApiError = error => {
-  Alert.alert(`${error.message}`);
+  console.log(`${error.message}`);
 };
 
-const apiCall = async ({ method, url, data }) => {
+const apiCall = async ({ method, url, data, token }) => {
   try {
+    if (token) {
+      instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+    }
+
     const response = await instance[method](url, data);
     return response.data;
   } catch (error) {
