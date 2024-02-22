@@ -26,7 +26,10 @@ const TagEditSelectBottomSheet = ({ onClose, onSelectOption }) => {
       onSetValue={handleOptionSelect}
       onClose={() => {
         tagRef?.current?.close();
-        onClose();
+
+        setTimeout(() => {
+          onClose();
+        }, 1000);
       }}
       data={['태그 편집', '이동', '삭제']}
       snapPoints={[size.height * 234, size.height * 300]}

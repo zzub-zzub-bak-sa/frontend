@@ -73,7 +73,10 @@ const TrashBinScreen = () => {
           ref={sortRef}
           onClose={() => {
             sortRef?.current?.close();
-            setOpenSort(false);
+
+            setTimeout(() => {
+              setOpenSort(false);
+            }, 1000);
           }}
           onSetValue={setSelectedSort}
           data={['가나다순', '최신순', '오래된순']}

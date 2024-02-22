@@ -110,7 +110,10 @@ const GalleryScreen = ({ navigation, route }) => {
           onSetValue={setCurrentEdit}
           onClose={() => {
             editRef.current.close();
-            setOpenEdit(false);
+
+            setTimeout(() => {
+              setOpenEdit(false);
+            }, 1000);
           }}
           data={['이동', '삭제']}
         />
@@ -149,7 +152,10 @@ const GalleryScreen = ({ navigation, route }) => {
           onSetValue={setSelectedSort}
           onClose={() => {
             sortRef.current.close();
-            setOpenSort(false);
+
+            setTimeout(() => {
+              setOpenSort(false);
+            }, 1000);
           }}
           data={['가나다순', '최신순', '오래된순']}
         />

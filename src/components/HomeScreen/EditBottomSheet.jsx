@@ -20,7 +20,10 @@ const EditBottomSheet = ({ onClose, index }) => {
       onSetValue={setEditCondition}
       onClose={() => {
         editRef?.current?.close();
-        onClose();
+
+        setTimeout(() => {
+          onClose();
+        }, 1000);
       }}
       data={['폴더삭제', '폴더편집']}
       snapPoints={['20.8%']}
