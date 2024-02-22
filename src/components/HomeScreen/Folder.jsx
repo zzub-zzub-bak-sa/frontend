@@ -13,9 +13,11 @@ const Folder = ({ title = '', numberOfLinks = 0, index, onPressKebab, onPress })
 
   return (
     <FolderWrapper index={index} onPress={onPress}>
-      <KebabMenu onPress={onPressKebab}>
-        <IcDots />
-      </KebabMenu>
+      {title !== '기본 폴더' && (
+        <KebabMenu onPress={onPressKebab}>
+          <IcDots />
+        </KebabMenu>
+      )}
       <View>
         <IconWrapper>
           <Icon source={require('../../assets/images/folder-yellow.png')} />
