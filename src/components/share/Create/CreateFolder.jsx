@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { View, Image, Keyboard, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useMutation } from 'react-query';
+import { useRecoilValue } from 'recoil';
 import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
 import Button from '../../base/Button';
 import { colors } from '../../../styles/colors';
 import size from '../../../utils/size';
 import InputField from '../../base/InputField';
-import { dataByLinkState } from '../../../store/store';
+import { createFolder } from '../../../api/apis/folders';
+import { tokenState } from '../../../store/store';
 
 const CreateFolder = ({
   placeholder = '태그를 입력하세요',
@@ -15,10 +17,20 @@ const CreateFolder = ({
   onBack,
   onChangeImage,
   onNext,
+  folderImage,
 }) => {
+  const token = useRecoilValue(tokenState);
   const [inputValue, setInputValue] = useState('');
   const [showKeyboard, setShowKeyboard] = useState(false);
-  const [dataByLink, setDataByLink] = useRecoilState(dataByLinkState);
+
+  const { mutate } = useMutation(createFolder, {
+    onSuccess: data => {
+      console.log(data);
+      if (data.success) {
+        onNext();
+      }
+    },
+  });
 
   const handleInputFocus = () => {
     setShowKeyboard(true);
@@ -32,6 +44,12 @@ const CreateFolder = ({
     };
   };
 
+  const renderItem = () => (
+    <IconContainer>
+      <folderImage.IconComponent size={72} color="white" backgroundColor={folderImage.color} />
+    </IconContainer>
+  );
+
   return (
     <CommonBottomSheet
       snapPoints={[showKeyboard ? size.height * 803 : size.height * 467]}
@@ -39,11 +57,8 @@ const CreateFolder = ({
       leftButtonType="back"
       onLeftButtonPress={onBack}
       rightButtonType="done"
-      // onRightButtonPress={onClose}
     >
-      <ImageBox onPress={onChangeImage}>
-        <FolderImage source={require('../../../assets/images/editFolder.png')} />
-      </ImageBox>
+      <ImageBox onPress={onChangeImage}>{renderItem()}</ImageBox>
       <InputContainer>
         <InputField
           placeholder={placeholder}
@@ -58,12 +73,15 @@ const CreateFolder = ({
         <Button
           width={350}
           height={54}
-          text="선택하기"
+          text="추가하기"
           varient="filled"
           color="primary"
           onPress={() => {
-            setDataByLink({ ...dataByLink, folderId: 1 });
-            onNext();
+            mutate({
+              name: inputValue,
+              assetType: 1,
+              token,
+            });
           }}
         />
       </ButtonContainer>
@@ -96,4 +114,9 @@ const FolderImage = styled(Image)`
   width: ${size.width * 100}px;
   height: ${size.height * 100}px;
   overflow: visible;
+`;
+
+const IconContainer = styled(View)`
+  border-radius: 14px;
+  margin: ${size.width * 10}px;
 `;
