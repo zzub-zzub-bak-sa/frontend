@@ -41,7 +41,7 @@ const icons = iconComponents.flatMap((IconComponent, idx) =>
 
 const ChangeImage = ({ folderImage, onPressSelect, onClose }) => {
   const renderItem = ({ item }) => (
-    <IconContainer selected={item.id === folderImage} onPress={() => onPressSelect(item.id)}>
+    <IconContainer selected={item.id === folderImage.id} onPress={() => onPressSelect(item)}>
       <item.IconComponent size={72} color="white" backgroundColor={item.color} />
     </IconContainer>
   );
@@ -80,7 +80,7 @@ const ChangeImage = ({ folderImage, onPressSelect, onClose }) => {
 
 export default ChangeImage;
 
-const IconContainer = styled(TouchableOpacity)`
+export const IconContainer = styled(TouchableOpacity)`
   border-radius: 14px;
   border: ${({ selected }) => (selected ? '1px solid white' : `1px solid ${colors.grey[100]}`)};
   margin: ${size.width * 10}px;
