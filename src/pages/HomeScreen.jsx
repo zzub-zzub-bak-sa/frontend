@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 import styled from 'styled-components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Layout from '../components/layout/Layout';
@@ -29,6 +30,7 @@ import FolderList from '../components/HomeScreen/FolderList';
 import { getFolderForHome } from '../api/apis/folders';
 
 import EditBottomSheet from '../components/HomeScreen/EditBottomSheet';
+import IcFolderFolder from '../assets/icons/folders/IcFolderFolder';
 
 const HomeScreen = ({ navigation, route }) => {
   const queryClient = useQueryClient();
@@ -48,7 +50,11 @@ const HomeScreen = ({ navigation, route }) => {
   const [openSearchFolder, setOpenSearchFolder] = useState(false);
   const [createNewFolder, setCreateNewFolder] = useState(false);
   const [openChangeImage, setOpenChangeImage] = useState(false);
-  const [folderImage, setFolderImage] = useState(0);
+  const [folderImage, setFolderImage] = useState({
+    IconComponent: IcFolderFolder,
+    color: colors.folders.yellow,
+    id: '',
+  });
   const [openFinishSavingFolder, setOpenFinishSavingFolder] = useState(false);
   const [openFinish, setOpenFinish] = useState(false);
   const [openTag, setOpenTag] = useState(false);
@@ -121,7 +127,7 @@ const HomeScreen = ({ navigation, route }) => {
     if (user.isLogIn) {
       refetch();
     }
-  }, [user.isLogIn, refetch]);
+  }, [user.isLogIn]);
 
   return (
     <Layout>
@@ -227,7 +233,6 @@ const HomeScreen = ({ navigation, route }) => {
           }}
           onChangeImage={() => {
             setOpenChangeImage(true);
-            setCreateNewFolder(false);
           }}
           onNext={() => {
             setCreateNewFolder(false);
@@ -253,6 +258,7 @@ const HomeScreen = ({ navigation, route }) => {
           fromHomeScreen={true}
           onPressClose={() => {
             setOpenFinishSavingFolder(false);
+            refetch();
           }}
           onPressGoTag={() => {
             setOpenFinishSavingFolder(false);
