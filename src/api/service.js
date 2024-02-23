@@ -1,7 +1,7 @@
 import instance from './instance';
 
-const handleApiError = error => {
-  console.log(`${error.message}`);
+const handleApiError = (error, url) => {
+  console.log(`${url}: ${error.message}`);
 };
 
 const apiCall = async ({ method, url, data, token }) => {
@@ -13,7 +13,7 @@ const apiCall = async ({ method, url, data, token }) => {
     const response = await instance[method](url, data);
     return response.data;
   } catch (error) {
-    handleApiError(error);
+    handleApiError(error, url);
     throw error;
   }
 };
