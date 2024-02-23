@@ -66,7 +66,7 @@ const HomeScreen = ({ navigation, route }) => {
     }));
     setToken(data.data.accessToken);
     await AsyncStorage.setItem('@token', String(data.data.accessToken));
-    queryClient.invalidateQueries('userData');
+    queryClient.invalidateQueries('get-folders');
   };
 
   // 회원가입
@@ -116,6 +116,12 @@ const HomeScreen = ({ navigation, route }) => {
 
     signInOrSignUp();
   }, [createUserMutate, signInMutate]);
+
+  useEffect(() => {
+    if (user.isLogIn) {
+      refetch();
+    }
+  }, [user.isLogIn, refetch]);
 
   return (
     <Layout>
