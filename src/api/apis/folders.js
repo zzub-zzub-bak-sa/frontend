@@ -1,6 +1,6 @@
 import apiCall from '../service';
 
-export const postFolders = async ({ name, assetType, token }) => {
+export const createFolder = async ({ name, assetType, token }) => {
   return apiCall({
     method: 'post',
     url: '/content/folders',
