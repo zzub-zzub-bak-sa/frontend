@@ -20,7 +20,7 @@ const FolderList = ({ onPressSort, sort, onPressKebab, folders }) => {
       </SelectBox>
       <FlatList
         data={folders}
-        renderItem={({ item, index }) => (
+        renderItem={({ item }) => (
           <Folder
             id={item.id}
             title={item.name}
