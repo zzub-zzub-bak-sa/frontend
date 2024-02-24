@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import CommonShortBottomSheet from '../base/modal/CommonShortBottomSheet';
 import size from '../../utils/size';
 
 const TagEditSelectBottomSheet = ({ onClose, onSelectOption }) => {
+  const tagRef = useRef(null);
+
   const handleOptionSelect = option => {
     switch (option) {
       case '태그 편집':
@@ -20,8 +22,15 @@ const TagEditSelectBottomSheet = ({ onClose, onSelectOption }) => {
 
   return (
     <CommonShortBottomSheet
+      ref={tagRef}
       onSetValue={handleOptionSelect}
-      onClose={onClose}
+      onClose={() => {
+        tagRef?.current?.close();
+
+        setTimeout(() => {
+          onClose();
+        }, 1000);
+      }}
       data={['태그 편집', '이동', '삭제']}
       snapPoints={[size.height * 234, size.height * 300]}
     />

@@ -8,14 +8,20 @@ import { body1 } from '../../../styles/fonts';
 
 const CommonShortBottomSheet = forwardRef(
   ({ snapPoints = ['27.5%'], index = 0, style, onSetValue, onClose, data = [] }, ref) => {
+    const handleChange = props => {
+      if (props.toLocaleString() < 0) {
+        onClose();
+      }
+    };
+
     return (
       <BottomSheet
         ref={ref}
         index={index}
         snapPoints={snapPoints}
         enablePanDownToClose={true}
-        handleComponent={() => null}
-        backgroundComponent={null}
+        backgroundStyle={{ backgroundColor: colors.bg[200] }}
+        onChange={handleChange}
         style={style}
       >
         <Container>

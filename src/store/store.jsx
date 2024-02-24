@@ -18,4 +18,9 @@ const userState = atom({
   },
 });
 
-export { dataByLinkState, userState };
+const tokenState = atom({
+  key: 'tokenState',
+  default: '',
+});
+
+export { dataByLinkState, userState, tokenState };

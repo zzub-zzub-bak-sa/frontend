@@ -6,16 +6,18 @@ import { colors } from '../../styles/colors';
 import { caption1, subtitle1 } from '../../styles/fonts';
 import IcDots from '../../assets/icons/IcDots';
 
-const Folder = ({ title = '', numberOfLinks = 0, index, onPressKebab, onPress }) => {
+const Folder = ({ title = '', numberOfLinks = 0, id, onPressKebab, onPress }) => {
   const handleNumberOfLinks = () => {
     return numberOfLinks >= 1000 ? '999+' : numberOfLinks;
   };
 
   return (
-    <FolderWrapper index={index} onPress={onPress}>
-      <KebabMenu onPress={onPressKebab}>
-        <IcDots />
-      </KebabMenu>
+    <FolderWrapper id={id} onPress={onPress}>
+      {title !== '기본 폴더' && (
+        <KebabMenu onPress={onPressKebab}>
+          <IcDots />
+        </KebabMenu>
+      )}
       <View>
         <IconWrapper>
           <Icon source={require('../../assets/images/folder-yellow.png')} />
@@ -38,7 +40,7 @@ const FolderWrapper = styled(TouchableOpacity)`
   background-color: ${colors.bg[100]};
   padding: ${size.height * 16}px ${size.width * 16}px;
   margin-bottom: ${size.height * 14}px;
-  margin-right: ${({ index }) => (index % 2 === 0 ? size.width * 14 : 0)}px;
+  margin-right: ${({ id }) => (id % 2 ? size.width * 14 : 0)}px;
 `;
 
 const KebabMenu = styled(TouchableOpacity)`

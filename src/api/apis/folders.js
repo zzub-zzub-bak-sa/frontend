@@ -1,6 +1,6 @@
 import apiCall from '../service';
 
-export const postFolders = async ({ name, assetType }) => {
+export const createFolder = async ({ name, assetType, token }) => {
   return apiCall({
     method: 'post',
     url: '/content/folders',
@@ -8,31 +8,35 @@ export const postFolders = async ({ name, assetType }) => {
       name,
       assetType,
     },
+    token,
   });
 };
 
-export const getFolderBySharing = async ({ keyword }) => {
+export const getFolderBySharing = async ({ keyword, token }) => {
   return apiCall({
     method: 'get',
     url: `/content/folders/by-sharing?keyword=${keyword}`,
+    token,
   });
 };
 
-export const getFolderForHome = async ({ sort = 'alphabet' | 'newest' | 'oldest' }) => {
+export const getFolderForHome = async ({ sort, token }) => {
   return apiCall({
     method: 'get',
-    url: `/content/folders/home?sort=${sort}`,
+    url: `/content/folders/home${sort ? `?sort=${sort}` : ''}}`,
+    token,
   });
 };
 
-export const getFolder = async ({ id, sort = 'newest' | 'oldest' | 'recommend' }) => {
+export const getFolder = async ({ id, sort = 'newest', token }) => {
   return apiCall({
     method: 'get',
     url: `/content/folders/${id}?sort=${sort}`,
+    token,
   });
 };
 
-export const updateFolder = async ({ id, name, assetType }) => {
+export const updateFolder = async ({ id, name, assetType, token }) => {
   return apiCall({
     method: 'put',
     url: `/content/folders/${id}`,
@@ -40,26 +44,30 @@ export const updateFolder = async ({ id, name, assetType }) => {
       name,
       assetType,
     },
+    token,
   });
 };
 
-export const deleteFolder = async ({ id }) => {
+export const deleteFolder = async ({ id, token }) => {
   return apiCall({
     method: 'delete',
     url: `/content/folders/${id}`,
+    token,
   });
 };
 
-export const getSearch = async ({ keyword }) => {
+export const getSearch = async ({ keyword, token }) => {
   return apiCall({
     method: 'get',
     url: `/content/folders/search?keyword=${keyword}`,
+    token,
   });
 };
 
-export const getAutoComplete = async ({ keyword }) => {
+export const getAutoComplete = async ({ keyword, token }) => {
   return apiCall({
     method: 'get',
     url: `/content/folders/auto-complete?keyword=${keyword}`,
+    token,
   });
 };

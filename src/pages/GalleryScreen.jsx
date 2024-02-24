@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -21,8 +21,9 @@ import Grid from '../components/GalleryScreen/Grid';
 import YesNoModal from '../components/base/modal/YesNoModal';
 import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
 
-const GalleryScreen = () => {
-  const navigation = useNavigation();
+const GalleryScreen = ({ navigation, route }) => {
+  const editRef = useRef(null);
+  const sortRef = useRef(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [currentEdit, setCurrentEdit] = useState('');
   const [selected, setSelected] = useState([]);
@@ -36,8 +37,6 @@ const GalleryScreen = () => {
   const [openChangeImage, setOpenChangeImage] = useState(false);
   const [folderImage, setFolderImage] = useState('');
   const [openDelete, setOpenDelete] = useState(false);
-
-  const route = useRoute();
 
   useEffect(() => {
     if (route.params?.showToast) {
@@ -106,9 +105,16 @@ const GalleryScreen = () => {
       )}
       {openEdit && (
         <CommonShortBottomSheet
+          ref={editRef}
           snapPoints={['20.8%']}
           onSetValue={setCurrentEdit}
-          onClose={() => setOpenEdit(false)}
+          onClose={() => {
+            editRef.current.close();
+
+            setTimeout(() => {
+              setOpenEdit(false);
+            }, 1000);
+          }}
           data={['이동', '삭제']}
         />
       )}
@@ -142,8 +148,15 @@ const GalleryScreen = () => {
       )}
       {openSort && (
         <CommonShortBottomSheet
+          ref={sortRef}
           onSetValue={setSelectedSort}
-          onClose={() => setOpenSort(false)}
+          onClose={() => {
+            sortRef.current.close();
+
+            setTimeout(() => {
+              setOpenSort(false);
+            }, 1000);
+          }}
           data={['가나다순', '최신순', '오래된순']}
         />
       )}
