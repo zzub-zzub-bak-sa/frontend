@@ -37,13 +37,17 @@ const ContentSceen = ({ navigation, route }) => {
     Linking.openURL(url);
   };
 
-  useQuery(['get-post-detail', route.params?.id], () => getPost({ id: route.params?.id, token }), {
-    onSuccess: data => {
-      if (data.code === 'OK') {
-        setPostData(data.data);
-      }
+  const { refetch } = useQuery(
+    ['get-post-detail', route.params?.id],
+    () => getPost({ id: route.params?.id, token }),
+    {
+      onSuccess: data => {
+        if (data.code === 'OK') {
+          setPostData(data.data);
+        }
+      },
     },
-  });
+  );
 
   return (
     <Layout>
@@ -73,6 +77,7 @@ const ContentSceen = ({ navigation, route }) => {
           <GoSnsText>{'SNS에서 보기 >'}</GoSnsText>
         </GoSns>
       </GoSnsContainer>
+      {/* 모달 */}
       {openTagEdit && (
         <TagEditSelectBottomSheet
           onClose={() => setOpenTagEdit(false)}
@@ -130,7 +135,14 @@ const ContentSceen = ({ navigation, route }) => {
         />
       )}
       {selectEditOption === '삭제' && (
-        <ContentDeleteModal onClose={() => setSelectEditOption('')} />
+        <ContentDeleteModal
+          id={postData.id}
+          onClose={() => setSelectEditOption('')}
+          onGoBack={() => {
+            navigation.goBack();
+            refetch();
+          }}
+        />
       )}
     </Layout>
   );

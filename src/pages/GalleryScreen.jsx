@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import Layout from '../components/layout/Layout';
 import size from '../utils/size';
@@ -22,6 +22,7 @@ import YesNoModal from '../components/base/modal/YesNoModal';
 import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
 import { getFolder } from '../api/apis/folders';
 import { tokenState } from '../store/store';
+import { deletePosts } from '../api/apis/posts';
 
 const GalleryScreen = ({ navigation, route }) => {
   const editRef = useRef(null);
@@ -42,7 +43,7 @@ const GalleryScreen = ({ navigation, route }) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [detailData, setDetailData] = useState({});
 
-  useQuery(
+  const { refetch } = useQuery(
     ['get-folder-detail'],
     () => getFolder({ id: route.params?.id, sort: 'newest', token }),
     {
@@ -54,6 +55,14 @@ const GalleryScreen = ({ navigation, route }) => {
       },
     },
   );
+
+  const { mutate } = useMutation(deletePosts, {
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        refetch();
+      }
+    },
+  });
 
   useEffect(() => {
     if (route.params?.showToast) {
@@ -73,6 +82,12 @@ const GalleryScreen = ({ navigation, route }) => {
       navigation.setParams({ showToast: false, toastType: null });
     }
   }, [navigation, route.params]);
+
+  const handlePostDelete = () => {
+    mutate({
+      postIds: selected,
+    });
+  };
 
   return (
     <Layout>
@@ -122,7 +137,12 @@ const GalleryScreen = ({ navigation, route }) => {
           leftText="취소하기"
           onPressLeft={() => setOpenDelete(false)}
           rightText="삭제하기"
-          onPressRight={() => null}
+          onPressRight={() => {
+            handlePostDelete();
+            setSelected([]);
+            setOpenDelete(false);
+            setCurrentEdit('');
+          }}
         />
       )}
       {openEdit && (
@@ -148,7 +168,13 @@ const GalleryScreen = ({ navigation, route }) => {
               : `${currentEdit}할 항목을 선택해 주세요.`
           }
           disable={!selected.length}
-          onPress={() => (currentEdit === '삭제' ? setOpenDelete(true) : setOpenFolder(true))}
+          onPress={() => {
+            if (currentEdit === '삭제') {
+              setOpenDelete(true);
+            } else {
+              setOpenFolder(true);
+            }
+          }}
         />
       )}
       {openFolder && (

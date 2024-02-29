@@ -9,12 +9,12 @@ import { colors } from '../../styles/colors';
 const Grid = ({ selected, onSelect, currentEdit, data }) => {
   const navigation = useNavigation();
 
-  const handleSelect = item => {
+  const handleSelect = id => {
     if (currentEdit) {
-      if (selected.includes(item)) {
-        onSelect(selected.filter(el => el !== item));
+      if (selected.includes(id)) {
+        onSelect(selected.filter(el => el !== id));
       } else {
-        onSelect([...selected, item]);
+        onSelect([...selected, id]);
       }
     }
   };
@@ -27,19 +27,24 @@ const Grid = ({ selected, onSelect, currentEdit, data }) => {
         renderItem={({ item }) => (
           <ArticleBox
             item={item}
-            selected={currentEdit && selected.includes(item)}
             onPress={() =>
               currentEdit
-                ? handleSelect(item)
+                ? handleSelect(item.id)
                 : navigation.navigate('Content', {
                     id: item.id,
                   })
             }
           >
-            {currentEdit && selected.includes(item) && (
-              <CheckBox>
-                <Check size={24} color="white" />
-              </CheckBox>
+            {currentEdit && selected.includes(item.id) && (
+              <>
+                <Blur
+                  selected={currentEdit && selected.includes(item.id)}
+                  onPress={() => handleSelect(item.id)}
+                />
+                <CheckBox>
+                  <Check size={24} color="white" />
+                </CheckBox>
+              </>
             )}
             <CoverImage src={item.contentUrl} alt={item.url} />
           </ArticleBox>
@@ -61,16 +66,16 @@ const ArticleBox = styled(TouchableOpacity)`
   width: ${size.width * 112}px;
   height: ${size.height * 112}px;
   border-radius: 16px;
-  background-color: ${({ selected }) => (selected ? colors.bg.selected : colors.bg[200])};
   margin-bottom: ${size.height * 7}px;
   margin-right: ${({ item }) => (item % 3 !== 0 ? size.width * 7 : 0)}px;
-  opacity: ${({ selected }) => (selected ? 0.9 : 1)};
+
   position: relative;
   overflow: 'hidden';
 `;
 
 const CheckBox = styled(View)`
   position: absolute;
+  z-index: 1;
   bottom: ${size.height * 8}px;
   right: ${size.width * 8}px;
 `;
@@ -84,4 +89,14 @@ const CoverImage = styled(Image)`
   height: 100%;
   border-radius: 16px;
   object-fit: cover;
+`;
+
+const Blur = styled(TouchableOpacity)`
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background-color: ${({ selected }) => (selected ? colors.bg.selected : 'white')};
+  opacity: ${({ selected }) => (selected ? 0.5 : 1)};
+  position: absolute;
+  z-index: 1;
 `;
