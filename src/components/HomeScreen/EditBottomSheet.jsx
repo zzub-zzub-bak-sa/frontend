@@ -37,9 +37,9 @@ const EditBottomSheet = ({ onClose, detailData }) => {
 
   useEffect(() => {
     if (editCondition === '폴더삭제') {
-      doUpdate({ id: detailData.id, name: detailData.nme, assetType: detailData.assetType, token });
-    } else if (editCondition === '폴더편집') {
       doDelete({ id: detailData.id, token });
+    } else if (editCondition === '폴더편집') {
+      // doUpdate({ id: detailData.id, name: detailData.nme, assetType: detailData.assetType, token });
     }
   }, [editCondition]);
 

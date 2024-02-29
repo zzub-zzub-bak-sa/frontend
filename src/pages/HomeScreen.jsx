@@ -40,7 +40,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [keyword, setKeyword] = useState('');
   const [focus, setFocus] = useState(false);
   const [openSort, setOpenSort] = useState(false);
-  const [sort, setSort] = useState('가나다순');
+  const [sort, setSort] = useState('alphabet');
   const [openEdit, setOpenEdit] = useState({
     condition: false,
     data: {},
@@ -97,8 +97,8 @@ const HomeScreen = ({ navigation, route }) => {
     },
   });
 
-  const { refetch } = useQuery(['get-folders'], () => getFolderForHome({ sort: 'newest', token }), {
-    enabled: user.isLogIn === true,
+  const foldersQuery = useQuery(['get-folders'], () => getFolderForHome({ sort, token }), {
+    enabled: false,
     onSuccess: data => {
       console.log(data.data);
       setFolders(data.data);
@@ -125,7 +125,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (user.isLogIn) {
-      refetch();
+      foldersQuery.refetch();
     }
   }, [user.isLogIn]);
 
@@ -172,7 +172,16 @@ const HomeScreen = ({ navigation, route }) => {
       {openSort && (
         <CommonShortBottomSheet
           ref={sortRef}
-          onSetValue={setSort}
+          onSetValue={text => {
+            if (text === '가나다순') {
+              setSort('alphabet');
+            } else if (text === '최신순') {
+              setSort('newest');
+            } else if (text === '오래된순') {
+              setSort('oldest');
+            }
+            foldersQuery.refetch();
+          }}
           onClose={() => {
             sortRef.current.close();
 
@@ -187,7 +196,7 @@ const HomeScreen = ({ navigation, route }) => {
         <EditBottomSheet
           onClose={() => {
             setOpenEdit({ ...openEdit, condition: false });
-            refetch();
+            foldersQuery.refetch();
           }}
           detailData={openEdit.data}
         />
@@ -236,7 +245,8 @@ const HomeScreen = ({ navigation, route }) => {
           }}
           onNext={() => {
             setCreateNewFolder(false);
-            setOpenFinishSavingFolder(true);
+            setOpenSelectFolder(true);
+            // setOpenFinishSavingFolder(true);
           }}
         />
       )}
@@ -258,7 +268,7 @@ const HomeScreen = ({ navigation, route }) => {
           fromHomeScreen={true}
           onPressClose={() => {
             setOpenFinishSavingFolder(false);
-            refetch();
+            foldersQuery.refetch();
           }}
           onPressGoTag={() => {
             setOpenFinishSavingFolder(false);
@@ -277,8 +287,6 @@ const HomeScreen = ({ navigation, route }) => {
             setOpenTag(false);
             setOpenFinish(true);
           }}
-          tags={tags}
-          setTags={setTags}
         />
       )}
 

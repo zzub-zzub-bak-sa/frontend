@@ -1,25 +1,19 @@
 import React, { useState } from 'react';
 import { Keyboard, Text, View } from 'react-native';
 import styled from 'styled-components/native';
+import { useRecoilState } from 'recoil';
 import size from '../../../utils/size';
 import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
 import { body1 } from '../../../styles/fonts';
 import Tags from '../../base/Tags';
 import InputWithTag from '../../base/InputWithTag';
+import { dataByLinkState } from '../../../store/store';
 
-const AddTagBottomSheets = ({ onPressBack, onPressClose, tags, setTags }) => {
-  const tagList = [
-    '김밥',
-    '맛집',
-    '카페',
-    '맛있는커피',
-    '데이트',
-    '데이트하기좋은',
-    '술집',
-    '일식',
-  ];
+const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
+  const [dataByLink, setDataByLink] = useRecoilState(dataByLinkState);
   const [value, setValue] = useState('');
   const [keyboard, setShowKeyboard] = useState(false);
+  const [tags, setTags] = useState([]);
 
   const handleInputFocus = () => {
     setShowKeyboard(true);
@@ -39,8 +33,11 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose, tags, setTags }) => {
       leftButtonType="back"
       onLeftButtonPress={onPressBack}
       rightButtonType="done"
-      onRightButtonPress={onPressClose}
-      snapPoints={[keyboard ? size.height * 800 : size.height * 362]}
+      onRightButtonPress={() => {
+        setDataByLink({ ...dataByLink, tags });
+        onPressClose();
+      }}
+      snapPoints={[keyboard ? size.height * 362 : size.height * 810]}
     >
       <InputWrapper>
         <Input
@@ -58,8 +55,8 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose, tags, setTags }) => {
         <TagsWrapper>
           <Title>등록된 태그</Title>
           <TagBox>
-            {tagList.map((tag, idx) => (
-              <Tags key={idx} text={tag} height={42} color="default" />
+            {[...new Set(tags)].map((tag, index) => (
+              <Tags key={index} text={tag} height={42} color="default" />
             ))}
           </TagBox>
         </TagsWrapper>
