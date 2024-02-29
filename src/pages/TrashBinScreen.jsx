@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import { useQuery } from 'react-query';
+import { useRecoilValue } from 'recoil';
 import Layout from '../components/layout/Layout';
 import IcBack from '../assets/icons/IcBack';
 import size from '../utils/size';
@@ -18,10 +19,12 @@ import YesNoModal from '../components/base/modal/YesNoModal';
 import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
 import CancelOrNotModal from '../components/GalleryScreen/CancelOrNotModal';
 import { showSuccessToast } from '../utils/showSuccessToast';
+import { getDeletedPosts } from '../api/apis/posts';
+import { tokenState } from '../store/store';
 
-const TrashBinScreen = () => {
-  const navigation = useNavigation();
+const TrashBinScreen = ({ navigation, route }) => {
   const sortRef = useRef(null);
+  const token = useRecoilValue(tokenState);
   const [selectedSort, setSelectedSort] = useState('정렬기준');
   const [openSort, setOpenSort] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -29,6 +32,17 @@ const TrashBinScreen = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [openCancel, setOpenCancel] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [deletePosts, setDeletedPosts] = useState([]);
+
+  useQuery(['get-deleted-posts'], () => getDeletedPosts(token), {
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        setDeletedPosts(data.data);
+        console.log('posts');
+        console.log(data);
+      }
+    },
+  });
 
   useEffect(() => {
     if (showToast) {
@@ -66,7 +80,12 @@ const TrashBinScreen = () => {
         </Row>
       </Container>
       <GridBox>
-        <Grid selected={selectedItems} onSelect={setSelectedItems} currentEdit={openRestore} />
+        <Grid
+          selected={selectedItems}
+          onSelect={setSelectedItems}
+          currentEdit={openRestore}
+          data={deletePosts}
+        />
       </GridBox>
       {openSort && (
         <CommonShortBottomSheet
