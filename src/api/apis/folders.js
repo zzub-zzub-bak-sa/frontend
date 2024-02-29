@@ -20,7 +20,7 @@ export const getFolderBySharing = async ({ keyword, token }) => {
   });
 };
 
-export const getFolderForHome = async ({ sort, token }) => {
+export const getFolderForHome = async ({ sort = 'alphabet', token }) => {
   return apiCall({
     method: 'get',
     url: `/content/folders/home${sort ? `?sort=${sort}` : ''}}`,
