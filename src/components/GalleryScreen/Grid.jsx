@@ -1,40 +1,49 @@
 import React from 'react';
-import { FlatList, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
 import Check from '../../assets/icons/Check';
 import size from '../../utils/size';
 import { colors } from '../../styles/colors';
 
-const Grid = ({ selected, onSelect, currentEdit }) => {
+const Grid = ({ selected, onSelect, currentEdit, data }) => {
   const navigation = useNavigation();
+
+  const handleSelect = item => {
+    if (currentEdit) {
+      if (selected.includes(item)) {
+        onSelect(selected.filter(el => el !== item));
+      } else {
+        onSelect([...selected, item]);
+      }
+    }
+  };
 
   return (
     <GridWrapper>
       <FlatList
-        data={Array(20)
-          .fill(0)
-          .map((_, i) => i + 1)}
-        renderItem={({ item }) => {
-          return currentEdit ? (
-            <>
-              {selected && selected.includes(item) ? (
-                <SelectedBox onPress={() => onSelect(selected.filter(el => el !== item))}>
-                  <CheckBox>
-                    <Check size={24} color="white" />
-                  </CheckBox>
-                </SelectedBox>
-              ) : (
-                <ArticleBox
-                  item={item}
-                  onPress={() => (currentEdit ? onSelect([...selected, item]) : null)}
-                />
-              )}
-            </>
-          ) : (
-            <ArticleBox item={item} onPress={() => navigation.navigate('Content')} />
-          );
-        }}
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <ArticleBox
+            item={item}
+            selected={currentEdit && selected.includes(item)}
+            onPress={() =>
+              currentEdit
+                ? handleSelect(item)
+                : navigation.navigate('Content', {
+                    id: item.id,
+                  })
+            }
+          >
+            {currentEdit && selected.includes(item) && (
+              <CheckBox>
+                <Check size={24} color="white" />
+              </CheckBox>
+            )}
+            <CoverImage src={item.contentUrl} alt={item.url} />
+          </ArticleBox>
+        )}
         ListFooterComponent={<FooterComponent />}
         numColumns={3}
       />
@@ -52,14 +61,12 @@ const ArticleBox = styled(TouchableOpacity)`
   width: ${size.width * 112}px;
   height: ${size.height * 112}px;
   border-radius: 16px;
-  background-color: ${colors.bg[200]};
+  background-color: ${({ selected }) => (selected ? colors.bg.selected : colors.bg[200])};
   margin-bottom: ${size.height * 7}px;
   margin-right: ${({ item }) => (item % 3 !== 0 ? size.width * 7 : 0)}px;
-`;
-
-const SelectedBox = styled(ArticleBox)`
-  background-color: ${colors.bg.selected};
-  opacity: 0.9;
+  opacity: ${({ selected }) => (selected ? 0.9 : 1)};
+  position: relative;
+  overflow: 'hidden';
 `;
 
 const CheckBox = styled(View)`
@@ -70,4 +77,11 @@ const CheckBox = styled(View)`
 
 const FooterComponent = styled(View)`
   height: 150px;
+`;
+
+const CoverImage = styled(Image)`
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  object-fit: cover;
 `;
