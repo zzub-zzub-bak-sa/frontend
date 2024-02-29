@@ -42,6 +42,7 @@ const GalleryScreen = ({ navigation, route }) => {
   const [folderImage, setFolderImage] = useState('');
   const [openDelete, setOpenDelete] = useState(false);
   const [detailData, setDetailData] = useState({});
+  const [currentFolderId, setCurrentFolderId] = useState(0);
 
   const { refetch } = useQuery(
     ['get-folder-detail'],
@@ -51,6 +52,7 @@ const GalleryScreen = ({ navigation, route }) => {
         if (data.code === 'OK') {
           console.log(data.data);
           setDetailData(data.data);
+          setCurrentFolderId(data.id);
         }
       },
     },
@@ -107,7 +109,13 @@ const GalleryScreen = ({ navigation, route }) => {
         )}
       </Header>
       <Row>
-        <TouchableOpacity onPress={() => navigation.navigate('SearchGallery')}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('SearchGallery', {
+              id: currentFolderId,
+            })
+          }
+        >
           <IcSearch size={20} color="white" />
         </TouchableOpacity>
         <SortBox onPress={() => setOpenSort(true)}>
