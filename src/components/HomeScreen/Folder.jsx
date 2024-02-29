@@ -40,7 +40,7 @@ const FolderWrapper = styled(TouchableOpacity)`
   background-color: ${colors.bg[100]};
   padding: ${size.height * 16}px ${size.width * 16}px;
   margin-bottom: ${size.height * 14}px;
-  margin-right: ${({ id }) => (id % 2 ? size.width * 14 : 0)}px;
+  margin-right: ${({ id }) => (id % 2 === 0 ? size.width * 14 : 0)}px;
 `;
 
 const KebabMenu = styled(TouchableOpacity)`
