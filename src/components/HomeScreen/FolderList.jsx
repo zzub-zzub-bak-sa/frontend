@@ -22,8 +22,6 @@ const FolderList = ({ onPressSort, sort, onPressKebab, folders }) => {
     }
   }, [sort]);
 
-  console.log(folders);
-
   return (
     <Content>
       <SelectBox onPress={onPressSort}>
@@ -32,9 +30,9 @@ const FolderList = ({ onPressSort, sort, onPressKebab, folders }) => {
       </SelectBox>
       <FlatList
         data={folders}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <Folder
-            id={item.id}
+            index={index}
             title={item.name}
             numberOfLinks={item._count}
             onPressKebab={() => onPressKebab(item)}

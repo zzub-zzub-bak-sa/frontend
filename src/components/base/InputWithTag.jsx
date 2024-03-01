@@ -21,7 +21,6 @@ const InputWithTag = ({
   const handleTagAdd = () => {
     setTags([...tags, value]);
     onChangeValue('');
-    console.log(tags);
   };
   const handleTagDelete = idx => {
     setTags(tags.filter((_, i) => i !== idx));
