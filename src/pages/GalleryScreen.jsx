@@ -118,7 +118,7 @@ const GalleryScreen = ({ navigation, route }) => {
         >
           <IcSearch size={20} color="white" />
         </TouchableOpacity>
-        <SortBox onPress={() => setOpenSort(true)}>
+        <SortBox onPress={() => setOpenSort(!openSort)}>
           <SortBoxText>{selectedSort}</SortBoxText>
           <IcArrowDown />
         </SortBox>
@@ -164,6 +164,8 @@ const GalleryScreen = ({ navigation, route }) => {
             setTimeout(() => {
               setOpenEdit(false);
             }, 1000);
+
+            refetch();
           }}
           data={['이동', '삭제']}
         />
