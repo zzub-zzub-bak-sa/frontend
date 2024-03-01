@@ -73,7 +73,7 @@ const CreateFolder = ({
         <Button
           width={350}
           height={54}
-          text="추가하기"
+          text="선택하기"
           varient="filled"
           color="primary"
           onPress={() => {

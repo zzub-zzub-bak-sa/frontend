@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
-import { useQuery } from 'react-query';
-import { useRecoilValue } from 'recoil';
 import size from '../../utils/size';
 import { caption1 } from '../../styles/fonts';
 import { colors } from '../../styles/colors';
@@ -12,10 +10,24 @@ import Folder from './Folder';
 
 const FolderList = ({ onPressSort, sort, onPressKebab, folders }) => {
   const navigation = useNavigation();
+  const [sortName, setSortName] = useState('가나다순');
+
+  useEffect(() => {
+    if (sort === 'alphabet') {
+      setSortName('가나다순');
+    } else if (sort === 'newest') {
+      setSortName('최신순');
+    } else if (sort === 'oldest') {
+      setSortName('오래된순');
+    }
+  }, [sort]);
+
+  console.log(folders);
+
   return (
     <Content>
       <SelectBox onPress={onPressSort}>
-        <SelectText>{sort}</SelectText>
+        <SelectText>{sortName}</SelectText>
         <IcArrowDown />
       </SelectBox>
       <FlatList
@@ -24,8 +36,13 @@ const FolderList = ({ onPressSort, sort, onPressKebab, folders }) => {
           <Folder
             id={item.id}
             title={item.name}
+            numberOfLinks={item._count}
             onPressKebab={() => onPressKebab(item)}
-            onPress={() => navigation.navigate('Gallery')}
+            onPress={() =>
+              navigation.navigate('Gallery', {
+                id: item.id,
+              })
+            }
           />
         )}
         keyExtractor={item => String(item.id)}

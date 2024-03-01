@@ -1,16 +1,28 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import styled from 'styled-components/native';
+import { useMutation } from 'react-query';
+import { useRecoilValue } from 'recoil';
 import CommonModal from '../base/modal/CommonModal';
 import { colors } from '../../styles/colors';
 import IcClose from '../../assets/icons/IcClose';
 import size from '../../utils/size';
 import { body1, title3 } from '../../styles/fonts';
 import Button from '../base/Button';
+import { deletePosts } from '../../api/apis/posts';
+import { tokenState } from '../../store/store';
 
-const ContentDeleteModal = ({ show, onClose }) => {
-  const navigation = useNavigation();
+const ContentDeleteModal = ({ show, onClose, onGoBack, id }) => {
+  const token = useRecoilValue(tokenState);
+
+  const { mutate } = useMutation(deletePosts, {
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        onClose();
+        onGoBack();
+      }
+    },
+  });
 
   return (
     <CommonModal
@@ -47,10 +59,9 @@ const ContentDeleteModal = ({ show, onClose }) => {
               color="disable"
               text="삭제하기"
               onPress={() => {
-                onClose();
-                navigation.navigate('Gallery', {
-                  showToast: true,
-                  toastType: 'deleted',
+                mutate({
+                  id,
+                  token,
                 });
               }}
             />

@@ -1,7 +1,10 @@
+/* eslint-disable operator-linebreak */
 import React, { useRef, useEffect, useState } from 'react';
 import { Keyboard, View } from 'react-native';
 import styled from 'styled-components';
 import { ScrollView, TouchableOpacity, FlatList } from 'react-native-gesture-handler';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useQuery } from 'react-query';
 import CommonBottomSheet from '../base/modal/CommonBottomSheet';
 import Button from '../base/Button';
 import Card from '../base/Card';
@@ -13,9 +16,13 @@ import CreateFolder from './Create/CreateFolder';
 import SearchFolder from './Search/SearchFolder';
 import SearchInput from '../base/SearchInput';
 import NoSearchResult from './Search/NoSearchResult';
+import { dataByLinkState, tokenState } from '../../store/store';
+import { getFolderBySharing } from '../../api/apis/folders';
 
 const SelectFolderBottomSheets = ({ onClose, onPressNewFolder, onNext }) => {
   const bottomSheetRef = useRef(null);
+  const [dataByLink, setDataByLink] = useRecoilState(dataByLinkState);
+  const token = useRecoilValue(tokenState);
 
   const [showKeyboard, setShowKeyboard] = useState(false);
   const [doSearch, setDoSearch] = useState(false);
@@ -24,19 +31,16 @@ const SelectFolderBottomSheets = ({ onClose, onPressNewFolder, onNext }) => {
   const [openSearchFolder, setOpenSearchFolder] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [hidden, setHidden] = useState(false);
+  const [folders, setFolders] = useState([]);
 
-  const folders = [
-    { title: ' 폴더명 최대 노출 길이 여...', numberOfLinks: 10 },
-    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 20 },
-    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
-    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
-    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
-    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
-    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
-    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
-    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
-    { title: '폴더명 최대 노출 길이 여...', numberOfLinks: 30 },
-  ];
+  useQuery(['get-folders-for-sharing'], () => getFolderBySharing({ keyword: '', token }), {
+    onSuccess: data => {
+      console.log(data.data);
+      setFolders(data.data);
+    },
+    onError: err => console.log(err),
+  });
 
   const handleInputFocus = () => {
     setShowKeyboard(true);
@@ -87,7 +91,10 @@ const SelectFolderBottomSheets = ({ onClose, onPressNewFolder, onNext }) => {
             color="default"
             text="폴더추가"
             renderIcon={() => <Folder size={24} />}
-            onPress={onPressNewFolder}
+            onPress={() => {
+              setHidden(true);
+              onPressNewFolder();
+            }}
           />
           {!doSearch ? (
             <TouchableOpacity onPress={() => setDoSearch(true)}>
@@ -102,31 +109,28 @@ const SelectFolderBottomSheets = ({ onClose, onPressNewFolder, onNext }) => {
           searchResultsLength={searchResults.length}
           height={calculateHeight()}
         >
-          {doSearch ? (
-            searchResults.length > 0 ? (
-              searchResults.map(el => (
-                <Card
-                  key={el}
-                  title={el}
-                  numberOfLinks={99}
-                  isSelected={selected === el}
-                  onPress={() => setSelected(el)}
-                />
-              ))
-            ) : (
-              <NoSearchResult onAddFolder={onPressNewFolder} />
-            )
-          ) : (
-            folders.map((folder, index) => (
-              <FolderCard
-                key={String(folder.numberOfLinks + folder.title + index)}
-                title={folder.title}
-                numberOfLinks={folder.numberOfLinks}
-                onPress={() => setSelectedFolder(index)}
-                isSelected={selectedFolder === index}
+          {doSearch &&
+            searchResults.length > 0 &&
+            searchResults.map(el => (
+              <Card
+                key={el}
+                title={el}
+                numberOfLinks={99}
+                isSelected={selected === el}
+                onPress={() => setSelected(el)}
               />
-            ))
-          )}
+            ))}
+          {doSearch && !searchResults.length && <NoSearchResult onAddFolder={onPressNewFolder} />}
+          {!doSearch &&
+            folders.map(folder => (
+              <FolderCard
+                key={folder.id}
+                title={folder.name}
+                numberOfLinks={folders._count}
+                onPress={() => setSelectedFolder(folder.id)}
+                isSelected={selectedFolder === folder.id}
+              />
+            ))}
         </StyledScrollView>
         {(!doSearch || (doSearch && searchResults.length > 0)) && (
           <ButtonContainer>
@@ -136,7 +140,10 @@ const SelectFolderBottomSheets = ({ onClose, onPressNewFolder, onNext }) => {
               text="선택하기"
               varient="filled"
               color="primary"
-              onPress={onNext}
+              onPress={() => {
+                setDataByLink({ ...dataByLink, folderId: selectedFolder });
+                onNext();
+              }}
             />
           </ButtonContainer>
         )}

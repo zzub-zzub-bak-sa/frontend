@@ -26,7 +26,7 @@ const AddToFolderBottomSheet = ({ onPressClose, onPressGoTag, fromHomeScreen }) 
       {fromHomeScreen ? (
         <SingleButtonWrapper>
           <Button
-            width={WIDTH - 40}
+            width={WIDTH - 30}
             height={54}
             varient="filled"
             color="primary"

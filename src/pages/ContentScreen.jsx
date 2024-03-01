@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, Image, Linking } from 'react-native';
 import styled from 'styled-components';
+import { useQuery } from 'react-query';
+import { useRecoilValue } from 'recoil';
 import size from '../utils/size';
 import IcBack from '../assets/icons/IcBack';
 import Layout from '../components/layout/Layout';
@@ -14,25 +15,39 @@ import CreateFolder from '../components/share/Create/CreateFolder';
 import ChangeImage from '../components/share/Create/ChangeImage';
 import ContentDeleteModal from '../components/ContentScreen/ContentDeleteModal';
 import SelectFolderBottomSheets from '../components/share/SelectFolderBottomSheets';
+import { getPost } from '../api/apis/posts';
+import { tokenState } from '../store/store';
 
-const ContentSceen = () => {
-  const tags = ['해당 태그는', '만약길이가길면', '세번째는아래로'];
+const ContentSceen = ({ navigation, route }) => {
+  const token = useRecoilValue(tokenState);
   const [openTagEdit, setOpenTagEdit] = useState(false);
   const [selectEditOption, setSelectEditOption] = useState('');
-  const [openFolder, setOpenFolder] = useState(false);
   const [createNewFolder, setCreateNewFolder] = useState(false);
   const [openChangeImage, setOpenChangeImage] = useState(false);
   const [folderImage, setFolderImage] = useState('');
   const [showToast, setShowToast] = useState(false);
-
-  const navigation = useNavigation();
+  const [postData, setPostData] = useState({});
 
   const handleSelectEditOption = option => {
-    console.log(option);
     setSelectEditOption(option);
-    console.log(selectEditOption);
     setOpenTagEdit(false);
   };
+
+  const handleOpenUrl = url => {
+    Linking.openURL(url);
+  };
+
+  const { refetch } = useQuery(
+    ['get-post-detail', route.params?.id],
+    () => getPost({ id: route.params?.id, token }),
+    {
+      onSuccess: data => {
+        if (data.code === 'OK') {
+          setPostData(data.data);
+        }
+      },
+    },
+  );
 
   return (
     <Layout>
@@ -45,12 +60,12 @@ const ContentSceen = () => {
         </TouchableOpacity>
       </Header>
       <ImageContainer>
-        <ImageBox source={require('../assets/images/imageBox.png')} />
+        <ImageBox source={{ url: postData.contentUrl }} />
       </ImageContainer>
       <TagContainer>
         <TagBox>
-          {tags.map((tag, idx) => (
-            <Tags key={idx} text={tag} height={42} color="default" />
+          {postData.tags?.map(tag => (
+            <Tags key={tag.name + tag.id} text={tag.name} height={42} color="default" />
           ))}
         </TagBox>
       </TagContainer>
@@ -58,10 +73,11 @@ const ContentSceen = () => {
         <SnsContainer>
           <Instagram size={24} />
         </SnsContainer>
-        <GoSns>
-          <GoSnsText>SNS에서 보기 ></GoSnsText>
+        <GoSns onPress={() => handleOpenUrl(postData.url)}>
+          <GoSnsText>{'SNS에서 보기 >'}</GoSnsText>
         </GoSns>
       </GoSnsContainer>
+      {/* 모달 */}
       {openTagEdit && (
         <TagEditSelectBottomSheet
           onClose={() => setOpenTagEdit(false)}
@@ -119,7 +135,14 @@ const ContentSceen = () => {
         />
       )}
       {selectEditOption === '삭제' && (
-        <ContentDeleteModal onClose={() => setSelectEditOption('')} />
+        <ContentDeleteModal
+          id={postData.id}
+          onClose={() => setSelectEditOption('')}
+          onGoBack={() => {
+            navigation.goBack();
+            refetch();
+          }}
+        />
       )}
     </Layout>
   );
@@ -152,6 +175,7 @@ const ImageContainer = styled(View)``;
 const ImageBox = styled(Image)`
   width: ${size.width * 390}px;
   height: ${size.height * 390}px;
+  object-fit: cover;
 `;
 
 const TagContainer = styled(View)`

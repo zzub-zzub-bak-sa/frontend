@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useMutation, useQuery } from 'react-query';
+import { useRecoilValue } from 'recoil';
 import Layout from '../components/layout/Layout';
 import size from '../utils/size';
 import IcBack from '../assets/icons/IcBack';
@@ -11,7 +12,6 @@ import IcArrowDown from '../assets/icons/IcArrowDown';
 import { colors } from '../styles/colors';
 import CommonShortBottomSheet from '../components/base/modal/CommonShortBottomSheet';
 import { WIDTH } from '../constants/constants';
-import Button from '../components/base/Button';
 import CancelOrNotModal from '../components/GalleryScreen/CancelOrNotModal';
 import SearchFolder from '../components/share/Search/SearchFolder';
 import { showSuccessToast } from '../utils/showSuccessToast';
@@ -20,10 +20,14 @@ import ChangeImage from '../components/share/Create/ChangeImage';
 import Grid from '../components/GalleryScreen/Grid';
 import YesNoModal from '../components/base/modal/YesNoModal';
 import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
+import { getFolder } from '../api/apis/folders';
+import { tokenState } from '../store/store';
+import { deletePosts } from '../api/apis/posts';
 
 const GalleryScreen = ({ navigation, route }) => {
   const editRef = useRef(null);
   const sortRef = useRef(null);
+  const token = useRecoilValue(tokenState);
   const [openEdit, setOpenEdit] = useState(false);
   const [currentEdit, setCurrentEdit] = useState('');
   const [selected, setSelected] = useState([]);
@@ -37,6 +41,30 @@ const GalleryScreen = ({ navigation, route }) => {
   const [openChangeImage, setOpenChangeImage] = useState(false);
   const [folderImage, setFolderImage] = useState('');
   const [openDelete, setOpenDelete] = useState(false);
+  const [detailData, setDetailData] = useState({});
+  const [currentFolderId, setCurrentFolderId] = useState(0);
+
+  const { refetch } = useQuery(
+    ['get-folder-detail'],
+    () => getFolder({ id: route.params?.id, sort: 'newest', token }),
+    {
+      onSuccess: data => {
+        if (data.code === 'OK') {
+          console.log(data.data);
+          setDetailData(data.data);
+          setCurrentFolderId(data.id);
+        }
+      },
+    },
+  );
+
+  const { mutate } = useMutation(deletePosts, {
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        refetch();
+      }
+    },
+  });
 
   useEffect(() => {
     if (route.params?.showToast) {
@@ -57,12 +85,18 @@ const GalleryScreen = ({ navigation, route }) => {
     }
   }, [navigation, route.params]);
 
+  const handlePostDelete = () => {
+    mutate({
+      postIds: selected,
+    });
+  };
+
   return (
     <Layout>
       <Header>
         <TitleBox onPress={() => navigation.navigate('Main')}>
           <IcBack size={24} color="white" />
-          <Title>폴더제목 최대글자수 16자입</Title>
+          <Title>{detailData.name}</Title>
         </TitleBox>
         {currentEdit ? (
           <TouchableOpacity onPress={() => setOpenCancel(true)}>
@@ -75,7 +109,13 @@ const GalleryScreen = ({ navigation, route }) => {
         )}
       </Header>
       <Row>
-        <TouchableOpacity onPress={() => navigation.navigate('SearchGallery')}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('SearchGallery', {
+              id: currentFolderId,
+            })
+          }
+        >
           <IcSearch size={20} color="white" />
         </TouchableOpacity>
         <SortBox onPress={() => setOpenSort(true)}>
@@ -83,7 +123,12 @@ const GalleryScreen = ({ navigation, route }) => {
           <IcArrowDown />
         </SortBox>
       </Row>
-      <Grid selected={selected} onSelect={setSelected} currentEdit={currentEdit} />
+      <Grid
+        selected={selected}
+        onSelect={setSelected}
+        currentEdit={currentEdit}
+        data={detailData.posts}
+      />
       {openCancel && (
         <CancelOrNotModal
           show={openCancel}
@@ -100,7 +145,12 @@ const GalleryScreen = ({ navigation, route }) => {
           leftText="취소하기"
           onPressLeft={() => setOpenDelete(false)}
           rightText="삭제하기"
-          onPressRight={() => null}
+          onPressRight={() => {
+            handlePostDelete();
+            setSelected([]);
+            setOpenDelete(false);
+            setCurrentEdit('');
+          }}
         />
       )}
       {openEdit && (
@@ -126,7 +176,13 @@ const GalleryScreen = ({ navigation, route }) => {
               : `${currentEdit}할 항목을 선택해 주세요.`
           }
           disable={!selected.length}
-          onPress={() => (currentEdit === '삭제' ? setOpenDelete(true) : setOpenFolder(true))}
+          onPress={() => {
+            if (currentEdit === '삭제') {
+              setOpenDelete(true);
+            } else {
+              setOpenFolder(true);
+            }
+          }}
         />
       )}
       {openFolder && (

@@ -26,6 +26,13 @@ const AddLinkBottomSheet = ({ onPress, onNext }) => {
     };
   };
 
+  const handleNext = () => {
+    if (inputValue.startsWith('http') || inputValue.startsWith('www.')) {
+      setDataByLink({ ...dataByLink, url: inputValue });
+      onNext();
+    }
+  };
+
   const customContainerStyle = {
     marginLeft: size.width * 20,
     marginRight: size.width * 20,
@@ -57,12 +64,7 @@ const AddLinkBottomSheet = ({ onPress, onNext }) => {
           varient="filled"
           color="primary"
           text="다음"
-          onPress={() => {
-            if (inputValue.startsWith('http') || inputValue.startsWith('www.')) {
-              setDataByLink({ ...dataByLink, url: inputValue });
-              onNext();
-            }
-          }}
+          onPress={handleNext}
         />
       </ButtonContainer>
     </CommonBottomSheet>

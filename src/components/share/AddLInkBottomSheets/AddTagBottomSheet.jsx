@@ -1,13 +1,33 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import { Image, Text, View } from 'react-native';
 import styled from 'styled-components/native';
+import { useMutation } from 'react-query';
+import { useRecoilValue } from 'recoil';
+import { useNavigation } from '@react-navigation/native';
 import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
 import { title3 } from '../../../styles/fonts';
 import size from '../../../utils/size';
 import Button from '../../base/Button';
 import { WIDTH } from '../../../constants/constants';
+import { dataByLinkState, tokenState } from '../../../store/store';
+import { createPosts } from '../../../api/apis/posts';
 
 const AddTagBottomSheet = ({ onPressClose, fromHomeScreen }) => {
+  const dataByLink = useRecoilValue(dataByLinkState);
+  const token = useRecoilValue(tokenState);
+  const navigation = useNavigation();
+
+  const { mutate } = useMutation(createPosts, {
+    onSuccess: data => {
+      console.log(data);
+    },
+  });
+
+  useEffect(() => {
+    mutate({ ...dataByLink, token });
+  }, []);
+
   return (
     <CommonBottomSheet
       rightButtonType="close"
@@ -28,7 +48,12 @@ const AddTagBottomSheet = ({ onPressClose, fromHomeScreen }) => {
           varient="filled"
           color="primary"
           text={fromHomeScreen ? '콘텐츠 보기' : '앱에서 보기'}
-          onPress={onPressClose}
+          onPress={() => {
+            navigation.navigate('Gallery', {
+              id: dataByLink.folderId,
+            });
+            onPressClose();
+          }}
         />
       </ButtonWrapper>
     </CommonBottomSheet>

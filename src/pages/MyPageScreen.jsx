@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { useRecoilState } from 'recoil';
 import Layout from '../components/layout/Layout';
 import size from '../utils/size';
 import IcBack from '../assets/icons/IcBack';
@@ -11,7 +12,6 @@ import { body2, body3, subtitle1, title3 } from '../styles/fonts';
 import { colors } from '../styles/colors';
 import IcUser from '../assets/icons/IcUser';
 import EditNicknameBottomSheet from '../components/MyPageScreen/EditNicknameBottomSheet';
-import { useRecoilState } from 'recoil';
 import { userState } from '../store/store';
 import { getMe, updateUser } from '../api/apis/account';
 
@@ -62,7 +62,7 @@ const MyPageScreen = () => {
           value={user.nickname}
           onChangeText={newNickname => setNickname(newNickname)}
           onPressClose={() => setEditNickname(false)}
-          onSave={() => changeNickname({ nickname: nickname })}
+          onSave={() => changeNickname({ nickname })}
         />
       )}
       <PolicyBox>
