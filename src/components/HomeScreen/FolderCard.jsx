@@ -1,13 +1,21 @@
 import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
+import { useNavigation } from '@react-navigation/native';
 import size from '../../utils/size';
 import FolderBox from '../base/FolderBox';
 import { subtitle1 } from '../../styles/fonts';
 
-const FolderCard = ({ title }) => {
+const FolderCard = ({ title, folderId }) => {
+  const navigation = useNavigation();
   return (
-    <CardContainer>
+    <CardContainer
+      onClick={() =>
+        navigation.navigate('Gallery', {
+          id: folderId,
+        })
+      }
+    >
       <FolderBox iconSize={48}>
         <ImageBox source={require('../../assets/images/folder-yellow.png')} />
       </FolderBox>

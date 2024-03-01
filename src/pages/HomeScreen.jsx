@@ -98,9 +98,8 @@ const HomeScreen = ({ navigation, route }) => {
   });
 
   const foldersQuery = useQuery(['get-folders'], () => getFolderForHome({ sort, token }), {
-    enabled: !!token,
+    enabled: token.length > 0 && user.isLogIn,
     onSuccess: data => {
-      console.log(data.data);
       setFolders(data.data);
     },
     onError: err => console.log(err),
@@ -124,7 +123,7 @@ const HomeScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    if (user.isLogIn) {
+    if (token && user.isLogIn) {
       foldersQuery.refetch();
     }
   }, [user.isLogIn]);
@@ -201,7 +200,7 @@ const HomeScreen = ({ navigation, route }) => {
           detailData={openEdit.data}
         />
       )}
-      {fixedKeyword && <SearchResults />}
+      {fixedKeyword && keyword && <SearchResults keyword={keyword} />}
       {openAddLink && (
         <AddLinkBottomSheet
           onPress={() => setOpenAddLink(false)}

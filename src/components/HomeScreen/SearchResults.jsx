@@ -1,44 +1,80 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useQuery } from 'react-query';
+import { useRecoilValue } from 'recoil';
+import { useNavigation } from '@react-navigation/native';
 import size from '../../utils/size';
 import { body2 } from '../../styles/fonts';
 import { colors } from '../../styles/colors';
 import FolderCard from './FolderCard';
 import TagCard from './TagCard';
 import NoResult from './NoResult';
+import { tokenState } from '../../store/store';
+import { getSearch } from '../../api/apis/folders';
+import { getTags } from '../../api/apis/tags';
 
-const SearchResults = ({ data }) => {
+const SearchResults = ({ keyword }) => {
+  const token = useRecoilValue(tokenState);
+  const navigation = useNavigation();
+  const [folderData, setFolderData] = useState([]);
+  const [tagData, setTagData] = useState([]);
+
+  useQuery(['search-folders', keyword], () => getSearch({ keyword, token }), {
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        setFolderData(data.data.folders);
+      }
+    },
+  });
+
+  useQuery(['search-tags', keyword], () => getTags({ keyword, token }), {
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        setTagData(data.data);
+      }
+    },
+  });
+
   return (
     <ScrollView>
-      {data ? (
+      {tagData && folderData ? (
         <>
           <View>
             <CategoryBox>
               <Category>폴더</Category>
-              <FolderCount>000건</FolderCount>
+              <FolderCount>{folderData.length}건</FolderCount>
             </CategoryBox>
-            {['홍대 데이트', '혼밥 홍대', '홍대 핫플'].map(el => (
-              <FolderCard key={el} title={el} />
+            {folderData.map(folder => (
+              <FolderCard key={folder.name} title={folder.name} folderId={folder.id} />
             ))}
-            <SeeMore>
-              <SeeMoreText>더보기</SeeMoreText>
-            </SeeMore>
-            <Divider />
+            {folderData.length > 3 && (
+              <>
+                <SeeMore>
+                  <SeeMoreText>더보기</SeeMoreText>
+                </SeeMore>
+                <Divider />
+              </>
+            )}
           </View>
           <View>
             <CategoryBox>
               <Category>태그</Category>
-              <FolderCount>000건</FolderCount>
+              <FolderCount>{tagData.length}건</FolderCount>
             </CategoryBox>
-            {['홍대', '홍대밥집', '홍대양식'].map(el => (
-              <TagCard key={el} tag={el} />
+            {tagData.map(tag => (
+              <TagCard key={tag} tag={tag} />
             ))}
-            <SeeMore>
-              <SeeMoreText>더보기</SeeMoreText>
-            </SeeMore>
-            <Divider />
+            {tagData.length > 3 && (
+              <>
+                <SeeMore>
+                  <SeeMoreText>더보기</SeeMoreText>
+                </SeeMore>
+
+                <Divider />
+              </>
+            )}
           </View>
         </>
       ) : (
