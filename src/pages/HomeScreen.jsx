@@ -98,7 +98,7 @@ const HomeScreen = ({ navigation, route }) => {
   });
 
   const foldersQuery = useQuery(['get-folders'], () => getFolderForHome({ sort, token }), {
-    enabled: false,
+    enabled: !!token,
     onSuccess: data => {
       console.log(data.data);
       setFolders(data.data);
@@ -114,14 +114,14 @@ const HomeScreen = ({ navigation, route }) => {
       if (!deviceId) {
         const uuid = DeviceInfo.getUniqueId();
         await AsyncStorage.setItem('@device-id', String(uuid));
-        createUserMutate({ id: uuid, nickname: 'Username' });
+        createUserMutate({ id: uuid, nickname: null });
       } else {
         signInMutate({ id: deviceId });
       }
     };
 
     signInOrSignUp();
-  }, [createUserMutate, signInMutate]);
+  }, []);
 
   useEffect(() => {
     if (user.isLogIn) {
