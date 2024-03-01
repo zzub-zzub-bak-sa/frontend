@@ -1,19 +1,35 @@
 import React, { useState } from 'react';
 import { Keyboard, Text, View } from 'react-native';
 import styled from 'styled-components/native';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useQuery } from 'react-query';
 import size from '../../../utils/size';
 import CommonBottomSheet from '../../base/modal/CommonBottomSheet';
 import { body1 } from '../../../styles/fonts';
 import Tags from '../../base/Tags';
 import InputWithTag from '../../base/InputWithTag';
-import { dataByLinkState } from '../../../store/store';
+import { dataByLinkState, tokenState } from '../../../store/store';
+import { getTagsByFolderId } from '../../../api/apis/tags';
 
 const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
+  const token = useRecoilValue(tokenState);
   const [dataByLink, setDataByLink] = useRecoilState(dataByLinkState);
   const [value, setValue] = useState('');
   const [keyboard, setShowKeyboard] = useState(false);
   const [tags, setTags] = useState([]);
+  const [currentFolderTags, setCurrentFolderTags] = useState([]);
+
+  useQuery(
+    ['get-tags-by-folders'],
+    () => getTagsByFolderId({ folderId: dataByLink.folderId, token }),
+    {
+      onSuccess: data => {
+        if (data.code === 'OK') {
+          setCurrentFolderTags(data.data);
+        }
+      },
+    },
+  );
 
   const handleInputFocus = () => {
     setShowKeyboard(true);
@@ -55,8 +71,8 @@ const AddTagBottomSheets = ({ onPressBack, onPressClose }) => {
         <TagsWrapper>
           <Title>등록된 태그</Title>
           <TagBox>
-            {[...new Set(tags)].map((tag, index) => (
-              <Tags key={index} text={tag} height={42} color="default" />
+            {[...new Set(currentFolderTags)].map((tag, index) => (
+              <Tags key={tag} text={tag} height={42} color="default" />
             ))}
           </TagBox>
         </TagsWrapper>
