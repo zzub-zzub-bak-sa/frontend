@@ -1,15 +1,17 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
 import size from '../../utils/size';
 import FolderBox from '../base/FolderBox';
 import { body1, caption1 } from '../../styles/fonts';
 import { colors } from '../../styles/colors';
 
-const TagCard = ({ tag }) => {
+const TagCard = ({ tag, image }) => {
   return (
     <TagCardWrapper>
-      <FolderBox iconSize={88} />
+      <FolderBox iconSize={88}>
+        <Image source={{ uri: image }} />
+      </FolderBox>
       <View>
         <Category>카테고리명</Category>
         <TagBox>

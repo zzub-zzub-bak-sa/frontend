@@ -15,11 +15,10 @@ export const createPosts = async ({ folderId, url, tags = [], token }) => {
 
 export const getSearchPosts = async ({ tags, folderId, sort, token }) => {
   let keywords = '';
-  tags.forEach(tag => (keywords += `keywords[]=${tag}`));
-
+  tags.forEach(tag => (keywords += `keywords[]=${tag}&`));
   return apiCall({
     method: 'get',
-    url: `/content/posts/search?${keywords}&folderId=${folderId}&sort=${sort}`,
+    url: `/content/posts/search?${keywords}folderId=${folderId}&sort=${sort}`,
     token,
   });
 };

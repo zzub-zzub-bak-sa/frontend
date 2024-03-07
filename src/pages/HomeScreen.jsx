@@ -32,7 +32,7 @@ import { getFolderForHome } from '../api/apis/folders';
 import EditBottomSheet from '../components/HomeScreen/EditBottomSheet';
 import IcFolderFolder from '../assets/icons/folders/IcFolderFolder';
 
-const HomeScreen = ({ navigation, route }) => {
+const HomeScreen = () => {
   const queryClient = useQueryClient();
   const sortRef = useRef(null);
   const [token, setToken] = useRecoilState(tokenState);
@@ -58,7 +58,6 @@ const HomeScreen = ({ navigation, route }) => {
   const [openFinishSavingFolder, setOpenFinishSavingFolder] = useState(false);
   const [openFinish, setOpenFinish] = useState(false);
   const [openTag, setOpenTag] = useState(false);
-  const [tags, setTags] = useState([]);
   const [imageChange, setImageChange] = useState(false);
   const [fixedKeyword, setFixedKeyword] = useState('');
   const [folders, setFolders] = useState([]);
@@ -98,10 +97,15 @@ const HomeScreen = ({ navigation, route }) => {
   });
 
   const foldersQuery = useQuery(['get-folders'], () => getFolderForHome({ sort, token }), {
-    enabled: false,
+    enabled: token.length > 0 && user.isLogIn,
     onSuccess: data => {
-      console.log(data.data);
-      setFolders(data.data);
+      if (sort === 'alphabet') {
+        setFolders(data.data);
+      } else if (sort === 'newest') {
+        setFolders([...data.data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      } else if (sort === 'oldest') {
+        setFolders([...data.data].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
+      }
     },
     onError: err => console.log(err),
   });
@@ -114,17 +118,17 @@ const HomeScreen = ({ navigation, route }) => {
       if (!deviceId) {
         const uuid = DeviceInfo.getUniqueId();
         await AsyncStorage.setItem('@device-id', String(uuid));
-        createUserMutate({ id: uuid, nickname: 'Username' });
+        createUserMutate({ id: uuid, nickname: null });
       } else {
         signInMutate({ id: deviceId });
       }
     };
 
     signInOrSignUp();
-  }, [createUserMutate, signInMutate]);
+  }, []);
 
   useEffect(() => {
-    if (user.isLogIn) {
+    if (token && user.isLogIn) {
       foldersQuery.refetch();
     }
   }, [user.isLogIn]);
@@ -153,6 +157,7 @@ const HomeScreen = ({ navigation, route }) => {
 
               setTimeout(() => {
                 setOpenSort(false);
+                foldersQuery.refetch();
               }, 1000);
             }
           }}
@@ -201,7 +206,7 @@ const HomeScreen = ({ navigation, route }) => {
           detailData={openEdit.data}
         />
       )}
-      {fixedKeyword && <SearchResults />}
+      {fixedKeyword && keyword && <SearchResults keyword={keyword} />}
       {openAddLink && (
         <AddLinkBottomSheet
           onPress={() => setOpenAddLink(false)}
@@ -246,7 +251,7 @@ const HomeScreen = ({ navigation, route }) => {
           onNext={() => {
             setCreateNewFolder(false);
             setOpenSelectFolder(true);
-            // setOpenFinishSavingFolder(true);
+            foldersQuery.refetch();
           }}
         />
       )}
