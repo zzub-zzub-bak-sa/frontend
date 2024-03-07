@@ -19,7 +19,7 @@ import YesNoModal from '../components/base/modal/YesNoModal';
 import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
 import CancelOrNotModal from '../components/GalleryScreen/CancelOrNotModal';
 import { showSuccessToast } from '../utils/showSuccessToast';
-import { getDeletedPosts, deletePostsPermanently } from '../api/apis/posts';
+import { getDeletedPosts, deletePostsPermanently, restorePosts } from '../api/apis/posts';
 import { tokenState } from '../store/store';
 
 const TrashBinScreen = ({ navigation, route }) => {
@@ -34,25 +34,39 @@ const TrashBinScreen = ({ navigation, route }) => {
   const [showToast, setShowToast] = useState(false);
   const [deletePosts, setDeletedPosts] = useState([]);
 
-  useQuery(['get-deleted-posts'], () => getDeletedPosts(token), {
+  const { refetch } = useQuery(['get-deleted-posts'], () => getDeletedPosts(token), {
     onSuccess: data => {
       if (data.code === 'OK') {
         setDeletedPosts(data.data);
-        console.log('삭제된 게시물 가져오기 성공', data.data);
       }
-    },
-    onError: error => {
-      console.error('삭제된 게시물 가져오기 실패', error);
     },
   });
 
   const { mutate: deletePermanently } = useMutation(deletePostsPermanently, {
-    onSuccess: () => {
-      setDeletedPosts([]);
-      console.log('휴지통 영구 삭제 성공');
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        refetch();
+      }
     },
-    onError: error => {
-      console.log('휴지통 삭제 실패', error);
+  });
+
+  const restoreSuccess = postIds => {
+    refetch();
+    showSuccessToast({
+      text1: '기본폴더에 복구되었습니다.',
+      text2: '보기',
+      onPressMove: () => {
+        navigation.navigate('Main');
+      },
+    });
+    setShowToast(false);
+  };
+
+  const { mutate: restore } = useMutation(({ postIds }) => restorePosts({ postIds, token }), {
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        restoreSuccess(postIds);
+      }
     },
   });
 
@@ -61,16 +75,10 @@ const TrashBinScreen = ({ navigation, route }) => {
     deletePermanently({ postIds, token });
   };
 
-  useEffect(() => {
-    if (showToast) {
-      showSuccessToast({
-        text1: '이동되었습니다.',
-        text2: '보러가기',
-        onPressMove: () => null,
-      });
-      setShowToast(false);
-    }
-  }, [showToast]);
+  const handleRestorePosts = () => {
+    const postIds = selectedItems;
+    restore({ postIds });
+  };
 
   return (
     <Layout>
@@ -154,10 +162,7 @@ const TrashBinScreen = ({ navigation, route }) => {
               : `복구할 항목을 선택해 주세요.`
           }
           disable={!selectedItems.length}
-          onPress={() => {
-            setOpenRestore(false);
-            setShowToast(true);
-          }}
+          onPress={handleRestorePosts}
         />
       )}
     </Layout>
