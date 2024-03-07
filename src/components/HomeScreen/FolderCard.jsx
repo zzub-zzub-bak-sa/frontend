@@ -6,7 +6,7 @@ import size from '../../utils/size';
 import FolderBox from '../base/FolderBox';
 import { subtitle1 } from '../../styles/fonts';
 
-const FolderCard = ({ title, folderId }) => {
+const FolderCard = ({ title, folderId, onPressFolder }) => {
   const navigation = useNavigation();
   return (
     <CardContainer
@@ -16,7 +16,7 @@ const FolderCard = ({ title, folderId }) => {
         })
       }
     >
-      <FolderBox iconSize={48}>
+      <FolderBox iconSize={48} onPress={onPressFolder}>
         <ImageBox source={require('../../assets/images/folder-yellow.png')} />
       </FolderBox>
       <FolderText>{title}</FolderText>

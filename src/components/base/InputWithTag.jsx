@@ -29,52 +29,61 @@ const InputWithTag = ({
   return (
     <>
       <Container containerStyle={containerStyle}>
-        <Scroll horizontal={true}>
-          <Content>
-            <TagWrapper>
-              {tags.map((tag, idx) => (
-                <Tags
-                  key={idx}
-                  text={tag}
-                  onPressTag={() => handleTagDelete(idx)}
-                  height={40}
-                  isEditPossible
-                />
-              ))}
-            </TagWrapper>
+        {/* <Scroll horizontal={true}> */}
+        <Content>
+          <TagWrapper>
+            {tags.map((tag, idx) => (
+              <Tags
+                key={tag}
+                text={tag}
+                onPressTag={() => handleTagDelete(idx)}
+                height={40}
+                isEditPossible
+              />
+            ))}
+          </TagWrapper>
 
-            {tags.length < 3 && (
-              <InputWrapper hasTags={tags.length > 0}>
-                <InputField
-                  placeholder={placeholder}
-                  placeholderTextColor={colors.grey[200]}
-                  value={value}
-                  onChangeValue={onChangeValue}
-                  inputStyle={inputStyle}
-                  onFocus={onFocus}
-                  onEndEditing={handleTagAdd}
-                  maxLength={max}
-                  returnKeyType="done"
-                />
-              </InputWrapper>
-            )}
-          </Content>
-        </Scroll>
+          {tags.length < 3 && (
+            <InputWrapper hasTags={tags.length > 0}>
+              <InputField
+                placeholder={placeholder}
+                placeholderTextColor={colors.grey[200]}
+                value={value}
+                onChangeValue={onChangeValue}
+                inputStyle={inputStyle}
+                onFocus={onFocus}
+                onEndEditing={handleTagAdd}
+                maxLength={max}
+                returnKeyType="done"
+              />
+            </InputWrapper>
+          )}
+        </Content>
+        {/* </Scroll> */}
       </Container>
       {value && (
         <SearchDropDown>
           {tags.map(name => {
             if (name.includes(value)) {
+              const parts = name.split(new RegExp(`(${value})`, 'gi'));
+
               return (
                 <MatchedTagsBox key={name}>
                   <Text>
-                    <MatchedTagsText>{name.split(value)[0]}</MatchedTagsText>
-                    <KeywordText>{value}</KeywordText>
-                    <MatchedTagsText>{name.split(value)[1]}</MatchedTagsText>
+                    {parts.map(part => {
+                      return part.toLowerCase() === value.toLowerCase() ? (
+                        <KeywordText key={part} style={{ color: colors.orange }}>
+                          {part}
+                        </KeywordText>
+                      ) : (
+                        <MatchedTagsText key={part}>{part}</MatchedTagsText>
+                      );
+                    })}
                   </Text>
                 </MatchedTagsBox>
               );
             }
+            return null; // 키워드를 포함하지 않는 태그는 무시
           })}
         </SearchDropDown>
       )}

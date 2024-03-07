@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import styled from 'styled-components/native';
@@ -44,15 +45,24 @@ const GalleryScreen = ({ navigation, route }) => {
   const [detailData, setDetailData] = useState({});
   const [currentFolderId, setCurrentFolderId] = useState(0);
 
-  const { refetch } = useQuery(
+  useEffect(() => {
+    if (route.params.id) {
+      setCurrentFolderId(route.params.id);
+    }
+  }, []);
+
+  const { refetch, isLoading } = useQuery(
     ['get-folder-detail'],
-    () => getFolder({ id: route.params?.id, sort: 'newest', token }),
+    () => getFolder({ id: currentFolderId, sort: 'newest', token }),
     {
       onSuccess: data => {
-        if (data.code === 'OK') {
+        if (!isLoading && (!data || !data.success)) {
+          refetch();
+        }
+
+        if (data.success) {
           console.log(data.data);
           setDetailData(data.data);
-          setCurrentFolderId(data.id);
         }
       },
     },

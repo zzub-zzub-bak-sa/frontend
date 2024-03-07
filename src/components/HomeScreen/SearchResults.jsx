@@ -47,7 +47,16 @@ const SearchResults = ({ keyword }) => {
               <FolderCount>{folderData.length}건</FolderCount>
             </CategoryBox>
             {folderData.map(folder => (
-              <FolderCard key={folder.name} title={folder.name} folderId={folder.id} />
+              <FolderCard
+                key={folder.name}
+                title={folder.name}
+                folderId={folder.id}
+                onPressFolder={() =>
+                  navigation.navigate('Gallery', {
+                    id: folder.id,
+                  })
+                }
+              />
             ))}
             {folderData.length > 3 && (
               <>
@@ -64,7 +73,7 @@ const SearchResults = ({ keyword }) => {
               <FolderCount>{tagData.length}건</FolderCount>
             </CategoryBox>
             {tagData.map(tag => (
-              <TagCard key={tag} tag={tag} />
+              <TagCard key={tag} tag={tag} image={tag} />
             ))}
             {tagData.length > 3 && (
               <>
