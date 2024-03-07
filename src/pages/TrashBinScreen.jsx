@@ -38,9 +38,11 @@ const TrashBinScreen = ({ navigation, route }) => {
     onSuccess: data => {
       if (data.code === 'OK') {
         setDeletedPosts(data.data);
-        console.log('posts');
-        console.log(data);
+        console.log('삭제된 게시물 가져오기 성공', data.data);
       }
+    },
+    onError: error => {
+      console.error('삭제된 게시물 가져오기 실패', error);
     },
   });
 
