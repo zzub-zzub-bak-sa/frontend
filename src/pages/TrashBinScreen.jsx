@@ -145,12 +145,18 @@ const TrashBinScreen = ({ navigation, route }) => {
         />
       )}
       {openCancel && (
-        <CancelOrNotModal
-          show={openCancel}
-          onClose={() => setOpenCancel(false)}
-          onStop={() => {
+        <YesNoModal
+          title="게시물 복구를 취소하시겠어요?"
+          subtitle="선택된 항목이 모두 사라져요"
+          leftText="취소하기"
+          onPressLeft={() => {
             setSelectedItems([]);
             setOpenRestore(false);
+            setOpenCancel(false);
+          }}
+          rightText="계속하기"
+          onPressRight={() => {
+            setOpenCancel(false);
           }}
         />
       )}
