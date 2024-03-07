@@ -50,7 +50,6 @@ const SearchResults = ({ keyword }) => {
               <FolderCard
                 key={folder.name}
                 title={folder.name}
-                folderId={folder.id}
                 onPressFolder={() =>
                   navigation.navigate('Gallery', {
                     id: folder.id,
