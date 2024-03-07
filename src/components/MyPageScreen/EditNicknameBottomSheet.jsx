@@ -8,7 +8,7 @@ import { colors } from '../../styles/colors';
 import { WIDTH } from '../../constants/constants';
 import Button from '../base/Button';
 
-const EditNicknameBottomSheet = ({ onPressClose, value, onChangeText }) => {
+const EditNicknameBottomSheet = ({ onPressClose, value, onChangeText, onSave }) => {
   const [keyboard, setShowKeyboard] = useState(false);
 
   const handleInputFocus = () => {
@@ -42,7 +42,7 @@ const EditNicknameBottomSheet = ({ onPressClose, value, onChangeText }) => {
         <Space />
       </InputWrapper>
       <ButtonWrapper>
-        <Button text="다음" varient="filled" color="primary" height={54} />
+        <Button text="다음" varient="filled" color="primary" height={54} onPress={onSave} />
       </ButtonWrapper>
     </CommonBottomSheet>
   );
