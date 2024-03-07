@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Layout from '../components/layout/Layout';
 import size from '../utils/size';
 import IcBack from '../assets/icons/IcBack';
@@ -13,32 +13,32 @@ import { colors } from '../styles/colors';
 import IcUser from '../assets/icons/IcUser';
 import EditNicknameBottomSheet from '../components/MyPageScreen/EditNicknameBottomSheet';
 import { userState } from '../store/store';
+import { tokenState } from '../store/store';
 import { getMe, updateUser } from '../api/apis/account';
 
 const MyPageScreen = () => {
-  const navigation = useNavigation();
   const [user, setUser] = useRecoilState(userState);
+  const token = useRecoilValue(tokenState);
+  const queryClient = useQueryClient();
+  const navigation = useNavigation();
   const [editNickname, setEditNickname] = useState(false);
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState();
 
-  const { data: userData } = useQuery('userData', getMe, {
-    enabled: user.isLogIn,
-    onSuccess: data => {
-      setUser(oldUser => ({ ...oldUser, nickname: data.nickname }));
-    },
-  });
-
-  // 닉네임 변경
-  const { mutate: changeNickname } = useMutation(updateUser, {
-    onSuccess: data => {
-      setUser(oldUser => ({ ...oldUser, nickname: data.nickname }));
-      console.log('Success', '닉네임이 변경 성공');
+  const { mutate } = useMutation(newNickname => updateUser({ nickname: newNickname, token }), {
+    onSuccess: () => {
+      setUser(user => ({ ...user, nickname: data.nickname }));
+      queryClient.invalidateQueries('userProfile');
     },
     onError: error => {
-      console.error('Error', '닉네임 변경 실패');
+      console.error('닉네임 변경 에러', error);
     },
   });
 
+  const handleSaveNickname = () => {
+    mutate(nickname);
+  };
+
+  console.log(user);
   return (
     <Layout>
       <Header onPress={() => navigation.navigate('Main')}>
@@ -48,7 +48,7 @@ const MyPageScreen = () => {
       <UserBox>
         <IcUser size={32} color="white" />
         <View>
-          <UserName>{user.nickname}</UserName>
+          <UserName>{nickname}</UserName>
           <TouchableOpacity onPress={() => setEditNickname(true)}>
             <EditProfile>내 정보 수정</EditProfile>
           </TouchableOpacity>
@@ -62,7 +62,7 @@ const MyPageScreen = () => {
           value={user.nickname}
           onChangeText={newNickname => setNickname(newNickname)}
           onPressClose={() => setEditNickname(false)}
-          onSave={() => changeNickname({ nickname })}
+          onSave={handleSaveNickname}
         />
       )}
       <PolicyBox>
