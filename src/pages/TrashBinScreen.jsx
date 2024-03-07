@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import Layout from '../components/layout/Layout';
 import IcBack from '../assets/icons/IcBack';
@@ -19,7 +19,7 @@ import YesNoModal from '../components/base/modal/YesNoModal';
 import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
 import CancelOrNotModal from '../components/GalleryScreen/CancelOrNotModal';
 import { showSuccessToast } from '../utils/showSuccessToast';
-import { getDeletedPosts } from '../api/apis/posts';
+import { getDeletedPosts, deletePostsPermanently } from '../api/apis/posts';
 import { tokenState } from '../store/store';
 
 const TrashBinScreen = ({ navigation, route }) => {
@@ -45,6 +45,21 @@ const TrashBinScreen = ({ navigation, route }) => {
       console.error('삭제된 게시물 가져오기 실패', error);
     },
   });
+
+  const { mutate: deletePermanently } = useMutation(deletePostsPermanently, {
+    onSuccess: () => {
+      setDeletedPosts([]);
+      console.log('휴지통 영구 삭제 성공');
+    },
+    onError: error => {
+      console.log('휴지통 삭제 실패', error);
+    },
+  });
+
+  const handleDeletePermanently = () => {
+    const postIds = deletePosts.map(post => post.id);
+    deletePermanently({ postIds, token });
+  };
 
   useEffect(() => {
     if (showToast) {
@@ -115,7 +130,10 @@ const TrashBinScreen = ({ navigation, route }) => {
           leftText="취소하기"
           onPressLeft={() => setOpenDelete(false)}
           rightText="삭제하기"
-          onPressRight={() => navigation.navigate('MyPage')}
+          onPressRight={() => {
+            handleDeletePermanently();
+            setOpenDelete(false);
+          }}
         />
       )}
       {openCancel && (
