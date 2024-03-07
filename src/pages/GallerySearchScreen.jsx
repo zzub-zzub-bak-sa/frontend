@@ -36,7 +36,6 @@ const GallerySearchScreen = ({ navigation, route }) => {
       }
 
       if (data.success) {
-        console.log(data.data);
         setData(data.data);
       }
     },
