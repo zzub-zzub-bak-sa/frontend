@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -17,7 +17,6 @@ import { colors } from '../styles/colors';
 import IcTrash from '../assets/icons/IcTrash';
 import YesNoModal from '../components/base/modal/YesNoModal';
 import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
-import CancelOrNotModal from '../components/GalleryScreen/CancelOrNotModal';
 import { showSuccessToast } from '../utils/showSuccessToast';
 import { getDeletedPosts, deletePostsPermanently, restorePosts } from '../api/apis/posts';
 import { tokenState } from '../store/store';
