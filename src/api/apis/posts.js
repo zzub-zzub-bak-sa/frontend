@@ -58,6 +58,9 @@ export const restorePosts = async token => {
   return apiCall({
     method: 'put',
     url: '/content/posts/restore',
+    data: {
+      postIds,
+    },
     token,
   });
 };
