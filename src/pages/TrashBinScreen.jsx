@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useRecoilValue } from 'recoil';
 import Layout from '../components/layout/Layout';
 import IcBack from '../assets/icons/IcBack';
@@ -17,9 +17,8 @@ import { colors } from '../styles/colors';
 import IcTrash from '../assets/icons/IcTrash';
 import YesNoModal from '../components/base/modal/YesNoModal';
 import SelectBottomSheet from '../components/base/modal/SelectBottomSheet';
-import CancelOrNotModal from '../components/GalleryScreen/CancelOrNotModal';
 import { showSuccessToast } from '../utils/showSuccessToast';
-import { getDeletedPosts } from '../api/apis/posts';
+import { getDeletedPosts, deletePostsPermanently, restorePosts } from '../api/apis/posts';
 import { tokenState } from '../store/store';
 
 const TrashBinScreen = ({ navigation, route }) => {
@@ -34,26 +33,51 @@ const TrashBinScreen = ({ navigation, route }) => {
   const [showToast, setShowToast] = useState(false);
   const [deletePosts, setDeletedPosts] = useState([]);
 
-  useQuery(['get-deleted-posts'], () => getDeletedPosts(token), {
+  const { refetch } = useQuery(['get-deleted-posts'], () => getDeletedPosts(token), {
     onSuccess: data => {
       if (data.code === 'OK') {
         setDeletedPosts(data.data);
-        console.log('posts');
-        console.log(data);
       }
     },
   });
 
-  useEffect(() => {
-    if (showToast) {
-      showSuccessToast({
-        text1: '이동되었습니다.',
-        text2: '보러가기',
-        onPressMove: () => null,
-      });
-      setShowToast(false);
-    }
-  }, [showToast]);
+  const { mutate: deletePermanently } = useMutation(deletePostsPermanently, {
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        refetch();
+      }
+    },
+  });
+
+  const restoreSuccess = postIds => {
+    refetch();
+    showSuccessToast({
+      text1: '기본폴더에 복구되었습니다.',
+      text2: '보기',
+      onPressMove: () => {
+        navigation.navigate('Main');
+      },
+    });
+    setShowToast(false);
+  };
+
+  const { mutate: restore } = useMutation(({ postIds }) => restorePosts({ postIds, token }), {
+    onSuccess: data => {
+      if (data.code === 'OK') {
+        restoreSuccess(postIds);
+      }
+    },
+  });
+
+  const handleDeletePermanently = () => {
+    const postIds = deletePosts.map(post => post.id);
+    deletePermanently({ postIds, token });
+  };
+
+  const handleRestorePosts = () => {
+    const postIds = selectedItems;
+    restore({ postIds });
+  };
 
   return (
     <Layout>
@@ -113,16 +137,25 @@ const TrashBinScreen = ({ navigation, route }) => {
           leftText="취소하기"
           onPressLeft={() => setOpenDelete(false)}
           rightText="삭제하기"
-          onPressRight={() => navigation.navigate('MyPage')}
+          onPressRight={() => {
+            handleDeletePermanently();
+            setOpenDelete(false);
+          }}
         />
       )}
       {openCancel && (
-        <CancelOrNotModal
-          show={openCancel}
-          onClose={() => setOpenCancel(false)}
-          onStop={() => {
+        <YesNoModal
+          title="게시물 복구를 취소하시겠어요?"
+          subtitle="선택된 항목이 모두 사라져요"
+          leftText="취소하기"
+          onPressLeft={() => {
             setSelectedItems([]);
             setOpenRestore(false);
+            setOpenCancel(false);
+          }}
+          rightText="계속하기"
+          onPressRight={() => {
+            setOpenCancel(false);
           }}
         />
       )}
@@ -134,10 +167,7 @@ const TrashBinScreen = ({ navigation, route }) => {
               : `복구할 항목을 선택해 주세요.`
           }
           disable={!selectedItems.length}
-          onPress={() => {
-            setOpenRestore(false);
-            setShowToast(true);
-          }}
+          onPress={handleRestorePosts}
         />
       )}
     </Layout>
